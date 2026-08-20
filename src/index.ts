@@ -12,8 +12,8 @@ app.use(express.static("public"));
 app.get("/api/stats", (_req, res) => {
   const row = db.prepare(`
     SELECT COUNT(*)                                                AS attempts,
-           SUM(status = 'recovered')                               AS recovered,
-           SUM(status = 'failed')                                  AS failed,
+           COALESCE(SUM(status = 'recovered'), 0)                  AS recovered,
+           COALESCE(SUM(status = 'failed'), 0)                     AS failed,
            COALESCE(SUM(CASE WHEN status = 'recovered'
                              THEN amount END), 0)                  AS recovered_paise
       FROM recovery_attempts
