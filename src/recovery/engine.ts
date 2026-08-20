@@ -19,35 +19,59 @@ export interface FailedPayment {
 export async function attemptRecovery(payment: FailedPayment): Promise<void> {
   const strategy = "immediate_link";
 
-  const link = await razorpay.paymentLink.create({
-    amount: payment.amount,
-    currency: payment.currency,
-    accept_partial: false,
-    description: "Your payment didn't go through — here's a fresh link",
-    customer: {
-      email: payment.email ?? undefined,
-      contact: payment.contact ?? undefined,
-    },
-    // We do the sending ourselves, so Razorpay must not also notify the
-    // customer — otherwise every recovery goes out twice.
-    notify: { sms: false, email: false },
-    reminder_enable: false,
-    notes: { recovers_payment_id: payment.payment_id, strategy },
-  });
+  try {
+    const link = await razorpay.paymentLink.create({
+      amount: payment.amount,
+      currency: payment.currency,
+      accept_partial: false,
+      description: "Your payment didn't go through — here's a fresh link",
+      customer: {
+        email: payment.email ?? undefined,
+        contact: payment.contact ?? undefined,
+      },
+      // We do the sending ourselves, so Razorpay must not also notify the
+      // customer — otherwise every recovery goes out twice.
+      notify: { sms: false, email: false },
+      reminder_enable: false,
+      notes: { recovers_payment_id: payment.payment_id, strategy },
+    });
 
-  db.prepare(
-    `INSERT INTO recovery_attempts (payment_id, strategy, payment_link_id, payment_link_url, amount)
-     VALUES (?, ?, ?, ?, ?)`,
-  ).run(payment.payment_id, strategy, link.id, link.short_url, payment.amount);
+    db.prepare(
+      `INSERT INTO recovery_attempts
+         (payment_id, strategy, status, payment_link_id, payment_link_url, amount)
+       VALUES (?, ?, 'sent', ?, ?, ?)`,
+    ).run(payment.payment_id, strategy, link.id, link.short_url, payment.amount);
 
-  // Day 1: "sending" is a log line. The channel adapter comes later.
-  console.log(`[recovery] ${payment.payment_id} -> ${link.short_url} (${strategy})`);
+    // Day 1: "sending" is a log line. The channel adapter comes later.
+    console.log(`[recovery] ${payment.payment_id} -> ${link.short_url} (${strategy})`);
+  } catch (error) {
+    // Record the failure rather than only logging it. A recovery that never
+    // went out is the single most important thing for the operator to see, and
+    // a line in a scrolling terminal is not seeing it.
+    const message = describeError(error);
+    db.prepare(
+      `INSERT INTO recovery_attempts (payment_id, strategy, status, error, amount)
+       VALUES (?, ?, 'failed', ?, ?)`,
+    ).run(payment.payment_id, strategy, message, payment.amount);
+
+    console.error(`[recovery] ${payment.payment_id} FAILED: ${message}`);
+  }
+}
+
+/** Razorpay errors nest the useful text; plain Errors don't. */
+function describeError(error: unknown): string {
+  if (typeof error === "object" && error !== null) {
+    const e = error as { error?: { description?: string }; message?: string };
+    if (e.error?.description) return e.error.description;
+    if (e.message) return e.message;
+  }
+  return String(error);
 }
 
 export function markRecovered(paymentLinkId: string): boolean {
   const result = db.prepare(
     `UPDATE recovery_attempts
-        SET recovered_at = datetime('now')
+        SET recovered_at = datetime('now'), status = 'recovered'
       WHERE payment_link_id = ? AND recovered_at IS NULL`,
   ).run(paymentLinkId);
   return result.changes > 0;

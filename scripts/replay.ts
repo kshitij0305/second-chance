@@ -30,6 +30,13 @@ const id = (prefix: string) => `${prefix}_${randomUUID().replace(/-/g, "").slice
 interface Scenario {
   method: string;
   amount: number;
+  /**
+   * Razorpay validates contact numbers even in test mode and rejects ones with
+   * recurring digits — +919999999999 comes back as a 400. Each scenario gets a
+   * distinct, plausible Indian mobile number.
+   */
+  contact: string;
+  email: string;
   error_code: string;
   error_source: string;
   error_step: string;
@@ -40,30 +47,35 @@ interface Scenario {
 const SCENARIOS: Record<string, Scenario> = {
   card_declined: {
     method: "card", amount: 249900,
+    contact: "+919876543210", email: "asha.menon@example.com",
     error_code: "BAD_REQUEST_ERROR", error_source: "bank",
     error_step: "payment_authorization", error_reason: "payment_failed",
     description: "Card declined by issuing bank",
   },
   insufficient_funds: {
     method: "card", amount: 899900,
+    contact: "+919812345678", email: "rohan.das@example.com",
     error_code: "BAD_REQUEST_ERROR", error_source: "bank",
     error_step: "payment_authorization", error_reason: "insufficient_funds",
     description: "Insufficient balance",
   },
   otp_incorrect: {
     method: "card", amount: 129900,
+    contact: "+919673401285", email: "priya.nair@example.com",
     error_code: "BAD_REQUEST_ERROR", error_source: "customer",
     error_step: "payment_authentication", error_reason: "incorrect_otp",
     description: "Customer entered an incorrect OTP",
   },
   upi_timeout: {
     method: "upi", amount: 59900,
+    contact: "+918745092361", email: "vikram.rao@example.com",
     error_code: "GATEWAY_ERROR", error_source: "gateway",
     error_step: "payment_authentication", error_reason: "payment_timeout",
     description: "UPI collect request expired",
   },
   gateway_down: {
     method: "netbanking", amount: 1499900,
+    contact: "+917298436501", email: "sneha.iyer@example.com",
     error_code: "GATEWAY_ERROR", error_source: "gateway",
     error_step: "payment_initiation", error_reason: "server_error",
     description: "Issuer unavailable",
@@ -75,7 +87,7 @@ const name = process.argv[2];
 if (!name || name === "list") {
   console.log("Scenarios:");
   for (const [key, s] of Object.entries(SCENARIOS)) {
-    console.log(`  ${key.padEnd(20)} ${s.method.padEnd(11)} ₹${(s.amount / 100).toLocaleString("en-IN")}  ${s.description}`);
+    console.log(`  ${key.padEnd(20)} ${s.method.padEnd(11)} Rs ${(s.amount / 100).toLocaleString("en-IN")}  ${s.description}`);
   }
   process.exit(name ? 0 : 1);
 }
@@ -100,8 +112,8 @@ const body = JSON.stringify({
         status: "failed",
         order_id: id("order"),
         method: scenario.method,
-        email: "customer@example.com",
-        contact: "+919999999999",
+        email: scenario.email,
+        contact: scenario.contact,
         error_code: scenario.error_code,
         error_description: scenario.description,
         error_source: scenario.error_source,

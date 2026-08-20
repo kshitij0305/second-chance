@@ -19,7 +19,7 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS failed_payments (
     payment_id   TEXT PRIMARY KEY,
     order_id     TEXT,
-    amount       INTEGER NOT NULL,      -- paise
+    amount       INTEGER NOT NULL,
     currency     TEXT    NOT NULL,
     method       TEXT,
     email        TEXT,
@@ -32,11 +32,15 @@ db.exec(`
     failed_at    TEXT NOT NULL DEFAULT (datetime('now'))
   );
 
-  -- One row per recovery attempt. This is the table the dashboard reads.
+  -- One row per recovery attempt, including the ones that never got off the
+  -- ground. An attempt that fails is a fact about the system, not log noise —
+  -- if it only ever reached console.error nobody would notice it happening.
   CREATE TABLE IF NOT EXISTS recovery_attempts (
     id               INTEGER PRIMARY KEY AUTOINCREMENT,
     payment_id       TEXT NOT NULL REFERENCES failed_payments(payment_id),
     strategy         TEXT NOT NULL,
+    status           TEXT NOT NULL DEFAULT 'sent',   -- sent | failed | recovered
+    error            TEXT,
     payment_link_id  TEXT,
     payment_link_url TEXT,
     amount           INTEGER NOT NULL,
@@ -46,6 +50,17 @@ db.exec(`
 
   CREATE INDEX IF NOT EXISTS idx_attempts_link ON recovery_attempts(payment_link_id);
 `);
+
+// Dev databases created before status/error existed keep working instead of
+// forcing a delete-and-recreate.
+const columns = (db.prepare("PRAGMA table_info(recovery_attempts)").all() as { name: string }[])
+  .map((c) => c.name);
+if (!columns.includes("status")) {
+  db.exec("ALTER TABLE recovery_attempts ADD COLUMN status TEXT NOT NULL DEFAULT 'sent'");
+}
+if (!columns.includes("error")) {
+  db.exec("ALTER TABLE recovery_attempts ADD COLUMN error TEXT");
+}
 
 export function recordWebhook(event: string, payload: unknown): void {
   db.prepare("INSERT INTO webhook_events (event, payload) VALUES (?, ?)")

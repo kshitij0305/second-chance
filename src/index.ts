@@ -11,19 +11,21 @@ app.use(express.static("public"));
 
 app.get("/api/stats", (_req, res) => {
   const row = db.prepare(`
-    SELECT COUNT(*)                                              AS attempts,
-           COUNT(recovered_at)                                   AS recovered,
-           COALESCE(SUM(CASE WHEN recovered_at IS NOT NULL
-                             THEN amount END), 0)                AS recovered_paise
+    SELECT COUNT(*)                                                AS attempts,
+           SUM(status = 'recovered')                               AS recovered,
+           SUM(status = 'failed')                                  AS failed,
+           COALESCE(SUM(CASE WHEN status = 'recovered'
+                             THEN amount END), 0)                  AS recovered_paise
       FROM recovery_attempts
-  `).get() as { attempts: number; recovered: number; recovered_paise: number };
+  `).get() as Record<string, number>;
 
   const recent = db.prepare(`
-    SELECT a.payment_id, a.strategy, a.payment_link_url, a.sent_at, a.recovered_at,
-           a.amount, f.error_code, f.error_reason, f.method
+    SELECT a.payment_id, a.strategy, a.status, a.error, a.payment_link_url,
+           a.sent_at, a.recovered_at, a.amount,
+           f.error_code, f.error_reason, f.method
       FROM recovery_attempts a
       JOIN failed_payments f ON f.payment_id = a.payment_id
-     ORDER BY a.sent_at DESC
+     ORDER BY a.id DESC
      LIMIT 50
   `).all();
 
