@@ -6,10 +6,17 @@
  * route, and goes through the same signature check — the only thing it skips is
  * the network hop from Razorpay's servers.
  *
- * IMPORTANT: the payloads below are synthetic and the error fields are guesses.
- * Once real webhooks are flowing, replace these with payloads captured from the
- * webhook_events table. The failure taxonomy has to come from what Razorpay
- * actually sends, not from what we imagined it sends.
+ * The error_code and error_reason values below come from the published
+ * error-scenario table, not from invention. An earlier version of this file
+ * guessed them — insufficient_funds, payment_failed, incorrect_otp — and every
+ * guess was wrong. Since the classifier keys off these strings, a wrong fixture
+ * would have trained it on a vocabulary that does not exist.
+ *
+ * Each scenario names the test card that reproduces the same failure at a real
+ * checkout, so a synthetic replay and a real payment stay comparable.
+ *
+ * Still inferred, and worth correcting against captured payloads once real
+ * webhooks land in webhook_events: error_source and error_step.
  *
  *   npm run replay -- card_declined
  *   npm run replay -- list
@@ -31,9 +38,9 @@ interface Scenario {
   method: string;
   amount: number;
   /**
-   * Razorpay validates contact numbers even in test mode and rejects ones with
-   * recurring digits — +919999999999 comes back as a 400. Each scenario gets a
-   * distinct, plausible Indian mobile number.
+   * Razorpay validates contact numbers even in test mode and rejects recurring
+   * digits — +919999999999 comes back as a 400. Each scenario uses a distinct,
+   * plausible Indian mobile number.
    */
   contact: string;
   email: string;
@@ -42,52 +49,55 @@ interface Scenario {
   error_step: string;
   error_reason: string;
   description: string;
+  /** Test card that produces this exact failure at a real checkout. */
+  test_card: string;
 }
 
 const SCENARIOS: Record<string, Scenario> = {
   card_declined: {
-    method: "card", amount: 249900,
+    method: "card", amount: 249900, test_card: "4100 2800 0006 0003",
     contact: "+919876543210", email: "asha.menon@example.com",
     error_code: "BAD_REQUEST_ERROR", error_source: "bank",
-    error_step: "payment_authorization", error_reason: "payment_failed",
-    description: "Card declined by issuing bank",
+    error_step: "payment_authorization", error_reason: "card_declined",
+    description: "Declined by the issuing bank",
   },
-  insufficient_funds: {
-    method: "card", amount: 899900,
+  insufficient_fund: {
+    method: "card", amount: 899900, test_card: "4100 2800 0008 0001",
     contact: "+919812345678", email: "rohan.das@example.com",
     error_code: "BAD_REQUEST_ERROR", error_source: "bank",
-    error_step: "payment_authorization", error_reason: "insufficient_funds",
-    description: "Insufficient balance",
+    error_step: "payment_authorization", error_reason: "insufficient_fund",
+    description: "Not enough balance on the account",
   },
-  otp_incorrect: {
-    method: "card", amount: 129900,
+  payment_timed_out: {
+    method: "card", amount: 129900, test_card: "4100 2800 0009 0000",
     contact: "+919673401285", email: "priya.nair@example.com",
-    error_code: "BAD_REQUEST_ERROR", error_source: "customer",
-    error_step: "payment_authentication", error_reason: "incorrect_otp",
-    description: "Customer entered an incorrect OTP",
+    error_code: "BAD_REQUEST_ERROR", error_source: "bank",
+    error_step: "payment_authorization", error_reason: "payment_timed_out",
+    description: "Temporary issue at the bank end",
   },
-  upi_timeout: {
-    method: "upi", amount: 59900,
+  authentication_failed: {
+    method: "card", amount: 59900, test_card: "4100 2800 0000 0009",
     contact: "+918745092361", email: "vikram.rao@example.com",
     error_code: "GATEWAY_ERROR", error_source: "gateway",
-    error_step: "payment_authentication", error_reason: "payment_timeout",
-    description: "UPI collect request expired",
+    error_step: "payment_authentication", error_reason: "authentication_failed",
+    description: "OTP or verification details were wrong",
   },
-  gateway_down: {
-    method: "netbanking", amount: 1499900,
+  gateway_technical_error: {
+    method: "card", amount: 1499900, test_card: "4100 2800 0002 0007",
     contact: "+917298436501", email: "sneha.iyer@example.com",
     error_code: "GATEWAY_ERROR", error_source: "gateway",
-    error_step: "payment_initiation", error_reason: "server_error",
-    description: "Issuer unavailable",
+    error_step: "payment_initiation", error_reason: "gateway_technical_error",
+    description: "Temporary gateway outage",
   },
 };
 
 const name = process.argv[2];
 
 if (!name || name === "list") {
-  console.log("Scenarios:");
+  console.log("Scenarios (card number reproduces the same failure at a real checkout):\n");
   for (const [key, s] of Object.entries(SCENARIOS)) {
-    console.log(`  ${key.padEnd(20)} ${s.method.padEnd(11)} Rs ${(s.amount / 100).toLocaleString("en-IN")}  ${s.description}`);
+    const rupees = (s.amount / 100).toLocaleString("en-IN");
+    console.log(`  ${key.padEnd(24)} Rs ${rupees.padEnd(9)} ${s.test_card}   ${s.description}`);
   }
   process.exit(name ? 0 : 1);
 }
