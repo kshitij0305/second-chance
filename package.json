@@ -9,7 +9,8 @@
     "start": "node --experimental-strip-types src/index.ts",
     "typecheck": "tsc --noEmit",
     "test": "node --test --experimental-strip-types src/**/*.test.ts",
-    "replay": "tsx scripts/replay.ts"
+    "replay": "tsx scripts/replay.ts",
+    "setup:secret": "node scripts/set-webhook-secret.mjs"
   },
   "dependencies": {
     "dotenv": "^17.2.3",
