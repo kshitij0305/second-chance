@@ -1,5 +1,14 @@
 node_modules/
 .env
+.env.*
+!.env.example
+
+# SQLite, including the write-ahead log and shared-memory sidecar files.
+# The bare *.db pattern does NOT cover these, and the WAL holds real page data —
+# it had captured webhook payloads with personal details in it.
 *.db
-*.db-journal
+*.db-*
+*.sqlite
+*.sqlite-*
+
 *.log
