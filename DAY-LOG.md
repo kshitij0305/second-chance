@@ -72,3 +72,42 @@ needs to be a row in a table.
 (Third, smaller: Razorpay validates phone numbers even in test mode and rejects
 recurring digits — my placeholder `+919999999999` came back as a 400. The
 synthetic scenarios now use varied plausible numbers.)
+
+First real webhook. Failed a live test-mode payment at a real checkout, and the
+app picked it up, classified nothing yet, created a recovery link and recorded
+the attempt. Tunnel, signature check, capture, link creation, attribution table —
+all working against real Razorpay traffic rather than my replays.
+
+Two things I got wrong on the way, and the second one is the interesting one.
+
+The webhook subscription was too broad in one direction and missing in another.
+Ticking the "Payment Events" group subscribed me to `payment.authorized` and
+`payment.captured`, which I don't use, while `payment_link.paid` — which the
+whole recovery attribution depends on — sits in a different group and wasn't
+subscribed at all. Paying a link produced no event. Worth checking what you're
+actually subscribed to rather than what you think you ticked.
+
+Then the taxonomy. I had rewritten my synthetic fixtures to use the error reasons
+from the published error-scenario table — `card_declined`, `insufficient_fund`,
+`payment_timed_out` and so on — on the grounds that my earlier guesses were
+wrong. Then I failed a real payment with the `card_declined` test card and the
+webhook came back:
+
+    error_code   BAD_REQUEST_ERROR
+    error_reason payment_failed
+    error_source gateway
+    error_step   payment_authorization
+
+Not `card_declined`, and `gateway` rather than `bank`. The documented table
+describes the errors those cards are capable of producing; the mock bank page's
+Failure button seems to produce a generic failure regardless of which card went
+in. So the documentation was accurate and my inference from it was not.
+
+Consequence for the design: a classifier keyed on `error_reason` alone collapses
+everything into one bucket. It has to read `error_code`, `error_source`,
+`error_step` and `method` together. And I can't finish the taxonomy from one
+sample — I need to fail payments across several cards and methods and see which
+fields actually move.
+
+The general point, twice over now: the failure vocabulary has to be built from
+captured payloads. Docs tell you what is possible, not what arrives.
