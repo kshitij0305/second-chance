@@ -233,3 +233,38 @@ Probably the last, honestly stated, plus whatever variance UPI and netbanking
 give. A classifier that handles a vocabulary it can only partly observe is a
 normal engineering situation; pretending the observation was richer than it was
 would not be.
+
+Collection finished: seven real failures across card, netbanking and wallet.
+UPI turned out to be disabled on the account, which is why the checkout showed no
+UPI option — found by querying the enabled payment methods rather than guessing
+at the UI.
+
+    card        | BAD_REQUEST_ERROR | gateway | payment_authorization | payment_failed  x5
+    netbanking  | BAD_REQUEST_ERROR | bank    | payment_authorization | payment_failed  x1
+    wallet      | BAD_REQUEST_ERROR | issuer  | payment_authorization | payment_failed  x1
+
+Three distinct combinations, which looks like useful variety until you notice
+that `error_source` maps one-to-one onto `method`. Card is always `gateway`,
+netbanking always `bank`, wallet always `issuer`. It is not an independent
+dimension, it is `method` restated. Treating those as two features would mean
+building a classifier that looks like it discriminates on two signals while
+actually keying on one.
+
+`error_code`, `error_step` and `error_reason` never moved across any of the seven.
+
+So the observable signal in test mode is `method`, and nothing else. Five
+different documented error cards produced identical payloads; only changing the
+payment method moved anything.
+
+What that means for the build. The classifier has to consume the full documented
+failure vocabulary, because production will send it, while only one dimension of
+that vocabulary can be exercised against real data here. That gap gets stated
+rather than hidden: real captured failures prove the method dimension, and
+clearly-labelled synthetic fixtures exercise the rest, with the provenance column
+keeping the two apart so neither is ever mistaken for the other.
+
+Strategy differentiation in the demo will therefore be driven by method, which is
+defensible on its own merits — a netbanking failure genuinely does suggest bank
+downtime and a later retry, while a card decline suggests switching rails. It is
+a smaller claim than "we diagnose why every payment failed", and it is one the
+data actually supports.
