@@ -11,7 +11,8 @@
     "test": "node --test --experimental-strip-types src/**/*.test.ts",
     "replay": "tsx scripts/replay.ts",
     "setup:secret": "node scripts/set-webhook-secret.mjs",
-    "redeliver": "tsx scripts/redeliver.ts"
+    "redeliver": "tsx scripts/redeliver.ts",
+    "taxonomy": "tsx scripts/taxonomy.ts"
   },
   "dependencies": {
     "dotenv": "^17.2.3",

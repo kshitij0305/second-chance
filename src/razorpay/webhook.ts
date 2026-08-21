@@ -1,6 +1,6 @@
 import { Router, raw } from "express";
 import { config } from "../config.ts";
-import { db, recordWebhook } from "../db.ts";
+import { db, recordWebhook, type WebhookSource } from "../db.ts";
 import { isValidWebhookSignature } from "./signature.ts";
 import type { RazorpayWebhookBody } from "./types.ts";
 import { attemptRecovery, markRecovered, markRecoveredByOriginalPayment } from "../recovery/engine.ts";
@@ -17,7 +17,13 @@ webhookRouter.post("/razorpay", raw({ type: "application/json" }), async (req, r
   // The only `as` cast in the pipeline. Everything downstream is typed, so a
   // field-name mismatch is a compile error rather than an undefined at runtime.
   const body = JSON.parse((req.body as Buffer).toString("utf8")) as RazorpayWebhookBody;
-  recordWebhook(body.event, body);
+  // Local tooling identifies itself so synthetic payloads never get mistaken for
+  // real traffic. Razorpay never sends this header, so anything without it is
+  // genuine. Not a security control — the signature check is — just provenance.
+  const header = req.header("x-second-chance-source");
+  const source: WebhookSource =
+    header === "replay" || header === "redelivery" ? header : "razorpay";
+  recordWebhook(body.event, body, source);
 
   // Acknowledge before doing any work. Razorpay retries on non-2xx, and a slow
   // handler turns one failed payment into several duplicate recovery links.

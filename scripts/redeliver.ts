@@ -70,7 +70,11 @@ for (const row of rows) {
 
   const response = await fetch(`http://localhost:${port}/webhooks/razorpay`, {
     method: "POST",
-    headers: { "Content-Type": "application/json", "x-razorpay-signature": signature },
+    headers: {
+      "Content-Type": "application/json",
+      "x-razorpay-signature": signature,
+      "x-second-chance-source": "redelivery",
+    },
     body,
   });
 

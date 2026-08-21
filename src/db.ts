@@ -12,6 +12,7 @@ db.exec(`
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     event       TEXT    NOT NULL,
     payload     TEXT    NOT NULL,
+    source      TEXT    NOT NULL DEFAULT 'razorpay',  -- razorpay | replay | redelivery
     received_at TEXT    NOT NULL DEFAULT (datetime('now'))
   );
 
@@ -62,7 +63,20 @@ if (!columns.includes("error")) {
   db.exec("ALTER TABLE recovery_attempts ADD COLUMN error TEXT");
 }
 
-export function recordWebhook(event: string, payload: unknown): void {
-  db.prepare("INSERT INTO webhook_events (event, payload) VALUES (?, ?)")
-    .run(event, JSON.stringify(payload));
+// Synthetic replays and real Razorpay traffic were landing in one table with
+// nothing to separate them, so the failure taxonomy was reading invented
+// payloads back as evidence. Rows captured before this column existed cannot be
+// attributed after the fact and are marked unknown rather than guessed at.
+const eventColumns = (db.prepare("PRAGMA table_info(webhook_events)").all() as { name: string }[])
+  .map((c) => c.name);
+if (!eventColumns.includes("source")) {
+  db.exec("ALTER TABLE webhook_events ADD COLUMN source TEXT NOT NULL DEFAULT 'unknown'");
+  db.exec("UPDATE webhook_events SET source = 'unknown'");
+}
+
+export type WebhookSource = "razorpay" | "replay" | "redelivery";
+
+export function recordWebhook(event: string, payload: unknown, source: WebhookSource): void {
+  db.prepare("INSERT INTO webhook_events (event, payload, source) VALUES (?, ?, ?)")
+    .run(event, JSON.stringify(payload), source);
 }

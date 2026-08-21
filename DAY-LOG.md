@@ -192,3 +192,44 @@ rate limiting and exponential backoff on 429, and a failed attempt becomes
 retryable rather than terminal. Recovery is not latency-critical — a link sent
 ninety seconds later is worth the same as one sent immediately — so throttling
 costs nothing here.
+
+Two findings, and the second one changes the plan.
+
+First, my own instrumentation was lying to me. Synthetic replays were being
+written into `webhook_events` alongside real Razorpay traffic with nothing to
+distinguish them, so the first run of the taxonomy script reported
+`insufficient_funds` and `incorrect_otp` as observed failure reasons. Both were
+invented by my own replay script. Neither has ever appeared in real traffic. I
+was reading my fixtures back as evidence and would have built a classifier around
+vocabulary that does not exist.
+
+Fixed by tagging provenance: local tooling now sends an `x-second-chance-source`
+header, so the table records whether a row came from Razorpay, the replay script,
+or a redelivery, and the taxonomy counts only real traffic by default. Rows
+captured before the column existed cannot be attributed after the fact — I
+backfilled the ones I could account for from session history and would otherwise
+have had to discard them.
+
+Second, and worse: test mode cannot produce varied card failures. I failed five
+payments with five different documented error-scenario cards — declined,
+insufficient funds, timed out, authentication failed, and a Mastercard decline —
+confirmed genuinely distinct by the `last4` on each payment. All five came back
+identical:
+
+    BAD_REQUEST_ERROR | gateway | payment_authorization | payment_failed
+
+Every field constant. The mock bank page's Failure button produces a generic
+failure and overrides whatever card went in, at least through the payment-link
+flow. Whether the direct Checkout integration behaves differently is untested.
+
+So the premise of the whole product — that the failure reason should determine
+the response — cannot be demonstrated with data collected this way. Options are
+to test the direct Checkout flow, to vary the method instead (UPI and netbanking
+at least move `method`), or to build the classifier against the documented
+vocabulary and drive it with clearly-labelled synthetic fixtures while noting
+that real test-mode traffic collapses to a single shape.
+
+Probably the last, honestly stated, plus whatever variance UPI and netbanking
+give. A classifier that handles a vocabulary it can only partly observe is a
+normal engineering situation; pretending the observation was richer than it was
+would not be.

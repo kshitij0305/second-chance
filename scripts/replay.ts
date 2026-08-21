@@ -141,7 +141,11 @@ const signature = createHmac("sha256", secret).update(body).digest("hex");
 
 const response = await fetch(`http://localhost:${port}/webhooks/razorpay`, {
   method: "POST",
-  headers: { "Content-Type": "application/json", "x-razorpay-signature": signature },
+  headers: {
+      "Content-Type": "application/json",
+      "x-razorpay-signature": signature,
+      "x-second-chance-source": "replay",
+    },
   body,
 });
 
