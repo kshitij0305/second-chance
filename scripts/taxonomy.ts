@@ -64,19 +64,19 @@ console.log(`${entities.length} real failures\n`);
 // A field with one distinct value across every sample carries no signal and
 // cannot be part of a classification key, however meaningful its name sounds.
 console.log("field variance");
-const FIELDS = ["method", "error_code", "error_source", "error_step", "error_reason"] as const;
+const FIELDS = ["method", "error_code", "error_source", "error_step", "error_reason", "error_description"] as const;
 for (const field of FIELDS) {
   const values = new Map<string, number>();
   for (const e of entities) {
     const v = String(e[field] ?? "(absent)");
     values.set(v, (values.get(v) ?? 0) + 1);
   }
-  const rendered = [...values.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .map(([v, n]) => `${v} x${n}`)
-    .join(", ");
   const flag = values.size === 1 ? "   <- constant, no signal" : "";
-  console.log(`  ${field.padEnd(14)} ${values.size} distinct: ${rendered}${flag}`);
+  console.log(`  ${field.padEnd(18)} ${values.size} distinct${flag}`);
+  for (const [v, n] of [...values.entries()].sort((a, b) => b[1] - a[1])) {
+    const shown = v.length > 88 ? v.slice(0, 85) + "..." : v;
+    console.log(`      x${String(n).padEnd(3)} ${shown}`);
+  }
 }
 
 console.log("\ndistinct combinations");

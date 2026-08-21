@@ -1,0 +1,86 @@
+[
+  {
+    "id": "pay_fixture01",
+    "amount": 274900,
+    "currency": "INR",
+    "status": "failed",
+    "method": "card",
+    "error_code": "BAD_REQUEST_ERROR",
+    "error_description": "Payment failed",
+    "error_source": "gateway",
+    "error_step": "payment_authorization",
+    "error_reason": "payment_failed"
+  },
+  {
+    "id": "pay_fixture02",
+    "amount": 189900,
+    "currency": "INR",
+    "status": "failed",
+    "method": "card",
+    "error_code": "BAD_REQUEST_ERROR",
+    "error_description": "Payment failed",
+    "error_source": "gateway",
+    "error_step": "payment_authorization",
+    "error_reason": "payment_failed"
+  },
+  {
+    "id": "pay_fixture03",
+    "amount": 764900,
+    "currency": "INR",
+    "status": "failed",
+    "method": "card",
+    "error_code": "BAD_REQUEST_ERROR",
+    "error_description": "Payment failed",
+    "error_source": "gateway",
+    "error_step": "payment_authorization",
+    "error_reason": "payment_failed"
+  },
+  {
+    "id": "pay_fixture04",
+    "amount": 49900,
+    "currency": "INR",
+    "status": "failed",
+    "method": "card",
+    "error_code": "BAD_REQUEST_ERROR",
+    "error_description": "Payment failed",
+    "error_source": "gateway",
+    "error_step": "payment_authorization",
+    "error_reason": "payment_failed"
+  },
+  {
+    "id": "pay_fixture05",
+    "amount": 329900,
+    "currency": "INR",
+    "status": "failed",
+    "method": "card",
+    "error_code": "BAD_REQUEST_ERROR",
+    "error_description": "Payment failed",
+    "error_source": "gateway",
+    "error_step": "payment_authorization",
+    "error_reason": "payment_failed"
+  },
+  {
+    "id": "pay_fixture06",
+    "amount": 689900,
+    "currency": "INR",
+    "status": "failed",
+    "method": "netbanking",
+    "error_code": "BAD_REQUEST_ERROR",
+    "error_description": "Your payment didn't go through as it was declined by the bank. Try another payment method or contact your bank.",
+    "error_source": "bank",
+    "error_step": "payment_authorization",
+    "error_reason": "payment_failed"
+  },
+  {
+    "id": "pay_fixture07",
+    "amount": 111100,
+    "currency": "INR",
+    "status": "failed",
+    "method": "wallet",
+    "error_code": "BAD_REQUEST_ERROR",
+    "error_description": "Your payment didn't go through due to a temporary issue. Any debited amount will be refunded in 4-5 business days.",
+    "error_source": "issuer",
+    "error_step": "payment_authorization",
+    "error_reason": "payment_failed"
+  }
+]

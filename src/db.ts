@@ -30,6 +30,10 @@ db.exec(`
     error_step   TEXT,
     error_reason TEXT,
     description  TEXT,
+    failure_class TEXT,
+    evidence      TEXT,
+    basis         TEXT,
+    source        TEXT NOT NULL DEFAULT 'razorpay',
     failed_at    TEXT NOT NULL DEFAULT (datetime('now'))
   );
 
@@ -67,6 +71,17 @@ if (!columns.includes("error")) {
 // nothing to separate them, so the failure taxonomy was reading invented
 // payloads back as evidence. Rows captured before this column existed cannot be
 // attributed after the fact and are marked unknown rather than guessed at.
+for (const [column, ddl] of [
+  ["failure_class", "ALTER TABLE failed_payments ADD COLUMN failure_class TEXT"],
+  ["evidence", "ALTER TABLE failed_payments ADD COLUMN evidence TEXT"],
+  ["basis", "ALTER TABLE failed_payments ADD COLUMN basis TEXT"],
+  ["source", "ALTER TABLE failed_payments ADD COLUMN source TEXT NOT NULL DEFAULT 'razorpay'"],
+] as const) {
+  const existing = (db.prepare("PRAGMA table_info(failed_payments)").all() as { name: string }[])
+    .map((c) => c.name);
+  if (!existing.includes(column)) db.exec(ddl);
+}
+
 const eventColumns = (db.prepare("PRAGMA table_info(webhook_events)").all() as { name: string }[])
   .map((c) => c.name);
 if (!eventColumns.includes("source")) {

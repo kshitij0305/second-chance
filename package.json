@@ -12,7 +12,9 @@
     "replay": "tsx scripts/replay.ts",
     "setup:secret": "node scripts/set-webhook-secret.mjs",
     "redeliver": "tsx scripts/redeliver.ts",
-    "taxonomy": "tsx scripts/taxonomy.ts"
+    "taxonomy": "tsx scripts/taxonomy.ts",
+    "reclassify": "tsx scripts/reclassify.ts",
+    "export-fixtures": "node scripts/export-fixtures.mjs"
   },
   "dependencies": {
     "dotenv": "^17.2.3",

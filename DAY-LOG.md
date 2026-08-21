@@ -268,3 +268,53 @@ defensible on its own merits — a netbanking failure genuinely does suggest ban
 downtime and a later retry, while a card decline suggests switching rails. It is
 a smaller claim than "we diagnose why every payment failed", and it is one the
 data actually supports.
+
+## Day 1
+
+Built the classifier, and nearly built it on the wrong field.
+
+Yesterday I concluded that `method` was the only observable signal, because
+`error_reason` reads `payment_failed` for every real failure. That conclusion was
+wrong, and the reason it was wrong is that my analysis script never looked at
+`error_description`. When I exported the captured failures as test fixtures the
+descriptions were sitting right there:
+
+    card        "Payment failed"
+    netbanking  "...declined by the bank. Try another payment method..."
+    wallet      "...due to a temporary issue. Any debited amount will be refunded..."
+
+Razorpay keeps `error_reason` generic and puts the actual meaning in
+`error_description`. Those two descriptions imply opposite strategies — one says
+this instrument will not work, try another; the other says wait, it was
+temporary. A classifier keyed on `error_reason` collapses them into one bucket
+and gets the strategy backwards half the time.
+
+The lesson is not "read the description". It is that my analysis tool decided
+what the data contained. It printed five fields, I read five fields, and I
+concluded the sixth did not exist. An instrument that quietly omits a dimension
+is worse than no instrument, because it produces a confident wrong answer instead
+of an obvious gap.
+
+The classifier is a lookup table, deliberately, and this is the place I most
+expected to reach for a model and did not. The input is a closed vocabulary of
+provider error codes and the output is one of six classes. A model would be
+slower, non-deterministic, impossible to unit test, and no more accurate than a
+table that encodes exactly the same mapping. The model earns its place at message
+generation, where the output is genuinely open-ended and the input is a customer,
+an amount and a language.
+
+Every classification carries the grounds it was reached on — observed, documented
+or inferred — because most of this vocabulary has never been seen arriving. On
+real traffic that produces five `unknown (observed)` for cards, one
+`instrument_rejected (observed)` for netbanking, one `transient_provider
+(observed)` for wallet. Five unknowns out of seven looks like a bad result and is
+the correct one: a generic card failure genuinely cannot be told apart from an
+outage or a 3DS drop, and inventing a class would mean building strategy on
+nothing.
+
+Two things this shook out. The provenance problem reappeared one table over —
+synthetic replays were sitting in `failed_payments` unmarked, exactly as they had
+been in `webhook_events`, so the same fix had to be applied again. And
+`reclassify` initially reported "10 failures" on a run that processed 7, which is
+precisely the class of quietly-wrong instrumentation that caused the
+`error_description` miss in the first place.

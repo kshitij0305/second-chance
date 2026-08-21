@@ -2,23 +2,28 @@
 <meta charset="utf-8">
 <title>Second Chance</title>
 <style>
-  body { font: 14px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace; margin: 2rem; max-width: 68rem; }
+  body { font: 14px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; margin: 2rem; max-width: 76rem; }
   h1 { font-size: 1.1rem; margin-bottom: 1.2rem; }
   .big { font-size: 2.4rem; font-weight: 700; }
-  .sub { color: #666; margin-bottom: .4rem; }
+  .sub { color: #666; margin-bottom: .3rem; }
   .alert { color: #b00; font-weight: 600; }
   table { border-collapse: collapse; width: 100%; margin-top: 1.5rem; }
-  th, td { text-align: left; padding: .4rem .55rem; border-bottom: 1px solid #ddd; vertical-align: top; }
-  th { color: #666; font-weight: 600; }
+  th, td { text-align: left; padding: .45rem .55rem; border-bottom: 1px solid #ddd; vertical-align: top; }
+  th { color: #666; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
   .recovered { color: #0a7d00; } .failed { color: #b00; } .sent { color: #888; }
-  .err { color: #b00; font-size: 12px; }
+  .basis { color: #777; font-size: 11.5px; max-width: 30rem; }
+  .ev { font-size: 11px; padding: .05rem .3rem; border-radius: 3px; border: 1px solid; }
+  .observed   { color: #0a7d00; border-color: #0a7d00; }
+  .documented { color: #a06000; border-color: #a06000; }
+  .inferred   { color: #888;    border-color: #bbb; }
+  .cls { font-weight: 600; }
 </style>
 <h1>Second Chance</h1>
 <div class="big" id="amount">--</div>
 <div class="sub" id="rate">--</div>
 <div class="alert" id="failed"></div>
 <table><thead><tr>
-  <th>payment</th><th>method</th><th>failure</th><th>strategy</th><th>status</th><th>sent</th>
+  <th>payment</th><th>method</th><th>classified as</th><th>on what grounds</th><th>status</th>
 </tr></thead><tbody id="rows"></tbody></table>
 <script>
 const inr = p => "₹" + (p / 100).toLocaleString("en-IN", { maximumFractionDigits: 2 });
@@ -33,10 +38,10 @@ async function refresh() {
   document.getElementById("rows").innerHTML = s.recent.map(r => `<tr>
     <td>${r.payment_id}</td>
     <td>${r.method ?? "-"}</td>
-    <td>${r.error_reason ?? r.error_code ?? "-"}</td>
-    <td>${r.strategy}</td>
-    <td class="${r.status}">${r.status}${r.error ? `<div class="err">${r.error}</div>` : ""}</td>
-    <td>${r.sent_at}</td>
+    <td><span class="cls">${r.failure_class ?? "-"}</span>
+        ${r.evidence ? `<span class="ev ${r.evidence}">${r.evidence}</span>` : ""}</td>
+    <td class="basis">${r.basis ?? ""}</td>
+    <td class="${r.status}">${r.status}${r.error ? `<div class="basis">${r.error}</div>` : ""}</td>
   </tr>`).join("");
 }
 refresh(); setInterval(refresh, 3000);
