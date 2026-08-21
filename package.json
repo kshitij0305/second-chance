@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "node --test --experimental-strip-types src/**/*.test.ts",
     "replay": "tsx scripts/replay.ts",
-    "setup:secret": "node scripts/set-webhook-secret.mjs"
+    "setup:secret": "node scripts/set-webhook-secret.mjs",
+    "redeliver": "tsx scripts/redeliver.ts"
   },
   "dependencies": {
     "dotenv": "^17.2.3",

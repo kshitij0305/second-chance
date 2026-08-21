@@ -23,6 +23,12 @@ export interface RazorpayPaymentEntity {
   error_step?: string | null;
   error_reason?: string | null;
   description?: string | null;
+  /**
+   * Notes set when creating a payment link propagate onto the payment that
+   * settles it. That is how a recovery is attributed back to the failure that
+   * caused it, without depending on the payment_link.paid subscription.
+   */
+  notes?: Record<string, string> | null;
 }
 
 export interface RazorpayPaymentLinkEntity {

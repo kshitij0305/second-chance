@@ -3,7 +3,7 @@ import { config } from "../config.ts";
 import { db, recordWebhook } from "../db.ts";
 import { isValidWebhookSignature } from "./signature.ts";
 import type { RazorpayWebhookBody } from "./types.ts";
-import { attemptRecovery, markRecovered } from "../recovery/engine.ts";
+import { attemptRecovery, markRecovered, markRecoveredByOriginalPayment } from "../recovery/engine.ts";
 import { toFailedPayment } from "../recovery/mapper.ts";
 
 export const webhookRouter: Router = Router();
@@ -59,6 +59,24 @@ async function handleEvent(body: RazorpayWebhookBody): Promise<void> {
 
       const attributed = markRecovered(entity.id);
       console.log(`[webhook] ${entity.id} paid${attributed ? " — recovered" : " (not one of ours)"}`);
+      break;
+    }
+
+    case "payment.captured": {
+      const entity = body.payload.payment?.entity;
+      if (!entity) throw new Error("payment.captured arrived with no payment entity");
+
+      const original = entity.notes?.recovers_payment_id;
+      if (!original) {
+        console.log(`[webhook] payment.captured ${entity.id} — not one of our recoveries`);
+        break;
+      }
+
+      const attributed = markRecoveredByOriginalPayment(original);
+      console.log(
+        `[webhook] payment.captured ${entity.id} recovers ${original}` +
+        (attributed ? " — RECOVERED" : " (already attributed)"),
+      );
       break;
     }
 

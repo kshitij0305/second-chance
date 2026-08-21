@@ -76,3 +76,21 @@ export function markRecovered(paymentLinkId: string): boolean {
   ).run(paymentLinkId);
   return result.changes > 0;
 }
+
+/**
+ * Attributes a recovery using the original payment id we planted in the link's
+ * notes. Razorpay copies those notes onto the payment that settles the link, so
+ * payment.captured alone is enough — payment_link.paid is a second, optional
+ * route to the same conclusion.
+ *
+ * Safe to call twice: the recovered_at guard makes it idempotent, which matters
+ * because both events can arrive for a single recovery.
+ */
+export function markRecoveredByOriginalPayment(originalPaymentId: string): boolean {
+  const result = db.prepare(
+    `UPDATE recovery_attempts
+        SET recovered_at = datetime('now'), status = 'recovered'
+      WHERE payment_id = ? AND recovered_at IS NULL`,
+  ).run(originalPaymentId);
+  return result.changes > 0;
+}

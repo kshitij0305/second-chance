@@ -111,3 +111,35 @@ fields actually move.
 
 The general point, twice over now: the failure vocabulary has to be built from
 captured payloads. Docs tell you what is possible, not what arrives.
+
+Closed the loop, and the fix came from reading a payload I was ignoring.
+
+The recovery was stuck showing as pending even after I paid the link, because
+attribution was written to depend on `payment_link.paid` and that event was never
+subscribed. The obvious fix was to go tick the checkbox. Before doing that I
+dumped the `payment.captured` payload — an event I *was* receiving and explicitly
+ignoring — and found this on it:
+
+    notes: {"strategy":"immediate_link","recovers_payment_id":"pay_TSQXBFs5wVYVO1"}
+
+Razorpay copies the notes from a payment link onto the payment that settles it.
+I had been setting those notes since the first version of the engine purely as a
+breadcrumb, without realising they came back. So the event I was throwing away
+already carried the attribution.
+
+Attribution now runs off `payment.captured` via those notes, with
+`payment_link.paid` kept as a second route to the same conclusion. Both paths hit
+an idempotent update guarded on `recovered_at IS NULL`, so a recovery that fires
+both events is credited once. This is strictly better than what I had: it does
+not depend on getting a subscription checkbox right, and it still attributes if
+the customer pays the link by some route that does not raise a link event.
+
+Also built `npm run redeliver`, which re-posts payloads straight out of
+`webhook_events`. Because raw payloads are stored before any processing, a
+handler fix can be applied to traffic that already arrived rather than needing
+the payment reproduced — which is how the stuck recovery above got credited
+without paying anything a second time. It is also how the classifier gets built:
+replay real captured failures instead of inventing them.
+
+Lesson: before adding a dependency to fix a gap, look at what you are already
+receiving and discarding. The data was in hand the whole time.
