@@ -173,3 +173,22 @@ before anyone else has a copy, and that window closes on the first push.
 
 Same session, same principle applied twice: check what you are actually shipping,
 not what you believe you configured.
+
+Hit `429 Too many requests` creating seven payment links in a loop — Razorpay
+rate-limits link creation, and five in quick succession was enough to trip it.
+
+That matters more than it first looks. The recovery engine creates one payment
+link per failed payment, and the situation it exists for is precisely a burst:
+an issuer goes down and two hundred checkouts fail inside a minute. The engine
+would then hit the rate limit and fail to recover exactly the failures it was
+built for. Recovery capacity collapses at the moment it is most needed.
+
+Current behaviour is at least not silent — the attempt is recorded with
+`status = 'failed'` and the error text, so the dashboard shows it. But there is
+no retry and no pacing.
+
+Fix, when I get to the strategy work: link creation goes through a queue with
+rate limiting and exponential backoff on 429, and a failed attempt becomes
+retryable rather than terminal. Recovery is not latency-critical — a link sent
+ninety seconds later is worth the same as one sent immediately — so throttling
+costs nothing here.
