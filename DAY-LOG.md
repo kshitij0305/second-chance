@@ -143,3 +143,33 @@ replay real captured failures instead of inventing them.
 
 Lesson: before adding a dependency to fix a gap, look at what you are already
 receiving and discarding. The data was in hand the whole time.
+
+Nearly published my own phone number, and the cause was a `.gitignore` pattern
+that looked complete.
+
+`.gitignore` had `*.db`, which I assumed covered the database. It does not cover
+`second-chance.db-wal` or `second-chance.db-shm` — SQLite's write-ahead log and
+shared-memory sidecar. In WAL mode the `.db` file can be almost empty while the
+real pages sit in the `-wal` file, so what got committed was the part with the
+data in it. Two commits carried captured webhook payloads containing the email
+and phone number I had typed into a real test checkout, buried in a binary blob
+nobody would think to open.
+
+Found it by listing what was actually tracked before the first push, rather than
+trusting the ignore file. Worth doing every time:
+
+    git ls-files
+
+Fixed with `*.db-*` and `*.sqlite-*` alongside `*.db`, then a `filter-branch`
+pass to purge the files from all ten commits, deleting `refs/original` and
+expiring the reflog afterwards — without that last part the old objects are still
+sitting there and the rewrite is theatre.
+
+The timing is the whole lesson. The repo had never been pushed, so the rewrite
+cost about a minute. After a public push it would not have been recoverable in
+any meaningful sense: GitHub retains unreachable objects, forks keep their own
+copies, and scrapers do not wait. A leak is cheap to fix only in the window
+before anyone else has a copy, and that window closes on the first push.
+
+Same session, same principle applied twice: check what you are actually shipping,
+not what you believe you configured.
