@@ -44,7 +44,7 @@ db.exec(`
     id               INTEGER PRIMARY KEY AUTOINCREMENT,
     payment_id       TEXT NOT NULL REFERENCES failed_payments(payment_id),
     strategy         TEXT NOT NULL,
-    status           TEXT NOT NULL DEFAULT 'sent',   -- scheduled | sending | sent | recovered | failed | superseded
+    status           TEXT NOT NULL DEFAULT 'sent',   -- scheduled | sending | sent | recovered | failed | superseded | expired
     attempt_number   INTEGER NOT NULL DEFAULT 1,
     scheduled_for    TEXT,
     explanation      TEXT,
@@ -59,6 +59,15 @@ db.exec(`
   );
 
   CREATE INDEX IF NOT EXISTS idx_attempts_link ON recovery_attempts(payment_link_id);
+
+  -- One row per (failure class, plan). The bandit's entire memory.
+  CREATE TABLE IF NOT EXISTS strategy_outcomes (
+    failure_class TEXT NOT NULL,
+    variant       TEXT NOT NULL,
+    successes     INTEGER NOT NULL DEFAULT 0,
+    failures      INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (failure_class, variant)
+  );
 `);
 
 // Dev databases created before status/error existed keep working instead of

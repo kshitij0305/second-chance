@@ -1,7 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { selectStrategy, strategyFor, allStrategies } from "./strategy.ts";
+import { selectStrategy, strategyFor, allStrategies, allVariants } from "./strategy.ts";
+import { variantsFor } from "./variants.ts";
 import { classify } from "./classifier.ts";
 import type { RazorpayPaymentEntity } from "../razorpay/types.ts";
 
@@ -16,14 +17,16 @@ const observed: RazorpayPaymentEntity[] = JSON.parse(
 test("no strategy ever sends immediately", () => {
   // A customer who just failed is often still at the checkout retrying. A
   // recovery link arriving mid-retry risks a double charge, which costs more
-  // trust than the recovery earns.
-  for (const [failureClass, strategy] of allStrategies()) {
-    assert.ok(strategy.delayMinutes > 0, `${failureClass} has no delay floor`);
+  // trust than the recovery earns. This must hold for every candidate plan the
+  // bandit can reach, not just the defaults - an arm that could be learned into
+  // would bypass the floor entirely.
+  for (const [failureClass, strategy] of allVariants()) {
+    assert.ok(strategy.delayMinutes > 0, `${failureClass}/${strategy.name} has no delay floor`);
   }
 });
 
-test("every failure class has a strategy and a rationale", () => {
-  for (const [failureClass, strategy] of allStrategies()) {
+test("every candidate plan has a name, an attempt cap and a rationale", () => {
+  for (const [failureClass, strategy] of allVariants()) {
     assert.ok(strategy.name, `${failureClass} unnamed`);
     assert.ok(strategy.maxAttempts >= 1, `${failureClass} allows no attempts`);
     assert.ok(strategy.rationale.length > 20, `${failureClass} rationale too thin`);
@@ -78,6 +81,7 @@ test("scheduledFor is the delay applied to the supplied clock", () => {
   const decision = selectStrategy(
     { failureClass: "transient_provider", evidence: "observed", basis: "test" },
     NOW,
+    { learning: false, timeScale: 1 },
   );
   assert.equal(decision.scheduledFor, "2026-08-23T10:20:00.000Z");
 });
@@ -86,6 +90,7 @@ test("the explanation records the finding, the evidence and the plan", () => {
   const decision = selectStrategy(
     { failureClass: "insufficient_funds", evidence: "documented", basis: "error_reason says so" },
     NOW,
+    { learning: false, timeScale: 1 },
   );
   assert.match(decision.explanation, /insufficient_funds/);
   assert.match(decision.explanation, /documented/);
@@ -113,7 +118,19 @@ test("the two diagnosable real failures get genuinely different plans", () => {
 
 test("undiagnosable real card failures all land on the conservative default", () => {
   for (const card of observed.filter((e) => e.method === "card")) {
-    const decision = selectStrategy(classify(card), NOW);
+    const decision = selectStrategy(classify(card), NOW, { learning: false });
     assert.equal(decision.strategy.name, "conservative_default");
+  }
+});
+
+test("with learning on, an undiagnosed failure still gets a plan built for uncertainty", () => {
+  // The bandit may pick any arm for this class, but every arm has to be one we
+  // would defend for a failure we could not diagnose.
+  const card = observed.find((e) => e.method === "card")!;
+  for (let i = 0; i < 40; i++) {
+    const decision = selectStrategy(classify(card), NOW, { learning: true });
+    const names = variantsFor("unknown").map((v) => v.name);
+    assert.ok(names.includes(decision.strategy.name), `picked ${decision.strategy.name}`);
+    assert.ok(decision.strategy.delayMinutes > 0);
   }
 });

@@ -42,6 +42,17 @@ export const config = {
    * should set stub.
    */
   linkProvider: process.env.LINK_PROVIDER === "stub" ? "stub" : "razorpay",
+  /**
+   * When off, every class uses its default plan and behaviour is identical to
+   * the version before the bandit existed. Kept as a switch because a learning
+   * system you cannot turn off is one you cannot debug.
+   */
+  learningEnabled: process.env.LEARNING !== "off",
+  /**
+   * How long a sent recovery waits before being counted as unanswered. Without
+   * a horizon the bandit only ever hears about successes and learns nothing.
+   */
+  expiryHours: Number(process.env.EXPIRY_HOURS ?? 48),
   groqApiKey,
   groqEnabled: Boolean(groqApiKey),
   /**

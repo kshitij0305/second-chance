@@ -55,6 +55,38 @@ earns. Every strategy has a delay floor, and a test asserts none can be zero.
 | `customer_cancelled` | wait 24 h, 1 attempt | they chose to stop; a quick nudge reads as pressure |
 | `unknown` | wait 30 min, same rail, 2 attempts | cannot diagnose, so do not act as though we can |
 
+### Learning which plan works
+
+Each hand-authored strategy is a hypothesis, not a fact. Twenty minutes for a
+provider outage is a guess. So each failure class offers several defensible
+plans and a Thompson-sampling bandit lets the outcomes decide between them.
+
+Thompson sampling rather than epsilon-greedy because recovery volume is low and
+outcomes are slow — a recovery scheduled eighteen hours out resolves a day later.
+Epsilon-greedy explores at a fixed rate regardless of uncertainty, wasting
+traffic on arms already known to be poor. Thompson sampling explores in
+proportion to actual uncertainty, which is what you want when every observation
+is expensive.
+
+Successes and failures both feed back: a recovery that goes unanswered past the
+expiry horizon is recorded as a failure, since a bandit that only hears about
+successes learns nothing.
+
+```bash
+npm run simulate
+```
+
+Real traffic here is seven captured failures, nowhere near enough to converge.
+The simulator therefore drives the mechanism against invented ground truth, and
+the claim is about the machinery rather than about payments: given outcomes, does
+selection find the best arm? On 3000 simulated failures it reaches 40.5% recovery
+against 37.0% for fixed defaults, and finds the best arm in five of six classes —
+including two where the hand-authored default was wrong.
+
+It fails on the sixth, `customer_cancelled`, and that is the honest part: those
+two arms differ by three points on 3% of traffic, so there is not enough evidence
+to separate them and a confident answer would be overfitting.
+
 ### Where a model is and is not used
 
 Classification and strategy selection are lookup tables, deliberately. The input
@@ -171,7 +203,8 @@ the dashboard, so a compressed run cannot be mistaken for real timing.
 | `npm run taxonomy` | field-by-field variance across real captured failures; `--all-sources` includes synthetic ones |
 | `npm run reclassify` | re-runs classification over stored failures without repeating the webhook handler side effects |
 | `npm run export-fixtures` | regenerates the scrubbed test fixtures from captured traffic |
-| `npm test` / `npm run typecheck` | 51 tests, strict TypeScript |
+| `npm run simulate -- <n>` | drives the bandit against invented ground truth so learning is observable |
+| `npm test` / `npm run typecheck` | 60 tests, strict TypeScript |
 
 ## Layout
 
@@ -182,6 +215,8 @@ the dashboard, so a compressed run cannot be mistaken for real timing.
 | `src/razorpay/types.ts` | hand-written webhook payload types |
 | `src/recovery/classifier.ts` | failure entity to failure class, with evidence |
 | `src/recovery/strategy.ts` | failure class to a plan, with a rationale |
+| `src/recovery/variants.ts` | the candidate plans the bandit chooses between |
+| `src/recovery/bandit.ts` | Thompson sampling and outcome accounting |
 | `src/recovery/composer.ts` | message generation, validation and fallback |
 | `src/recovery/templates.ts` | deterministic message per failure class |
 | `src/razorpay/links.ts` | payment link creation, real or stubbed |

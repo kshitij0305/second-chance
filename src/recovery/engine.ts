@@ -4,6 +4,7 @@ import type { Decision } from "./strategy.ts";
 import { config } from "../config.ts";
 import { compose, formatAmount } from "./composer.ts";
 import type { FailureClass } from "./classifier.ts";
+import { recordOutcome } from "./bandit.ts";
 
 export interface FailedPayment {
   payment_id: string;
@@ -205,12 +206,60 @@ export function markRecovered(paymentLinkId: string): boolean {
  * same conclusion. Idempotent, because both can arrive for one recovery.
  */
 export function markRecoveredByOriginalPayment(originalPaymentId: string): boolean {
+  // Read the arm before the update, so the outcome is attributed to the plan
+  // that was actually used rather than to whatever is current.
+  const arm = armFor(originalPaymentId);
+
   const result = db.prepare(
     `UPDATE recovery_attempts
         SET recovered_at = datetime('now'), status = 'recovered'
       WHERE payment_id = ? AND recovered_at IS NULL AND status != 'scheduled'`,
   ).run(originalPaymentId);
+
+  if (result.changes > 0 && arm) recordOutcome(arm.failure_class, arm.strategy, true);
   return result.changes > 0;
+}
+
+interface Arm { failure_class: FailureClass; strategy: string }
+
+function armFor(paymentId: string): Arm | null {
+  const row = db.prepare(
+    `SELECT a.strategy, f.failure_class
+       FROM recovery_attempts a
+       JOIN failed_payments f ON f.payment_id = a.payment_id
+      WHERE a.payment_id = ? AND a.recovered_at IS NULL AND a.status != 'scheduled'
+      ORDER BY a.id DESC LIMIT 1`,
+  ).get(paymentId) as unknown as Arm | undefined;
+  return row ?? null;
+}
+
+/**
+ * Resolves recoveries that were sent and never paid.
+ *
+ * Without this the bandit only ever hears about successes, so every arm looks
+ * perfect and it learns nothing. A recovery that goes unanswered is the more
+ * common outcome and the more informative one.
+ *
+ * The horizon scales with TIME_SCALE alongside the delays, so a compressed demo
+ * resolves outcomes at the same compressed rate rather than never.
+ */
+export function expireStale(now: Date = new Date()): number {
+  const horizonMs = (config.expiryHours * 3600_000) / config.timeScale;
+  const cutoff = new Date(now.getTime() - horizonMs).toISOString();
+
+  const stale = db.prepare(
+    `SELECT a.id, a.strategy, f.failure_class
+       FROM recovery_attempts a
+       JOIN failed_payments f ON f.payment_id = a.payment_id
+      WHERE a.status = 'sent' AND a.recovered_at IS NULL AND a.sent_at <= ?`,
+  ).all(cutoff.replace("T", " ").slice(0, 19)) as unknown as (Arm & { id: number })[];
+
+  for (const row of stale) {
+    db.prepare("UPDATE recovery_attempts SET status = 'expired' WHERE id = ?").run(row.id);
+    recordOutcome(row.failure_class, row.strategy, false);
+  }
+  if (stale.length) console.log(`[expire] ${stale.length} recovery attempt(s) went unanswered`);
+  return stale.length;
 }
 
 /**
@@ -240,6 +289,11 @@ export function startDispatcher(): () => void {
   reportStuckSends();
   const timer = setInterval(() => {
     dispatchDue().catch((e) => console.error("[dispatch] loop error:", e));
+    try {
+      expireStale();
+    } catch (e) {
+      console.error("[expire] loop error:", e);
+    }
   }, config.dispatchIntervalMs);
   timer.unref?.();
   console.log(`dispatcher polling every ${config.dispatchIntervalMs / 1000}s`);

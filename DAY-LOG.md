@@ -441,3 +441,55 @@ every one for omitting the amount placeholder. Rewrote the prompt to state the
 placeholder requirement up front and say plainly that a message without both is
 discarded. Second run: 11%, same single cause. That is a real quality dial with a
 number on it, rather than reading a few samples and forming an impression.
+
+## Day 3, learning layer
+
+Thompson sampling over candidate plans per failure class, with outcomes feeding
+back.
+
+The choice of algorithm was the one real decision. Epsilon-greedy is the obvious
+default and is wrong here: it explores at a fixed rate regardless of how
+uncertain it actually is, which wastes traffic on arms already known to be poor
+while under-exploring ones barely tried. Recovery volume is low and outcomes are
+slow — a recovery scheduled eighteen hours out resolves a day later — so every
+observation is expensive and exploration should be proportional to uncertainty.
+That is exactly what Thompson sampling does.
+
+Two things that turned out to matter more than the sampler.
+
+An untried arm has to read as unknown rather than as bad. A Beta(1,1) prior puts
+it at 0.5; starting arms at zero would mean the first one to get lucky is never
+challenged again.
+
+And the bandit has to hear about failures, not just successes. Recoveries are
+only marked when someone pays, so without an expiry horizon every arm looks
+perfect and nothing is ever learned. A sent recovery that goes unanswered past
+the horizon is now resolved as a failure, and the horizon scales with TIME_SCALE
+alongside the delays so a compressed demo resolves outcomes at the compressed
+rate rather than never.
+
+Three tests were failing after the rewiring, all correctly: they asserted a fixed
+plan per class, which stopped being true the moment selection became stochastic.
+The fix was to make selection options explicit parameters rather than reading
+config, so a test can pin learning off and assert exact scheduling, while a
+separate test asserts that with learning on the choice stays inside the declared
+arms and still respects the no-instant-send floor. That floor check now runs over
+every candidate arm rather than the defaults — an arm the bandit could learn into
+would otherwise bypass the safety rule entirely.
+
+On 3000 simulated failures: 40.5% recovered against 37.0% for fixed defaults, and
+the best arm found in five of six classes, including two where my hand-authored
+default was wrong. The default for transient failures was twenty minutes; the
+data preferred five.
+
+It fails on the sixth class and that failure is worth keeping in the demo.
+`customer_cancelled` carries 3% of traffic and its two arms differ by three
+percentage points. There is not enough evidence there to distinguish them, the
+bandit does not distinguish them, and a version that confidently picked one would
+be overfitting. Reporting that honestly is better than tuning the simulation
+until every class looks solved.
+
+The ground truth in the simulator is invented, and the script says so at the top
+and in its output. It demonstrates that the selection mechanism finds the best
+arm given outcomes. It does not demonstrate which recovery plan is best in the
+real world. Those are different claims and only the first is being made.
