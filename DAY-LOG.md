@@ -493,3 +493,38 @@ The ground truth in the simulator is invented, and the script says so at the top
 and in its output. It demonstrates that the selection mechanism finds the best
 arm given outcomes. It does not demonstrate which recovery plan is best in the
 real world. Those are different claims and only the first is being made.
+
+Then I measured whether the learning layer is actually worth having, and the
+answer is: not always.
+
+One simulation is an anecdote. The first 3000-failure run found the best arm in
+five of six classes; the next found six of six. Same code, same settings. So I
+added a repeat mode that runs the whole simulation many times and reports how
+often each class converges, rather than reporting whichever result came up.
+
+That pattern is stable: classes where the best arm leads by ten points or more
+converge every run, and classes where two arms sit two or three points apart on
+thin traffic converge about half the time. Half is the correct answer there —
+there is not enough evidence to separate them, and a version that always picked
+one would be overfitting.
+
+The more useful number came from varying the traffic volume, twelve runs each:
+
+      500 failures   median +5.2%   range  -4.0% to +15.9%
+     1000 failures   median +6.3%   range  -3.8% to +13.5%
+     3000 failures   median +6.7%   range  -1.5% to +14.3%
+    10000 failures   median +11.5%  range  +7.6% to +16.8%
+
+Exploration costs something, and below roughly ten thousand failures that cost
+can exceed the gain. A merchant with low volume may end up worse off than with
+fixed defaults. A single 1000-round run I did by hand came out at -1.1%, which is
+not noise but the expected behaviour at that size.
+
+I would not have found this by looking at one run and seeing +10%. The temptation
+with a learning layer is to run it once, get a good number, and put that number
+in the pitch. The honest version needed a distribution rather than a sample, and
+the distribution says something more useful than the sample did: this feature
+should be a deliberate switch, not an always-on default, and it should not be
+turned on for a merchant who does not have the volume to pay for the exploration.
+
+That is now what the code does and what the README says.

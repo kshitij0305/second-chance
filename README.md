@@ -83,9 +83,38 @@ selection find the best arm? On 3000 simulated failures it reaches 40.5% recover
 against 37.0% for fixed defaults, and finds the best arm in five of six classes —
 including two where the hand-authored default was wrong.
 
-It fails on the sixth, `customer_cancelled`, and that is the honest part: those
-two arms differ by three points on 3% of traffic, so there is not enough evidence
-to separate them and a confident answer would be overfitting.
+Which class it misses varies between runs, and that variance is the point — a
+single simulation is an anecdote. Repeating it says something firmer:
+
+```bash
+npm run simulate -- 3000 --repeat 12
+```
+
+Classes where the best arm leads by 10 points or more converge in every run.
+Classes where two arms sit 2-3 points apart on thin traffic converge about half
+the time, which is correct: there is not enough evidence to separate them, and a
+system that always picked one would be overfitting.
+
+**The learning layer is not free, and below a certain volume it loses money.**
+Measured across 12 runs at each size:
+
+| Failures | Median lift | Range across runs |
+|---|---|---|
+| 500 | +5.2% | −4.0% to +15.9% |
+| 1,000 | +6.3% | −3.8% to +13.5% |
+| 3,000 | +6.7% | −1.5% to +14.3% |
+| 10,000 | +11.5% | +7.6% to +16.8% |
+
+Exploration has a real cost, and under about ten thousand failures it can exceed
+the gain — a merchant with low volume may end up worse off than with fixed
+defaults. So learning is a deliberate switch rather than an always-on default:
+
+```bash
+LEARNING=off npm run dev
+```
+
+With it off, every class uses its hand-authored default and behaviour is
+identical to the version before the bandit existed.
 
 ### Where a model is and is not used
 

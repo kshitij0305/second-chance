@@ -54,44 +54,118 @@ const MIX: [FailureClass, number][] = [
 ];
 
 const rounds = Number(process.argv[2] ?? 2000);
+const repeatFlag = process.argv.indexOf("--repeat");
+const repeats = repeatFlag >= 0 ? Number(process.argv[repeatFlag + 1] ?? 20) : 1;
 
-db.exec("DELETE FROM strategy_outcomes");
 
-function drawClass(): FailureClass {
-  let r = Math.random();
-  for (const [cls, share] of MIX) {
-    if ((r -= share) <= 0) return cls;
-  }
-  return MIX[0]![0];
+interface RunResult {
+  learned: number;
+  baseline: number;
+  bestArmFound: Record<string, boolean>;
+  checkpoints: { round: number; learned: number; baseline: number }[];
 }
 
-let learnedWins = 0;
-let baselineWins = 0;
-const checkpoints: { round: number; learned: number; baseline: number }[] = [];
-
-for (let i = 1; i <= rounds; i++) {
-  const failureClass = drawClass();
-
-  // What the bandit chooses, and what a fixed hand-authored default would have.
-  const chosen = selectVariant(failureClass, true).strategy.name;
-  const baseline = defaultVariant(failureClass).name;
-
-  const recovered = Math.random() < TRUTH[failureClass][chosen]!;
-  if (recovered) learnedWins++;
-  if (Math.random() < TRUTH[failureClass][baseline]!) baselineWins++;
-
-  db.prepare(
-    `INSERT INTO strategy_outcomes (failure_class, variant, successes, failures)
-     VALUES (?, ?, ?, ?)
-     ON CONFLICT(failure_class, variant) DO UPDATE SET
-       successes = successes + excluded.successes,
-       failures  = failures  + excluded.failures`,
-  ).run(failureClass, chosen, recovered ? 1 : 0, recovered ? 0 : 1);
-
-  if (i % Math.max(1, Math.floor(rounds / 8)) === 0) {
-    checkpoints.push({ round: i, learned: learnedWins / i, baseline: baselineWins / i });
-  }
+function bestArmFor(cls: FailureClass): string {
+  return Object.entries(TRUTH[cls]).sort((a, b) => b[1] - a[1])[0]![0];
 }
+
+function runOnce(): RunResult {
+  db.exec("DELETE FROM strategy_outcomes");
+
+  function drawClass(): FailureClass {
+    let r = Math.random();
+    for (const [cls, share] of MIX) {
+      if ((r -= share) <= 0) return cls;
+    }
+    return MIX[0]![0];
+  }
+
+  let learnedWins = 0;
+  let baselineWins = 0;
+  const checkpoints: { round: number; learned: number; baseline: number }[] = [];
+
+  for (let i = 1; i <= rounds; i++) {
+    const failureClass = drawClass();
+
+    // What the bandit chooses, and what a fixed hand-authored default would have.
+    const chosen = selectVariant(failureClass, true).strategy.name;
+    const baseline = defaultVariant(failureClass).name;
+
+    const recovered = Math.random() < TRUTH[failureClass][chosen]!;
+    if (recovered) learnedWins++;
+    if (Math.random() < TRUTH[failureClass][baseline]!) baselineWins++;
+
+    db.prepare(
+      `INSERT INTO strategy_outcomes (failure_class, variant, successes, failures)
+       VALUES (?, ?, ?, ?)
+       ON CONFLICT(failure_class, variant) DO UPDATE SET
+         successes = successes + excluded.successes,
+         failures  = failures  + excluded.failures`,
+    ).run(failureClass, chosen, recovered ? 1 : 0, recovered ? 0 : 1);
+
+    if (i % Math.max(1, Math.floor(rounds / 8)) === 0) {
+      checkpoints.push({ round: i, learned: learnedWins / i, baseline: baselineWins / i });
+    }
+  }
+
+
+  const bestArmFound: Record<string, boolean> = {};
+  for (const cls of allClasses()) {
+    const arms = statsFor(cls).filter((a) => a.observations > 0);
+    if (!arms.length) continue;
+    const picked = [...arms].sort((a, b) => b.observations - a.observations)[0]!;
+    bestArmFound[cls] = picked.variant === bestArmFor(cls);
+  }
+  return {
+    learned: learnedWins / rounds,
+    baseline: baselineWins / rounds,
+    bestArmFound,
+    checkpoints,
+  };
+}
+
+if (repeats > 1) {
+  /**
+   * One simulation is an anecdote. Convergence on a low-volume class where the
+   * arms are close is genuinely a coin flip, and a single run will report
+   * whichever side it landed on as though it were the result.
+   */
+  const runs = Array.from({ length: repeats }, runOnce);
+  const converged: Record<string, number> = {};
+  for (const run of runs) {
+    for (const [cls, ok] of Object.entries(run.bestArmFound)) {
+      converged[cls] = (converged[cls] ?? 0) + (ok ? 1 : 0);
+    }
+  }
+
+  console.log(`${repeats} independent runs of ${rounds} failures each.
+`);
+  console.log("how often each class settles on the best arm");
+  const ordered = Object.entries(converged).sort((a, b) => b[1] - a[1]);
+  for (const [cls, wins] of ordered) {
+    const pct = Math.round((wins / repeats) * 100);
+    const gap = (() => {
+      const t = Object.values(TRUTH[cls as FailureClass]).sort((a, b) => b - a);
+      return ((t[0]! - t[1]!) * 100).toFixed(0);
+    })();
+    console.log(`  ${String(pct).padStart(3)}%  ${cls.padEnd(26)} best arm leads by ${gap} points`);
+  }
+
+  const learned = runs.reduce((s, r) => s + r.learned, 0) / repeats;
+  const baseline = runs.reduce((s, r) => s + r.baseline, 0) / repeats;
+  const lifts = runs.map((r) => ((r.learned - r.baseline) / r.baseline) * 100).sort((a, b) => a - b);
+  console.log(
+    `
+mean recovery ${(learned * 100).toFixed(1)}% vs ${(baseline * 100).toFixed(1)}% fixed — ` +
+    `lift ${lifts[0]!.toFixed(1)}% to ${lifts.at(-1)!.toFixed(1)}% across runs, median ${lifts[Math.floor(repeats / 2)]!.toFixed(1)}%`,
+  );
+  process.exit(0);
+}
+
+const single = runOnce();
+const learnedWins = Math.round(single.learned * rounds);
+const baselineWins = Math.round(single.baseline * rounds);
+const checkpoints = single.checkpoints;
 
 console.log(`${rounds} simulated failures. Ground truth is invented; see the header of this script.\n`);
 
