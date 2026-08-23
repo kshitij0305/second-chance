@@ -23,7 +23,7 @@ app.get("/api/stats", (_req, res) => {
 
   const recent = db.prepare(`
     SELECT a.payment_id, a.strategy, a.status, a.error, a.payment_link_url,
-           a.sent_at, a.recovered_at, a.amount, a.scheduled_for, a.attempt_number, a.explanation,
+           a.sent_at, a.recovered_at, a.amount, a.scheduled_for, a.attempt_number, a.explanation, a.message, a.message_source,
            f.error_code, f.error_reason, f.method,
            f.failure_class, f.evidence, f.basis, f.source
       FROM recovery_attempts a
@@ -32,7 +32,7 @@ app.get("/api/stats", (_req, res) => {
      LIMIT 50
   `).all();
 
-  res.json({ ...row, time_scale: config.timeScale, recent });
+  res.json({ ...row, time_scale: config.timeScale, link_provider: config.linkProvider, recent });
 });
 
 app.listen(config.port, () => {
@@ -40,6 +40,9 @@ app.listen(config.port, () => {
   console.log(`webhook endpoint: POST /webhooks/razorpay`);
   if (config.timeScale > 1) {
     console.log(`TIME SCALE ${config.timeScale}x — strategy delays are compressed for demo`);
+  }
+  if (config.linkProvider === "stub") {
+    console.log("LINK PROVIDER stub — payment links are fake and no Razorpay quota is used");
   }
   startDispatcher();
 });

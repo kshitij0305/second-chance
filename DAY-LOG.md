@@ -373,3 +373,45 @@ twenty-four hours, which is correct and unwatchable in a five-minute video.
 `TIME_SCALE` divides only the wall-clock deadline, never the strategy's stated
 intent, and any value above 1 puts a visible banner on the dashboard so a
 compressed run can never be mistaken for real timing.
+
+## Day 3, later
+
+Message composition, which is the one place in this system a model belongs, and
+two constraints found the hard way.
+
+The design rule is that the model writes prose and code owns facts. It is handed
+no amount, no link and no customer name — it writes a body containing
+placeholders, and code substitutes the real values afterwards. A model cannot
+misstate a number it was never given. On top of that, a validator rejects
+anything containing a digit outside the placeholders, a URL of its own, an
+unauthorised discount, or over the length limit. Rejections fall back to a
+deterministic template and are recorded as such, so a rising rejection rate
+becomes a measurable signal that the model is too small for the brief rather than
+something someone has to notice by eye.
+
+The model is also never load-bearing. Every failure class has a template, and if
+generation is unavailable the template ships. A recovery must not be lost because
+an inference provider was down.
+
+That structure paid for itself immediately. The credits turned out to be on a
+Claude Code plan rather than an API account, so the provider had to change.
+Swapping the entire inference provider touched one function and left all 51 tests
+passing unchanged — because the tests cover the validation fence and the
+templates, neither of which know which model wrote the words.
+
+The second constraint was self-inflicted and more instructive. Dispatch started
+failing with "test mode limit of 30 reached for payment_link". Razorpay allows
+thirty payment links per test account for its entire lifetime, and cancelling
+them does not return the quota — verified by cancelling one and immediately
+failing to create another.
+
+Every local test run, every replayed scenario, every end-to-end check had been
+creating real payment links. Development quietly consumed a finite resource that
+the demo depends on, and the account ran dry mid-build with the video still
+unrecorded.
+
+The fix is a stub link provider: same shape, no network, no quota, and a banner
+on the dashboard whenever links are stubbed so a stubbed run cannot be passed off
+as a live one. The rule worth keeping is that a development loop should never
+consume a resource the demonstration needs. This should have been the first thing
+built, not the thing built after running out.

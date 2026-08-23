@@ -48,6 +48,8 @@ db.exec(`
     attempt_number   INTEGER NOT NULL DEFAULT 1,
     scheduled_for    TEXT,
     explanation      TEXT,
+    message          TEXT,
+    message_source   TEXT,
     error            TEXT,
     payment_link_id  TEXT,
     payment_link_url TEXT,
@@ -78,6 +80,8 @@ for (const [column, ddl] of [
   ["attempt_number", "ALTER TABLE recovery_attempts ADD COLUMN attempt_number INTEGER NOT NULL DEFAULT 1"],
   ["scheduled_for", "ALTER TABLE recovery_attempts ADD COLUMN scheduled_for TEXT"],
   ["explanation", "ALTER TABLE recovery_attempts ADD COLUMN explanation TEXT"],
+  ["message", "ALTER TABLE recovery_attempts ADD COLUMN message TEXT"],
+  ["message_source", "ALTER TABLE recovery_attempts ADD COLUMN message_source TEXT"],
 ] as const) {
   const existing = (db.prepare("PRAGMA table_info(recovery_attempts)").all() as { name: string }[])
     .map((c) => c.name);

@@ -24,6 +24,7 @@
   .due { font-variant-numeric: tabular-nums; }
 </style>
 <h1>Second Chance</h1>
+<div id="stubbadge"></div>
 <div id="scalebadge"></div>
 <div class="big" id="amount">--</div>
 <div class="sub" id="rate">--</div>
@@ -45,6 +46,9 @@ function dueIn(iso) {
 
 async function refresh() {
   const s = await (await fetch("/api/stats")).json();
+  const badges = [];
+  if (s.link_provider === "stub") badges.push('<span class="scale">STUB LINKS — not real payment links</span>');
+  document.getElementById("stubbadge").innerHTML = badges.join(" ");
   document.getElementById("scalebadge").innerHTML = s.time_scale > 1
     ? `<span class="scale">TIME COMPRESSED ${s.time_scale}× — delays shown are real intent, wall-clock is scaled</span>` : "";
   document.getElementById("amount").textContent = inr(s.recovered_paise) + " recovered";

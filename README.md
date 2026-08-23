@@ -63,8 +63,28 @@ classes. A model would be slower, non-deterministic, impossible to unit test, an
 no more accurate than a table encoding the same mapping.
 
 The model earns its place at message composition, where the output is genuinely
-open-ended — tone, language, and what to say to a particular customer about a
-particular amount. That part is not built yet.
+open-ended — the register has to shift with the reason for the failure, and
+"your bank declined this card" and "there wasn't enough balance" need very
+different handling for the same customer.
+
+Two rules make that safe. **The model never handles facts**: it is given no
+amount, no link and no name, it writes a body with placeholders, and code
+substitutes the real values. A model cannot misstate a number it was never
+given. **The model is never load-bearing**: every failure class has a
+deterministic template, and if generation is unavailable or produces something
+that fails validation, the template ships. A recovery is never lost because an
+inference provider was down.
+
+Generated messages are rejected if they contain any digit outside the
+placeholders, a URL of their own, an unauthorised discount, or if they exceed the
+length limit. Rejections are recorded as `template_after_rejection`, so a rising
+rejection rate is the signal that the model is too small for the brief rather
+than something a reader has to notice by eye.
+
+Inference runs on Groq (`openai/gpt-oss-20b` by default). The provider sits
+behind a single function; swapping it touched one call site and left all 51 tests
+passing unchanged, because the tests cover the validation fence rather than the
+model.
 
 ## What this can and cannot demonstrate
 
@@ -114,6 +134,21 @@ Webhooks, subscribed to `payment.failed` and `payment.captured`. The secret from
 
 Dashboard: http://localhost:3000
 
+### Developing without burning payment-link quota
+
+Razorpay test mode allows **thirty payment links per account, ever** — cancelling
+them does not give the quota back. A development loop that creates real links
+will exhaust the allowance the demo needs, which is exactly what happened here.
+
+So local work uses a stub provider: same shape, no network, no quota.
+
+```bash
+LINK_PROVIDER=stub npm run dev
+```
+
+The dashboard shows a banner whenever links are stubbed, so a stubbed run cannot
+be presented as a live one. Leave it unset to create real links.
+
 ### Seeing it work without waiting a day
 
 Real delays run from 2 minutes to 24 hours. `TIME_SCALE` divides only the
@@ -136,7 +171,7 @@ the dashboard, so a compressed run cannot be mistaken for real timing.
 | `npm run taxonomy` | field-by-field variance across real captured failures; `--all-sources` includes synthetic ones |
 | `npm run reclassify` | re-runs classification over stored failures without repeating the webhook handler side effects |
 | `npm run export-fixtures` | regenerates the scrubbed test fixtures from captured traffic |
-| `npm test` / `npm run typecheck` | 35 tests, strict TypeScript |
+| `npm test` / `npm run typecheck` | 51 tests, strict TypeScript |
 
 ## Layout
 
@@ -147,6 +182,9 @@ the dashboard, so a compressed run cannot be mistaken for real timing.
 | `src/razorpay/types.ts` | hand-written webhook payload types |
 | `src/recovery/classifier.ts` | failure entity to failure class, with evidence |
 | `src/recovery/strategy.ts` | failure class to a plan, with a rationale |
+| `src/recovery/composer.ts` | message generation, validation and fallback |
+| `src/recovery/templates.ts` | deterministic message per failure class |
+| `src/razorpay/links.ts` | payment link creation, real or stubbed |
 | `src/recovery/engine.ts` | scheduling, guarded dispatch, attribution |
 | `src/recovery/mapper.ts` | Razorpay vocabulary to ours |
 | `src/db.ts` | SQLite schema and migrations |
@@ -161,8 +199,9 @@ the dashboard, so a compressed run cannot be mistaken for real timing.
 - Link creation is rate-limited by Razorpay and has no backoff, so a burst of
   failures — precisely the case this exists for — would fail to recover some of
   them. Those are recorded as `failed` and surfaced, not silently dropped.
-- Recovery messages are not delivered to customers yet. Dispatch creates the link
-  and logs it. Channel adapters and message composition are the next piece.
+- Recovery messages are composed and stored but not yet delivered to a customer.
+  Dispatch creates the link, writes the message, and logs it. SMS and WhatsApp
+  adapters are the next piece.
 - `instrument_rejected` records the intent to steer away from the failed method
   but does not yet restrict methods on the generated link.
 

@@ -1,7 +1,9 @@
 import { db } from "../db.ts";
-import { razorpay } from "../razorpay/client.ts";
+import { linkProvider } from "../razorpay/links.ts";
 import type { Decision } from "./strategy.ts";
 import { config } from "../config.ts";
+import { compose, formatAmount } from "./composer.ts";
+import type { FailureClass } from "./classifier.ts";
 
 export interface FailedPayment {
   payment_id: string;
@@ -57,6 +59,8 @@ interface DueRow {
   email: string | null;
   contact: string | null;
   order_id: string | null;
+  method: string | null;
+  failure_class: FailureClass | null;
 }
 
 /**
@@ -83,7 +87,7 @@ export async function dispatchDue(now: Date = new Date()): Promise<number> {
 async function runDispatch(now: Date): Promise<number> {
   const due = db.prepare(
     `SELECT a.id, a.payment_id, a.strategy, a.amount,
-            f.email, f.contact, f.order_id
+            f.email, f.contact, f.order_id, f.method, f.failure_class
        FROM recovery_attempts a
        JOIN failed_payments f ON f.payment_id = a.payment_id
       WHERE a.status = 'scheduled' AND a.scheduled_for <= ?
@@ -134,26 +138,34 @@ function alreadyPaid(row: DueRow): boolean {
 
 async function send(row: DueRow): Promise<boolean> {
   try {
-    const link = await razorpay.paymentLink.create({
+    const link = await linkProvider.create({
       amount: row.amount,
       currency: "INR",
-      accept_partial: false,
       description: "Your payment didn't go through — here's a fresh link",
-      customer: { email: row.email ?? undefined, contact: row.contact ?? undefined },
-      // We do the sending ourselves, so Razorpay must not also notify the
-      // customer — otherwise every recovery goes out twice.
-      notify: { sms: false, email: false },
-      reminder_enable: false,
+      email: row.email ?? undefined,
+      contact: row.contact ?? undefined,
       notes: { recovers_payment_id: row.payment_id, strategy: row.strategy },
+    });
+
+    // Composed only once the link exists, so the message can carry the real
+    // URL. Never blocks the send: compose() falls back to a template if
+    // generation is unavailable or produces something that fails validation.
+    const composed = await compose(row.failure_class ?? "unknown", {
+      name: null,
+      method: row.method ?? "payment method",
+      amount: formatAmount(row.amount),
+      link: link.short_url,
     });
 
     db.prepare(
       `UPDATE recovery_attempts
-          SET status = 'sent', payment_link_id = ?, payment_link_url = ?, sent_at = datetime('now')
+          SET status = 'sent', payment_link_id = ?, payment_link_url = ?,
+              message = ?, message_source = ?, sent_at = datetime('now')
         WHERE id = ?`,
-    ).run(link.id, link.short_url, row.id);
+    ).run(link.id, link.short_url, composed.text, composed.source, row.id);
 
-    console.log(`[dispatch] ${row.payment_id} -> ${link.short_url} (${row.strategy})`);
+    console.log(`[dispatch] ${row.payment_id} -> ${link.short_url} (${row.strategy}, message by ${composed.source})`);
+    console.log(`           "${composed.text}"`);
     return true;
   } catch (error) {
     // Record the failure rather than only logging it. A recovery that never
