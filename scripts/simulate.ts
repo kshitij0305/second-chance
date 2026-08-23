@@ -19,8 +19,16 @@
 import "dotenv/config";
 import { DatabaseSync } from "node:sqlite";
 
-process.env.DB_PATH ??= "./simulation.db";
-process.env.LEARNING ??= "on";
+/**
+ * Always a scratch database, never the working one.
+ *
+ * This was `??=` and it did not work: `dotenv/config` above sets DB_PATH from
+ * .env first, and dotenv does not override, so the default never applied and the
+ * simulator wrote invented outcomes straight into the live database. Assign
+ * unconditionally, and let SIM_DB be the only way to point it elsewhere.
+ */
+process.env.DB_PATH = process.env.SIM_DB ?? "./simulation.db";
+process.env.LEARNING = "on";
 
 const { selectVariant, statsFor } = await import("../src/recovery/bandit.ts");
 const { defaultVariant, allClasses } = await import("../src/recovery/variants.ts");
@@ -52,6 +60,31 @@ const MIX: [FailureClass, number][] = [
   ["authentication_abandoned", 0.08],
   ["customer_cancelled", 0.03],
 ];
+
+/**
+ * Refuse to run against a database holding real recovery attempts.
+ *
+ * The outcomes this writes are invented, and `strategy_outcomes` records no
+ * provenance — simulated and real outcomes are indistinguishable once written.
+ * Pointing DB_PATH at the working database would silently poison the learning
+ * state with fabricated evidence, which is the same mistake that put synthetic
+ * webhooks in with real ones earlier in this build. A guard is cheaper than
+ * discovering it later.
+ */
+const realAttempts = (db.prepare(
+  "SELECT COUNT(*) n FROM recovery_attempts",
+).get() as { n: number }).n;
+
+if (realAttempts > 0) {
+  console.error([
+    `Refusing to run: ${process.env.DB_PATH} holds ${realAttempts} real recovery attempt(s).`,
+    "The simulator writes invented outcomes into the same table the live bandit learns from.",
+    "Run it against a scratch database instead:",
+    "",
+    "  DB_PATH=./simulation.db npm run simulate",
+  ].join("\n"));
+  process.exit(1);
+}
 
 const rounds = Number(process.argv[2] ?? 2000);
 const repeatFlag = process.argv.indexOf("--repeat");

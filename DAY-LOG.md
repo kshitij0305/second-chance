@@ -528,3 +528,47 @@ should be a deliberate switch, not an always-on default, and it should not be
 turned on for a merchant who does not have the volume to pay for the exploration.
 
 That is now what the code does and what the README says.
+
+Added a guard to the simulator, and it immediately caught a real bug in the thing
+it was guarding.
+
+`strategy_outcomes` records no provenance — a simulated outcome and a real one
+are identical once written. So the simulator now refuses to run against a
+database containing real recovery attempts, and tells you to point it at a
+scratch file instead.
+
+The first time I ran it, the guard fired on a run I expected to succeed. Not a
+false positive. The script began with:
+
+    import "dotenv/config";
+    process.env.DB_PATH ??= "./simulation.db";
+
+dotenv loads `.env` first and does not override variables already set, so
+`DB_PATH` was already `./second-chance.db` by the time the default ran and `??=`
+did nothing. Every simulation I had run had been writing invented outcomes
+directly into the working database. Checking it: fifteen arm rows holding several
+thousand fabricated observations, and not one real recovery among them. The
+bandit's entire memory in the live database was fiction.
+
+Assignment is now unconditional, with `SIM_DB` as the only way to redirect it,
+and the contaminated table has been cleared.
+
+Three things about this are worth keeping.
+
+The bug was invisible from the outside. The simulator printed correct-looking
+results either way, because it clears the outcomes table before each run — so it
+always reported a clean experiment while leaving the debris in whichever database
+it happened to be pointed at.
+
+`??=` reads as "use this default" but means "only if nothing else set it", and
+what set it was an import three lines above. The two lines were written minutes
+apart and the interaction between them was invisible in either one alone.
+
+And this is the third time in this build that mixing real and synthetic data has
+caused a problem: synthetic webhooks counted as real evidence in the taxonomy,
+synthetic failures unmarked in `failed_payments`, and now fabricated outcomes in
+the live bandit. Each time the fix was provenance — recording where data came
+from — and each time I applied it only to the table that had just burned me
+rather than to the pattern. The guard is the first fix that generalises, and it
+only exists because I finally treated it as a recurring problem rather than three
+separate accidents.

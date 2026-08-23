@@ -3,6 +3,8 @@ import { config } from "./config.ts";
 import { db } from "./db.ts";
 import { webhookRouter } from "./razorpay/webhook.ts";
 import { startDispatcher } from "./recovery/engine.ts";
+import { statsFor } from "./recovery/bandit.ts";
+import { allClasses } from "./recovery/variants.ts";
 
 const app = express();
 
@@ -16,6 +18,10 @@ app.get("/api/stats", (_req, res) => {
            COALESCE(SUM(status = 'recovered'), 0)                  AS recovered,
            COALESCE(SUM(status = 'failed'), 0)                     AS failed,
            COALESCE(SUM(status = 'scheduled'), 0)                  AS scheduled,
+           COALESCE(SUM(status = 'expired'), 0)                    AS expired,
+           COALESCE(SUM(status = 'sent'), 0)                       AS sent_pending,
+           COALESCE(SUM(CASE WHEN status IN ('scheduled','sending','sent')
+                             THEN amount END), 0)                  AS at_risk_paise,
            COALESCE(SUM(CASE WHEN status = 'recovered'
                              THEN amount END), 0)                  AS recovered_paise
       FROM recovery_attempts
@@ -32,7 +38,34 @@ app.get("/api/stats", (_req, res) => {
      LIMIT 50
   `).all();
 
-  res.json({ ...row, time_scale: config.timeScale, link_provider: config.linkProvider, recent });
+  // Flattened for the dashboard: one row per arm, ordered by class, with the
+  // leading arm marked so the table reads without the reader doing arithmetic.
+  const arms = allClasses().flatMap((cls) => {
+    const stats = statsFor(cls);
+    const total = stats.reduce((sum, a) => sum + a.observations, 0);
+    if (total === 0) return [];
+    const best = Math.max(...stats.map((a) => a.observations));
+    return stats
+      .sort((a, b) => b.observations - a.observations)
+      .map((a, i) => ({
+        failure_class: cls,
+        variant: a.variant,
+        observations: a.observations,
+        rate: a.rate,
+        share: total ? a.observations / total : 0,
+        leading: a.observations === best && total > 0,
+        first: i === 0,
+      }));
+  });
+
+  res.json({
+    ...row,
+    time_scale: config.timeScale,
+    link_provider: config.linkProvider,
+    learning: config.learningEnabled,
+    arms,
+    recent,
+  });
 });
 
 app.listen(config.port, () => {
