@@ -44,7 +44,10 @@ db.exec(`
     id               INTEGER PRIMARY KEY AUTOINCREMENT,
     payment_id       TEXT NOT NULL REFERENCES failed_payments(payment_id),
     strategy         TEXT NOT NULL,
-    status           TEXT NOT NULL DEFAULT 'sent',   -- sent | failed | recovered
+    status           TEXT NOT NULL DEFAULT 'sent',   -- scheduled | sending | sent | recovered | failed | superseded
+    attempt_number   INTEGER NOT NULL DEFAULT 1,
+    scheduled_for    TEXT,
+    explanation      TEXT,
     error            TEXT,
     payment_link_id  TEXT,
     payment_link_url TEXT,
@@ -71,6 +74,16 @@ if (!columns.includes("error")) {
 // nothing to separate them, so the failure taxonomy was reading invented
 // payloads back as evidence. Rows captured before this column existed cannot be
 // attributed after the fact and are marked unknown rather than guessed at.
+for (const [column, ddl] of [
+  ["attempt_number", "ALTER TABLE recovery_attempts ADD COLUMN attempt_number INTEGER NOT NULL DEFAULT 1"],
+  ["scheduled_for", "ALTER TABLE recovery_attempts ADD COLUMN scheduled_for TEXT"],
+  ["explanation", "ALTER TABLE recovery_attempts ADD COLUMN explanation TEXT"],
+] as const) {
+  const existing = (db.prepare("PRAGMA table_info(recovery_attempts)").all() as { name: string }[])
+    .map((c) => c.name);
+  if (!existing.includes(column)) db.exec(ddl);
+}
+
 for (const [column, ddl] of [
   ["failure_class", "ALTER TABLE failed_payments ADD COLUMN failure_class TEXT"],
   ["evidence", "ALTER TABLE failed_payments ADD COLUMN evidence TEXT"],

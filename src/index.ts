@@ -2,6 +2,7 @@ import express from "express";
 import { config } from "./config.ts";
 import { db } from "./db.ts";
 import { webhookRouter } from "./razorpay/webhook.ts";
+import { startDispatcher } from "./recovery/engine.ts";
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.get("/api/stats", (_req, res) => {
     SELECT COUNT(*)                                                AS attempts,
            COALESCE(SUM(status = 'recovered'), 0)                  AS recovered,
            COALESCE(SUM(status = 'failed'), 0)                     AS failed,
+           COALESCE(SUM(status = 'scheduled'), 0)                  AS scheduled,
            COALESCE(SUM(CASE WHEN status = 'recovered'
                              THEN amount END), 0)                  AS recovered_paise
       FROM recovery_attempts
@@ -21,7 +23,7 @@ app.get("/api/stats", (_req, res) => {
 
   const recent = db.prepare(`
     SELECT a.payment_id, a.strategy, a.status, a.error, a.payment_link_url,
-           a.sent_at, a.recovered_at, a.amount,
+           a.sent_at, a.recovered_at, a.amount, a.scheduled_for, a.attempt_number, a.explanation,
            f.error_code, f.error_reason, f.method,
            f.failure_class, f.evidence, f.basis, f.source
       FROM recovery_attempts a
@@ -30,10 +32,14 @@ app.get("/api/stats", (_req, res) => {
      LIMIT 50
   `).all();
 
-  res.json({ ...row, recent });
+  res.json({ ...row, time_scale: config.timeScale, recent });
 });
 
 app.listen(config.port, () => {
   console.log(`second-chance listening on http://localhost:${config.port}`);
   console.log(`webhook endpoint: POST /webhooks/razorpay`);
+  if (config.timeScale > 1) {
+    console.log(`TIME SCALE ${config.timeScale}x — strategy delays are compressed for demo`);
+  }
+  startDispatcher();
 });

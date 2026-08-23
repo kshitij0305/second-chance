@@ -1,5 +1,7 @@
 import { db } from "../db.ts";
 import { razorpay } from "../razorpay/client.ts";
+import type { Decision } from "./strategy.ts";
+import { config } from "../config.ts";
 
 export interface FailedPayment {
   payment_id: string;
@@ -7,54 +9,161 @@ export interface FailedPayment {
   currency: string;
   email?: string | null;
   contact?: string | null;
+  order_id?: string | null;
 }
 
 /**
- * Day 1 engine: one strategy, no branching, no model.
+ * Records a recovery to be sent later, rather than sending it now.
  *
- * This is deliberately dumb. The point right now is to prove a payment can
- * fail, be asked for again, and come back — end to end, on real webhooks.
- * The classifier, the policy engine and the strategy selection replace this.
+ * Nothing goes out at failure time. The strategy decides when, and a customer
+ * who has just failed a payment is frequently still at the checkout retrying —
+ * a link arriving mid-retry risks a double charge.
  */
-export async function attemptRecovery(payment: FailedPayment): Promise<void> {
-  const strategy = "immediate_link";
+export function scheduleRecovery(payment: FailedPayment, decision: Decision): void {
+  const existing = db.prepare(
+    "SELECT COUNT(*) n FROM recovery_attempts WHERE payment_id = ?",
+  ).get(payment.payment_id) as { n: number };
 
+  if (existing.n >= decision.strategy.maxAttempts) {
+    console.log(
+      `[schedule] ${payment.payment_id} already at ${existing.n}/${decision.strategy.maxAttempts} attempts — not scheduling`,
+    );
+    return;
+  }
+
+  db.prepare(
+    `INSERT INTO recovery_attempts
+       (payment_id, strategy, status, amount, attempt_number, scheduled_for, explanation)
+     VALUES (?, ?, 'scheduled', ?, ?, ?, ?)`,
+  ).run(
+    payment.payment_id,
+    decision.strategy.name,
+    payment.amount,
+    existing.n + 1,
+    decision.scheduledFor,
+    decision.explanation,
+  );
+
+  console.log(
+    `[schedule] ${payment.payment_id} -> ${decision.strategy.name}, due ${decision.scheduledFor}`,
+  );
+}
+
+interface DueRow {
+  id: number;
+  payment_id: string;
+  strategy: string;
+  amount: number;
+  email: string | null;
+  contact: string | null;
+  order_id: string | null;
+}
+
+/**
+ * Sends any recovery that has come due.
+ *
+ * Called on a timer. Every send is guarded: between scheduling and dispatch the
+ * customer may have completed the payment by some other route, and a recovery
+ * link sent after that is at best noise and at worst a second charge.
+ */
+let dispatchInFlight = false;
+
+export async function dispatchDue(now: Date = new Date()): Promise<number> {
+  // The poll interval is shorter than a Razorpay round trip, so without this a
+  // second pass starts while the first is still awaiting the API.
+  if (dispatchInFlight) return 0;
+  dispatchInFlight = true;
+  try {
+    return await runDispatch(now);
+  } finally {
+    dispatchInFlight = false;
+  }
+}
+
+async function runDispatch(now: Date): Promise<number> {
+  const due = db.prepare(
+    `SELECT a.id, a.payment_id, a.strategy, a.amount,
+            f.email, f.contact, f.order_id
+       FROM recovery_attempts a
+       JOIN failed_payments f ON f.payment_id = a.payment_id
+      WHERE a.status = 'scheduled' AND a.scheduled_for <= ?
+      ORDER BY a.scheduled_for`,
+  ).all(now.toISOString()) as unknown as DueRow[];
+
+  let sent = 0;
+  for (const row of due) {
+    // Claim the row before doing anything slow. The in-flight guard above stops
+    // overlapping passes within one process; this is the actual correctness
+    // guarantee, and it is a single atomic statement so two readers cannot both
+    // win. Without it the dispatcher creates two live payment links for one
+    // recovery — observed, and invisible in the data afterwards because the
+    // second send simply overwrites the first link's URL.
+    const claimed = db.prepare(
+      "UPDATE recovery_attempts SET status = 'sending' WHERE id = ? AND status = 'scheduled'",
+    ).run(row.id);
+    if (claimed.changes === 0) continue;
+
+    if (alreadyPaid(row)) {
+      db.prepare(
+        "UPDATE recovery_attempts SET status = 'superseded', error = ? WHERE id = ?",
+      ).run("customer completed payment before this recovery was due", row.id);
+      console.log(`[dispatch] ${row.payment_id} superseded — already paid`);
+      continue;
+    }
+    if (await send(row)) sent++;
+  }
+  return sent;
+}
+
+/**
+ * Has this order been settled since the failure?
+ *
+ * Answered from captured webhooks rather than by polling the provider: the
+ * events are already on disk, and a lookup per due recovery would burn the same
+ * rate limit the recovery itself needs.
+ */
+function alreadyPaid(row: DueRow): boolean {
+  if (!row.order_id) return false;
+  const hit = db.prepare(
+    `SELECT COUNT(*) n FROM webhook_events
+      WHERE event = 'payment.captured'
+        AND json_extract(payload, '$.payload.payment.entity.order_id') = ?`,
+  ).get(row.order_id) as { n: number };
+  return hit.n > 0;
+}
+
+async function send(row: DueRow): Promise<boolean> {
   try {
     const link = await razorpay.paymentLink.create({
-      amount: payment.amount,
-      currency: payment.currency,
+      amount: row.amount,
+      currency: "INR",
       accept_partial: false,
       description: "Your payment didn't go through — here's a fresh link",
-      customer: {
-        email: payment.email ?? undefined,
-        contact: payment.contact ?? undefined,
-      },
+      customer: { email: row.email ?? undefined, contact: row.contact ?? undefined },
       // We do the sending ourselves, so Razorpay must not also notify the
       // customer — otherwise every recovery goes out twice.
       notify: { sms: false, email: false },
       reminder_enable: false,
-      notes: { recovers_payment_id: payment.payment_id, strategy },
+      notes: { recovers_payment_id: row.payment_id, strategy: row.strategy },
     });
 
     db.prepare(
-      `INSERT INTO recovery_attempts
-         (payment_id, strategy, status, payment_link_id, payment_link_url, amount)
-       VALUES (?, ?, 'sent', ?, ?, ?)`,
-    ).run(payment.payment_id, strategy, link.id, link.short_url, payment.amount);
+      `UPDATE recovery_attempts
+          SET status = 'sent', payment_link_id = ?, payment_link_url = ?, sent_at = datetime('now')
+        WHERE id = ?`,
+    ).run(link.id, link.short_url, row.id);
 
-    // Day 1: "sending" is a log line. The channel adapter comes later.
-    console.log(`[recovery] ${payment.payment_id} -> ${link.short_url} (${strategy})`);
+    console.log(`[dispatch] ${row.payment_id} -> ${link.short_url} (${row.strategy})`);
+    return true;
   } catch (error) {
     // Record the failure rather than only logging it. A recovery that never
-    // went out is the single most important thing for the operator to see, and
-    // a line in a scrolling terminal is not seeing it.
+    // went out is the most important thing for an operator to see, and a line
+    // in a scrolling terminal is not seeing it.
     const message = describeError(error);
-    db.prepare(
-      `INSERT INTO recovery_attempts (payment_id, strategy, status, error, amount)
-       VALUES (?, ?, 'failed', ?, ?)`,
-    ).run(payment.payment_id, strategy, message, payment.amount);
-
-    console.error(`[recovery] ${payment.payment_id} FAILED: ${message}`);
+    db.prepare("UPDATE recovery_attempts SET status = 'failed', error = ? WHERE id = ?")
+      .run(message, row.id);
+    console.error(`[dispatch] ${row.payment_id} FAILED: ${message}`);
+    return false;
   }
 }
 
@@ -78,19 +187,49 @@ export function markRecovered(paymentLinkId: string): boolean {
 }
 
 /**
- * Attributes a recovery using the original payment id we planted in the link's
- * notes. Razorpay copies those notes onto the payment that settles the link, so
- * payment.captured alone is enough — payment_link.paid is a second, optional
- * route to the same conclusion.
- *
- * Safe to call twice: the recovered_at guard makes it idempotent, which matters
- * because both events can arrive for a single recovery.
+ * Attributes a recovery using the original payment id planted in the link notes.
+ * Razorpay copies those notes onto the payment that settles the link, so
+ * payment.captured alone is enough; payment_link.paid is a second route to the
+ * same conclusion. Idempotent, because both can arrive for one recovery.
  */
 export function markRecoveredByOriginalPayment(originalPaymentId: string): boolean {
   const result = db.prepare(
     `UPDATE recovery_attempts
         SET recovered_at = datetime('now'), status = 'recovered'
-      WHERE payment_id = ? AND recovered_at IS NULL`,
+      WHERE payment_id = ? AND recovered_at IS NULL AND status != 'scheduled'`,
   ).run(originalPaymentId);
   return result.changes > 0;
+}
+
+/**
+ * Reports recoveries left mid-send by a process that died.
+ *
+ * Deliberately does not reset them to 'scheduled'. The provider call may have
+ * succeeded before the crash, so retrying risks the second live payment link
+ * this whole mechanism exists to prevent. Surfacing them for a human to judge
+ * is the safe default; automatic recovery here needs an idempotency key on the
+ * provider call, which is the proper fix rather than a guess.
+ */
+export function reportStuckSends(): number {
+  const stuck = db.prepare(
+    "SELECT COUNT(*) n FROM recovery_attempts WHERE status = 'sending'",
+  ).get() as { n: number };
+  if (stuck.n > 0) {
+    console.warn(
+      `[dispatch] ${stuck.n} recovery attempt(s) stuck in 'sending' from a previous run — ` +
+      "not retried automatically, since the payment link may already exist",
+    );
+  }
+  return stuck.n;
+}
+
+/** Starts the dispatch loop. Returns a stop function. */
+export function startDispatcher(): () => void {
+  reportStuckSends();
+  const timer = setInterval(() => {
+    dispatchDue().catch((e) => console.error("[dispatch] loop error:", e));
+  }, config.dispatchIntervalMs);
+  timer.unref?.();
+  console.log(`dispatcher polling every ${config.dispatchIntervalMs / 1000}s`);
+  return () => clearInterval(timer);
 }

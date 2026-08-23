@@ -18,5 +18,6 @@ export function toFailedPayment(entity: RazorpayPaymentEntity): FailedPayment {
     currency: entity.currency,
     email: entity.email ?? null,
     contact: entity.contact ?? null,
+    order_id: entity.order_id ?? null,
   };
 }

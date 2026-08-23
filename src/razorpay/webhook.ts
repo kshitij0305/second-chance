@@ -3,7 +3,8 @@ import { config } from "../config.ts";
 import { db, recordWebhook, type WebhookSource } from "../db.ts";
 import { isValidWebhookSignature } from "./signature.ts";
 import type { RazorpayWebhookBody } from "./types.ts";
-import { attemptRecovery, markRecovered, markRecoveredByOriginalPayment } from "../recovery/engine.ts";
+import { scheduleRecovery, markRecovered, markRecoveredByOriginalPayment } from "../recovery/engine.ts";
+import { selectStrategy } from "../recovery/strategy.ts";
 import { toFailedPayment } from "../recovery/mapper.ts";
 import { classify } from "../recovery/classifier.ts";
 
@@ -63,7 +64,8 @@ async function handleEvent(body: RazorpayWebhookBody, source: WebhookSource): Pr
         classification.failureClass, classification.evidence, classification.basis, source,
       );
 
-      await attemptRecovery(toFailedPayment(entity));
+      const decision = selectStrategy(classification, new Date());
+      scheduleRecovery(toFailedPayment(entity), decision);
       break;
     }
 

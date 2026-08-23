@@ -2,47 +2,68 @@
 <meta charset="utf-8">
 <title>Second Chance</title>
 <style>
-  body { font: 14px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; margin: 2rem; max-width: 76rem; }
-  h1 { font-size: 1.1rem; margin-bottom: 1.2rem; }
+  body { font: 14px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; margin: 2rem; max-width: 80rem; }
+  h1 { font-size: 1.1rem; margin-bottom: .2rem; }
+  .scale { display:inline-block; background:#fff3cd; border:1px solid #d9b400; color:#7a5c00;
+           padding:.1rem .4rem; border-radius:3px; font-size:11px; margin-bottom:1rem; }
   .big { font-size: 2.4rem; font-weight: 700; }
   .sub { color: #666; margin-bottom: .3rem; }
   .alert { color: #b00; font-weight: 600; }
-  table { border-collapse: collapse; width: 100%; margin-top: 1.5rem; }
+  table { border-collapse: collapse; width: 100%; margin-top: 1.4rem; }
   th, td { text-align: left; padding: .45rem .55rem; border-bottom: 1px solid #ddd; vertical-align: top; }
-  th { color: #666; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
-  .recovered { color: #0a7d00; } .failed { color: #b00; } .sent { color: #888; }
-  .basis { color: #777; font-size: 11.5px; max-width: 30rem; }
-  .ev { font-size: 11px; padding: .05rem .3rem; border-radius: 3px; border: 1px solid; }
-  .observed   { color: #0a7d00; border-color: #0a7d00; }
-  .documented { color: #a06000; border-color: #a06000; }
-  .inferred   { color: #888;    border-color: #bbb; }
+  th { color: #666; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
+  .scheduled { color: #0b5cad; } .sending { color: #0b5cad; }
+  .sent { color: #666; } .recovered { color: #0a7d00; font-weight: 600; }
+  .failed { color: #b00; } .superseded { color: #999; }
+  .why { color: #777; font-size: 11.5px; max-width: 34rem; }
+  .ev { font-size: 10.5px; padding: .05rem .3rem; border-radius: 3px; border: 1px solid; }
+  .observed { color:#0a7d00; border-color:#0a7d00; }
+  .documented { color:#a06000; border-color:#a06000; }
+  .inferred { color:#888; border-color:#bbb; }
   .cls { font-weight: 600; }
+  .due { font-variant-numeric: tabular-nums; }
 </style>
 <h1>Second Chance</h1>
+<div id="scalebadge"></div>
 <div class="big" id="amount">--</div>
 <div class="sub" id="rate">--</div>
 <div class="alert" id="failed"></div>
 <table><thead><tr>
-  <th>payment</th><th>method</th><th>classified as</th><th>on what grounds</th><th>status</th>
+  <th>payment</th><th>method</th><th>diagnosis</th><th>plan</th><th>status</th>
 </tr></thead><tbody id="rows"></tbody></table>
 <script>
 const inr = p => "₹" + (p / 100).toLocaleString("en-IN", { maximumFractionDigits: 2 });
+
+function dueIn(iso) {
+  if (!iso) return "";
+  const secs = Math.round((new Date(iso) - Date.now()) / 1000);
+  if (secs <= 0) return "due now";
+  if (secs < 90) return `in ${secs}s`;
+  const mins = Math.round(secs / 60);
+  return mins < 90 ? `in ${mins}m` : `in ${(mins / 60).toFixed(1)}h`;
+}
+
 async function refresh() {
   const s = await (await fetch("/api/stats")).json();
+  document.getElementById("scalebadge").innerHTML = s.time_scale > 1
+    ? `<span class="scale">TIME COMPRESSED ${s.time_scale}× — delays shown are real intent, wall-clock is scaled</span>` : "";
   document.getElementById("amount").textContent = inr(s.recovered_paise) + " recovered";
   document.getElementById("rate").textContent =
-    `${s.recovered || 0} recovered of ${s.attempts} attempts` +
-    (s.attempts ? ` (${Math.round(100 * (s.recovered || 0) / s.attempts)}%)` : "");
+    `${s.recovered || 0} recovered · ${s.scheduled || 0} scheduled · ${s.attempts} attempts total`;
   document.getElementById("failed").textContent =
     s.failed ? `${s.failed} recovery attempt(s) never went out — see the table` : "";
+
   document.getElementById("rows").innerHTML = s.recent.map(r => `<tr>
-    <td>${r.payment_id}</td>
+    <td>${r.payment_id}<div class="why">attempt ${r.attempt_number}</div></td>
     <td>${r.method ?? "-"}</td>
     <td><span class="cls">${r.failure_class ?? "-"}</span>
-        ${r.evidence ? `<span class="ev ${r.evidence}">${r.evidence}</span>` : ""}</td>
-    <td class="basis">${r.basis ?? ""}</td>
-    <td class="${r.status}">${r.status}${r.error ? `<div class="basis">${r.error}</div>` : ""}</td>
+        ${r.evidence ? `<span class="ev ${r.evidence}">${r.evidence}</span>` : ""}
+        <div class="why">${r.basis ?? ""}</div></td>
+    <td><span class="cls">${r.strategy}</span>
+        ${r.status === "scheduled" ? `<div class="due">${dueIn(r.scheduled_for)}</div>` : ""}
+        ${r.payment_link_url ? `<div class="why"><a href="${r.payment_link_url}">${r.payment_link_url}</a></div>` : ""}</td>
+    <td class="${r.status}">${r.status}${r.error ? `<div class="why">${r.error}</div>` : ""}</td>
   </tr>`).join("");
 }
-refresh(); setInterval(refresh, 3000);
+refresh(); setInterval(refresh, 1000);
 </script>

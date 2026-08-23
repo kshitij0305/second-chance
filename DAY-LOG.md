@@ -318,3 +318,58 @@ been in `webhook_events`, so the same fix had to be applied again. And
 `reclassify` initially reported "10 failures" on a run that processed 7, which is
 precisely the class of quietly-wrong instrumentation that caused the
 `error_description` miss in the first place.
+
+## Day 3
+
+Built strategy selection, and it immediately produced the exact bug the product
+exists to prevent.
+
+The strategy table maps each failure class to a plan: how long to wait, whether
+to steer away from the failed instrument, how many attempts are allowed. A dead
+card gets a different rail in three minutes because waiting changes nothing. An
+empty account waits until the next morning because retrying an empty account
+just declines again. A provider blip keeps the same rail and waits twenty
+minutes. Abandoned authentication gets the fastest re-offer available, because
+intent decays in minutes.
+
+One rule applies to every class: nothing sends instantly. A customer who has just
+failed a payment is often still at the checkout retrying, and a recovery link
+arriving mid-retry risks them paying twice. A double charge costs far more trust
+than a recovery gains, so even the hottest-intent case waits. There is a test
+asserting no strategy can ever have a zero delay.
+
+Then the dispatcher double-sent.
+
+Running the lifecycle end to end, one payment produced two live payment links.
+The dispatcher polls every couple of seconds; it selected rows with status
+`scheduled`, then awaited the provider call before writing the result back. A
+second poll landing inside that await saw the same row still marked `scheduled`
+and sent it again. Read-then-write with an await in the middle, no claim.
+
+Two things make this worse than an ordinary race. The failure mode is precisely
+what the delay floor above was designed to prevent — two live links means the
+customer can pay twice — so the design was defeated one layer below where it was
+reasoned about. And it left no trace: the second send overwrote the first link's
+URL, so the row count stayed correct and the data looked perfectly healthy. I
+only caught it because the dispatch log printed the same payment id twice.
+
+Fixed with an atomic claim: a conditional `UPDATE ... WHERE id = ? AND status =
+'scheduled'` before anything slow, proceeding only if it changed a row. Two
+concurrent readers cannot both win a single atomic statement. There is also an
+in-flight guard against overlapping passes, but that is an optimisation — the
+claim is the correctness guarantee, and the tests assert the claim, not the
+guard. Re-verified under deliberately harsher settings than the ones that
+triggered it: 120x compression, one-second polling, four concurrent recoveries,
+one link each.
+
+Left deliberately unfixed: a recovery interrupted mid-send stays in `sending` and
+is never retried automatically. The provider call may have succeeded before the
+crash, so retrying risks the second live link again. Doing this properly needs an
+idempotency key on the provider call. Guessing is worse than surfacing it, so it
+warns on boot and waits for a human.
+
+Also added time compression for the demo. Real delays run from two minutes to
+twenty-four hours, which is correct and unwatchable in a five-minute video.
+`TIME_SCALE` divides only the wall-clock deadline, never the strategy's stated
+intent, and any value above 1 puts a visible banner on the dashboard so a
+compressed run can never be mistaken for real timing.
