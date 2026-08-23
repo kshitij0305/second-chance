@@ -415,3 +415,29 @@ on the dashboard whenever links are stubbed so a stubbed run cannot be passed of
 as a live one. The rule worth keeping is that a development loop should never
 consume a resource the demonstration needs. This should have been the first thing
 built, not the thing built after running out.
+
+First real generation attempt returned nothing at all. Every message fell back to
+a template with the rejection reason `empty`.
+
+`gpt-oss-20b` reasons before answering, and that reasoning is billed against the
+same completion budget as the answer. I had set `max_completion_tokens: 300`,
+sized for a 300-character message. The model spent 298 tokens thinking, hit the
+length limit, and returned an empty string. Two budgets that look like one: the
+token budget covers reasoning plus output, while the character limit only
+constrains output.
+
+Setting `reasoning_effort: "low"` took reasoning from 298 tokens to 7. Writing two
+sentences from a brief that is already supplied requires no deliberation.
+
+The failure is worth noting for how quiet it was. Nothing errored, nothing
+retried, no alert fired — messages simply came out as templates, which is a
+perfectly good outcome and would have looked like the model working fine if I had
+not checked the source field. The fallback that makes the system robust is also
+what would have hidden the model being completely broken. Recording *which*
+source produced each message is what made it visible.
+
+Then the measurable part earned its keep. First run: 33% of generations rejected,
+every one for omitting the amount placeholder. Rewrote the prompt to state the
+placeholder requirement up front and say plainly that a message without both is
+discarded. Second run: 11%, same single cause. That is a real quality dial with a
+number on it, rather than reading a few samples and forming an impression.

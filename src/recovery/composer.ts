@@ -46,9 +46,13 @@ const LINK_TOKEN = "{{link}}";
 
 const SYSTEM_PROMPT = `You write short payment recovery messages for Indian merchants, sent over SMS and WhatsApp.
 
+Your message MUST contain both of these exact placeholders, or it is discarded unread:
+  ${AMOUNT_TOKEN}   - where the amount goes
+  ${LINK_TOKEN}     - where the payment link goes
+Write them literally, braces included. Never write the actual amount or a real URL; you have not been told either.
+
 Rules, all of them absolute:
 - Output the message body only. No subject line, no preamble, no sign-off, no quotation marks around it.
-- Use ${AMOUNT_TOKEN} where the amount goes and ${LINK_TOKEN} where the payment link goes. These are substituted later.
 - Never write a number, a currency figure, a date, a deadline, a discount or any offer. You do not know them.
 - Under 300 characters.
 - Plain and human. No marketing voice, no exclamation marks, no emoji, no guilt, no urgency tactics.
@@ -101,7 +105,18 @@ async function generate(
 
   const completion = await groq.chat.completions.create({
     model: config.composerModel,
-    max_completion_tokens: 300,
+    // gpt-oss models reason before answering, and reasoning is billed against
+    // the same completion budget as the answer. At the default effort this task
+    // spent 298 of 300 tokens thinking, hit the length limit, and returned an
+    // empty string — every message silently fell back to a template.
+    //
+    // Writing two sentences from a supplied brief needs no deliberation, so
+    // effort is pinned low. That took reasoning from 298 tokens to 7.
+    reasoning_effort: "low",
+    // Generous relative to a 300-character message, because this budget covers
+    // reasoning as well as output. The message length limit is enforced by the
+    // validator, which is the check that actually matters.
+    max_completion_tokens: 512,
     temperature: 0.6,
     messages: [
       { role: "system", content: SYSTEM_PROMPT },
