@@ -1,11 +1,14 @@
 import express from "express";
-import { config } from "./config.ts";
+import { config, assertServerConfig } from "./config.ts";
 import { db } from "./db.ts";
 import { webhookRouter } from "./razorpay/webhook.ts";
 import { startDispatcher } from "./recovery/engine.ts";
 import { labRouter } from "./lab/checkout.ts";
 import { statsFor } from "./recovery/bandit.ts";
 import { allClasses } from "./recovery/variants.ts";
+
+// Fail loudly at startup rather than on the first request.
+assertServerConfig();
 
 const app = express();
 
