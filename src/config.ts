@@ -56,14 +56,21 @@ export const config = {
   groqApiKey,
   groqEnabled: Boolean(groqApiKey),
   /**
-   * A small model is the right size for this job. The output is two sentences
-   * with a fixed shape, the brief is supplied in the prompt, and correctness is
-   * enforced by validation rather than by model capability — a fabricated number
-   * is caught by code, not hoped away by a better model.
+   * A small model, measured rather than assumed. Across 150 generations each
+   * (`npm run bench:composer`):
    *
-   * The rejection rate is the signal for whether this is too small: messages
-   * rejected by the validator are recorded as `template_after_rejection`, so if
-   * that climbs, move to openai/gpt-oss-120b.
+   *   20b, plain prompt    4.7% rejected   $0.041 per 1000 messages
+   *   20b, few-shot        0.7% rejected   $0.050
+   *   120b, plain prompt   0.0% rejected   $0.093
+   *
+   * Two examples in the system prompt close almost the whole gap to a model
+   * eight times the size, for 22% more cost rather than 130% more. At this
+   * sample 0.7% and 0.0% are one rejection apart and not distinguishable.
+   *
+   * Every rejection in every variant had the same cause — the model omitting the
+   * amount placeholder — which is an instruction-following miss, not a
+   * capability limit. Instruction-following misses are fixed by showing rather
+   * than by paying.
    */
   composerModel: process.env.COMPOSER_MODEL ?? "openai/gpt-oss-20b",
 };

@@ -639,3 +639,36 @@ The general lesson is about where intent gets recorded. This system explains
 every decision it makes, which is a good property, and it meant a decision that
 was never carried out still appeared in the audit trail as though it had been.
 Explanations should be generated from what happened, not from what was planned.
+
+Turned a judgement in the README into a measurement.
+
+The README asserted that a small model was the right size for message
+composition. That was reasoning, not evidence, and it is exactly the kind of
+claim a panel should push on. So I benchmarked it: same prompt, same validator,
+same failure classes, varying only the model and whether examples are supplied.
+150 generations per variant.
+
+    20b, plain prompt    4.7% rejected   $0.041 per 1000 messages
+    20b, few-shot        0.7% rejected   $0.050
+    120b, plain prompt   0.0% rejected   $0.093
+
+The useful part is not which won. It is that every rejection in every variant had
+the same cause — the model omitting the amount placeholder — and that tells you
+what kind of problem it is. An instruction-following miss is not a capability
+limit, and paying eight times more per token to fix one is the wrong lever. Two
+examples in the prompt closed almost the entire gap for 22% more cost rather than
+130% more.
+
+The metric mattered as much as the result. Validator rejection rate is not a
+stylistic opinion about prose; a rejected message is one the system refused to
+send because it fabricated a figure or dropped a placeholder, and the template
+went out instead. That made "is the bigger model better" answerable without
+anyone reading messages and forming an impression.
+
+Two smaller things. A first run at 48 generations per variant showed 4.2% against
+0.0% — two rejections against none, which is not a result. Rerunning at 150
+turned it into something defensible, and the numbers barely moved, which is
+itself reassuring. And that first run showed the few-shot variant at 3.5 seconds
+median against 617ms, which I flagged as possibly noise rather than asserting;
+at the larger sample all three variants land within 100ms of each other. It was
+noise. Worth having said so at the time rather than building an argument on it.

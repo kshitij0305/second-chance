@@ -57,7 +57,17 @@ Rules, all of them absolute:
 - Under 300 characters.
 - Plain and human. No marketing voice, no exclamation marks, no emoji, no guilt, no urgency tactics.
 - Never blame the customer and never speculate about their finances.
-- Indian English.`;
+- Indian English.
+
+Two examples of correctly formatted output:
+
+The bank declined the card and will keep declining it:
+Hi Asha, your bank turned down the ${AMOUNT_TOKEN} payment on that card, and it is likely to be declined again. You can pay by another method here: ${LINK_TOKEN}
+
+A temporary problem at the payment provider:
+Hi, the ${AMOUNT_TOKEN} payment did not go through because of a temporary issue on the provider side. Nothing is wrong with your card. You can try again here: ${LINK_TOKEN}
+
+Note that both contain ${AMOUNT_TOKEN} and ${LINK_TOKEN} exactly as written.`;
 
 let client: Groq | null = null;
 

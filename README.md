@@ -143,9 +143,29 @@ rejection rate is the signal that the model is too small for the brief rather
 than something a reader has to notice by eye.
 
 Inference runs on Groq (`openai/gpt-oss-20b` by default). The provider sits
-behind a single function; swapping it touched one call site and left all 51 tests
+behind a single function; swapping it touched one call site and left every test
 passing unchanged, because the tests cover the validation fence rather than the
 model.
+
+**The model size was measured, not assumed.** `npm run bench:composer` varies
+only the model and whether the prompt carries examples, across 150 generations
+each:
+
+| Variant | Rejected by the validator | Cost per 1000 messages |
+|---|---|---|
+| 20b, plain prompt | 4.7% | $0.041 |
+| 20b, few-shot | 0.7% | $0.050 |
+| 120b, plain prompt | 0.0% | $0.093 |
+
+Every rejection in every variant had the same cause: the model omitting the
+amount placeholder. That is an instruction-following miss, not a capability
+limit, and instruction-following misses are fixed by showing rather than by
+paying. Two examples in the system prompt close almost the whole gap to a model
+eight times the size, for 22% more cost instead of 130% more — and at this sample
+0.7% and 0.0% are one rejection apart, which is not a distinguishable difference.
+
+So the small model stays, with examples. The rejection rate remains the signal if
+that ever stops being true.
 
 ## What this can and cannot demonstrate
 
@@ -255,6 +275,7 @@ where there is enough volume for it to be doing something.
 | `npm run export-fixtures` | regenerates the scrubbed test fixtures from captured traffic |
 | `npm run simulate -- <n>` | drives the bandit against invented ground truth so learning is observable |
 | `npm run demo` | scripted walkthrough at a fixed pace; `-- --reset` clears state between takes |
+| `npm run bench:composer` | model size and few-shot against validator rejection rate and cost |
 | `npm test` / `npm run typecheck` | 66 tests, strict TypeScript |
 
 ## Layout
