@@ -813,3 +813,43 @@ vocabulary while only part of it can be exercised is now a stated constraint wit
 evidence behind it rather than an excuse.
 
 Kept the harness in the repository. It is the evidence.
+
+Before recording, I checked whether the repository actually works when cloned.
+It did not.
+
+The README says `npm install` then `npm test`. I had never once run that on a
+machine without a `.env` file, because mine has always had one. Cloning fresh
+from GitHub: four test files failed to load entirely and the suite reported 35
+tests instead of 72. Not 72 with failures — 35, because the files never loaded,
+and the count silently shrank rather than announcing anything was wrong.
+
+Two causes, both the same mistake at different depths.
+
+`config.ts` validated required env vars at import time. Almost everything imports
+config, so without credentials almost nothing was loadable. Validation belongs at
+server startup, not at module load: configuration is data, and whether the data
+is sufficient is a question for the thing that needs it. A pure function under
+test needs none of it.
+
+Then, with that fixed, one file still failed. `client.ts` constructed the
+Razorpay SDK as a module-level constant, and the SDK throws when `key_id` is
+empty. So importing anything that transitively reached it still required real
+credentials. Worse, it meant the server's own missing-env-var check never ran at
+all — ES imports evaluate before any statement in the importing module, so the
+first thing a newcomer saw was a stack trace from inside a vendored SDK rather
+than the sentence written specifically to tell them what was missing. Made the
+client lazy.
+
+And while reading the file I found a third thing: the SMTP password whitespace
+strip was `/s+/` rather than `/\s+/`. It removed the letter s. It had appeared to
+work only because the app password in use happens to contain no lowercase s.
+
+Verified properly this time: fresh clone from GitHub, npm install, 72 of 72
+passing, typecheck clean, and a server with no `.env` now prints the intended
+message.
+
+The general point is that "it works on my machine" is not a joke about
+environments, it is a statement about which paths have actually been executed. I
+had run the test suite fifty times and never once from a state a reader would
+start in. The instruction in my own README was untested, and testing it took four
+minutes.
