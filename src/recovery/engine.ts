@@ -5,6 +5,7 @@ import { config } from "../config.ts";
 import { compose, formatAmount } from "./composer.ts";
 import type { FailureClass } from "./classifier.ts";
 import { recordOutcome } from "./bandit.ts";
+import { findVariant } from "./variants.ts";
 
 export interface FailedPayment {
   payment_id: string;
@@ -139,6 +140,13 @@ function alreadyPaid(row: DueRow): boolean {
 
 async function send(row: DueRow): Promise<boolean> {
   try {
+    // When the failure was a property of the instrument rather than the moment,
+    // the plan says to steer away from it — and until now that intent only ever
+    // reached an explanation string. Hide the failed method on the checkout so
+    // the recovery actually offers a different route.
+    const variant = row.failure_class ? findVariant(row.failure_class, row.strategy) : undefined;
+    const excludeMethod = variant?.avoidFailedMethod ? (row.method ?? undefined) : undefined;
+
     const link = await linkProvider.create({
       amount: row.amount,
       currency: "INR",
@@ -146,6 +154,7 @@ async function send(row: DueRow): Promise<boolean> {
       email: row.email ?? undefined,
       contact: row.contact ?? undefined,
       notes: { recovers_payment_id: row.payment_id, strategy: row.strategy },
+      excludeMethod,
     });
 
     // Composed only once the link exists, so the message can carry the real
@@ -161,11 +170,14 @@ async function send(row: DueRow): Promise<boolean> {
     db.prepare(
       `UPDATE recovery_attempts
           SET status = 'sent', payment_link_id = ?, payment_link_url = ?,
-              message = ?, message_source = ?, sent_at = datetime('now')
+              message = ?, message_source = ?, excluded_method = ?, sent_at = datetime('now')
         WHERE id = ?`,
-    ).run(link.id, link.short_url, composed.text, composed.source, row.id);
+    ).run(link.id, link.short_url, composed.text, composed.source, link.excluded_method ?? null, row.id);
 
-    console.log(`[dispatch] ${row.payment_id} -> ${link.short_url} (${row.strategy}, message by ${composed.source})`);
+    console.log(
+      `[dispatch] ${row.payment_id} -> ${link.short_url} (${row.strategy}, message by ${composed.source}` +
+      (link.excluded_method ? `, ${link.excluded_method} hidden` : "") + ")",
+    );
     console.log(`           "${composed.text}"`);
     return true;
   } catch (error) {

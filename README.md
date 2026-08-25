@@ -50,7 +50,7 @@ earns. Every strategy has a delay floor, and a test asserts none can be zero.
 |---|---|---|
 | `transient_provider` | wait 20 min, same rail, 3 attempts | provider-side and temporary; the instrument is fine |
 | `insufficient_funds` | wait 18 h, same rail, 2 attempts | the account was empty, not broken; retrying now declines again |
-| `instrument_rejected` | wait 3 min, **different rail**, 2 attempts | this card will keep refusing, so waiting changes nothing |
+| `instrument_rejected` | wait 3 min, **failed method hidden on the checkout**, 2 attempts | this card will keep refusing, so waiting changes nothing |
 | `authentication_abandoned` | wait 2 min, same rail, 2 attempts | customer was mid-purchase; intent decays within minutes |
 | `customer_cancelled` | wait 24 h, 1 attempt | they chose to stop; a quick nudge reads as pressure |
 | `unknown` | wait 30 min, same rail, 2 attempts | cannot diagnose, so do not act as though we can |
@@ -255,7 +255,7 @@ where there is enough volume for it to be doing something.
 | `npm run export-fixtures` | regenerates the scrubbed test fixtures from captured traffic |
 | `npm run simulate -- <n>` | drives the bandit against invented ground truth so learning is observable |
 | `npm run demo` | scripted walkthrough at a fixed pace; `-- --reset` clears state between takes |
-| `npm test` / `npm run typecheck` | 60 tests, strict TypeScript |
+| `npm test` / `npm run typecheck` | 66 tests, strict TypeScript |
 
 ## Layout
 
@@ -288,8 +288,6 @@ where there is enough volume for it to be doing something.
 - Recovery messages are composed and stored but not yet delivered to a customer.
   Dispatch creates the link, writes the message, and logs it. SMS and WhatsApp
   adapters are the next piece.
-- `instrument_rejected` records the intent to steer away from the failed method
-  but does not yet restrict methods on the generated link.
 
 ## Notes
 

@@ -50,6 +50,7 @@ db.exec(`
     explanation      TEXT,
     message          TEXT,
     message_source   TEXT,
+    excluded_method  TEXT,
     error            TEXT,
     payment_link_id  TEXT,
     payment_link_url TEXT,
@@ -91,6 +92,7 @@ for (const [column, ddl] of [
   ["explanation", "ALTER TABLE recovery_attempts ADD COLUMN explanation TEXT"],
   ["message", "ALTER TABLE recovery_attempts ADD COLUMN message TEXT"],
   ["message_source", "ALTER TABLE recovery_attempts ADD COLUMN message_source TEXT"],
+  ["excluded_method", "ALTER TABLE recovery_attempts ADD COLUMN excluded_method TEXT"],
 ] as const) {
   const existing = (db.prepare("PRAGMA table_info(recovery_attempts)").all() as { name: string }[])
     .map((c) => c.name);

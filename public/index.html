@@ -125,6 +125,7 @@ async function refresh() {
         <div class="sub">${esc(r.basis)}</div></td>
     <td><span class="cls">${esc(r.strategy)}</span>
         ${r.status === "scheduled" ? `<div class="due">${dueIn(r.scheduled_for)}</div>` : ""}
+        ${r.excluded_method ? `<div class="sub">${esc(r.excluded_method)} hidden on the checkout</div>` : ""}
         ${r.payment_link_url ? `<div class="sub">${esc(r.payment_link_url)}</div>` : ""}</td>
     <td>${r.message
         ? `<span class="tag ${r.message_source}">${r.message_source === "model" ? "written by model" : r.message_source === "template" ? "template" : "model rejected"}</span>

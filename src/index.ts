@@ -29,7 +29,7 @@ app.get("/api/stats", (_req, res) => {
 
   const recent = db.prepare(`
     SELECT a.payment_id, a.strategy, a.status, a.error, a.payment_link_url,
-           a.sent_at, a.recovered_at, a.amount, a.scheduled_for, a.attempt_number, a.explanation, a.message, a.message_source,
+           a.sent_at, a.recovered_at, a.amount, a.scheduled_for, a.attempt_number, a.explanation, a.message, a.message_source, a.excluded_method,
            f.error_code, f.error_reason, f.method,
            f.failure_class, f.evidence, f.basis, f.source
       FROM recovery_attempts a

@@ -603,3 +603,39 @@ than one demonstration quietly making both look like the same thing.
 
 Verified: five beats, five classes, five plans, matching the narration exactly,
 repeatably.
+
+Closed a gap that was worse than an unfinished feature: a claim the system made
+about itself that was not true.
+
+The `instrument_rejected` strategy carries `avoidFailedMethod: true`, the README
+described it as "different rail", and I had written it into the demo narration as
+"switch rails". What the code actually did was set the flag, append the words
+"steering away from the failed method" to an explanation string, and then create
+a payment link identical to every other payment link. The customer could switch
+method because the link offered all of them, but nothing steered them anywhere.
+The intent existed only as text.
+
+That is a specific kind of bad. An unfinished feature is visible in the Known
+Gaps list. A feature that describes itself in the audit trail, in the docs and in
+the demo, while doing nothing, is the system lying about its own behaviour — and
+the explanation string made it read as though it had happened.
+
+Razorpay payment links do support this: `options.checkout.method` takes booleans
+per method. Checked the API rather than guessing at the shape, since this was
+going into the video.
+
+One rule matters in the implementation. Only ever hide one method, and only if
+the checkout recognises it. A recovery link with everything disabled cannot be
+paid at all, which turns a recovery attempt into a dead end — strictly worse than
+not steering. Methods the checkout cannot toggle, like paylater or nach, are
+ignored rather than passed through, because an unrecognised key could restrict
+nothing or everything depending on how the provider reads it, and sending no
+options is predictable. There are tests for both.
+
+Verified end to end: the real captured netbanking failure now produces a link
+with netbanking hidden, and nothing else in the sequence is restricted.
+
+The general lesson is about where intent gets recorded. This system explains
+every decision it makes, which is a good property, and it meant a decision that
+was never carried out still appeared in the audit trail as though it had been.
+Explanations should be generated from what happened, not from what was planned.
