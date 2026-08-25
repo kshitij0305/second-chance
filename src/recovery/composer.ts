@@ -41,10 +41,10 @@ export interface ComposedMessage {
 const MAX_CHARS = 320;
 
 /** Placeholders the model must use instead of real values. */
-const AMOUNT_TOKEN = "{{amount}}";
-const LINK_TOKEN = "{{link}}";
+export const AMOUNT_TOKEN = "{{amount}}";
+export const LINK_TOKEN = "{{link}}";
 
-const SYSTEM_PROMPT = `You write short payment recovery messages for Indian merchants, sent over SMS and WhatsApp.
+export const SYSTEM_PROMPT = `You write short payment recovery messages for Indian merchants, sent over SMS and WhatsApp.
 
 Your message MUST contain both of these exact placeholders, or it is discarded unread:
   ${AMOUNT_TOKEN}   - where the amount goes

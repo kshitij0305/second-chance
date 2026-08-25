@@ -16,7 +16,8 @@
     "reclassify": "tsx scripts/reclassify.ts",
     "export-fixtures": "node scripts/export-fixtures.mjs",
     "simulate": "tsx scripts/simulate.ts",
-    "demo": "tsx scripts/demo.ts"
+    "demo": "tsx scripts/demo.ts",
+    "bench:composer": "tsx scripts/bench-composer.ts"
   },
   "dependencies": {
     "dotenv": "^17.2.3",
