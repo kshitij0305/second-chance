@@ -3,6 +3,7 @@ import { config } from "./config.ts";
 import { db } from "./db.ts";
 import { webhookRouter } from "./razorpay/webhook.ts";
 import { startDispatcher } from "./recovery/engine.ts";
+import { labRouter } from "./lab/checkout.ts";
 import { statsFor } from "./recovery/bandit.ts";
 import { allClasses } from "./recovery/variants.ts";
 
@@ -11,6 +12,13 @@ const app = express();
 app.use("/webhooks", webhookRouter);
 app.use(express.json());
 app.use(express.static("public"));
+
+// Investigation harness, not product surface. Gated so it cannot be mounted by
+// accident: it creates real orders and exists only to find out what the provider
+// sends through the direct Checkout flow.
+if (config.labEnabled) {
+  app.use("/lab", labRouter);
+}
 
 app.get("/api/stats", (_req, res) => {
   const row = db.prepare(`
@@ -84,5 +92,8 @@ app.listen(config.port, () => {
       ? `DELIVERY email — messages are really sent${config.deliveryRedirectTo ? `, redirected to ${config.deliveryRedirectTo}` : ""}`
       : "DELIVERY console — messages are logged, not sent",
   );
+  if (config.labEnabled) {
+    console.log(`LAB enabled — checkout error lab at http://localhost:${config.port}/lab`);
+  }
   startDispatcher();
 });

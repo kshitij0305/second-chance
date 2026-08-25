@@ -171,12 +171,23 @@ that ever stops being true.
 
 Worth stating plainly, because it shapes what the code does.
 
-Razorpay test mode collapses almost every card failure into one generic error.
-Five different documented error-scenario cards — declined, insufficient funds,
-timed out, authentication failed, and a Mastercard decline — were each failed at
-a real checkout, and every captured failure came back identical on
-`error_reason`. The real signal turned out to be `error_description`, which does
-separate a bank decline from a temporary issue.
+Razorpay test mode collapses every card failure into one generic error, and this
+was tested rather than assumed.
+
+Through **payment links**: five different documented error-scenario cards —
+declined, insufficient funds, timed out, authentication failed, and a Mastercard
+decline — each failed at a real checkout. All five returned identical payloads.
+
+Through the **direct Checkout integration**, which is the flow the published
+error-scenario table actually describes: same result. Different cards, identical
+`error_reason: payment_failed`, `error_source: gateway`, same description. The
+harness used for that is at `src/lab/checkout.ts` and prints expected against
+actual error reason for each documented card.
+
+So there is no integration path in test mode that yields distinguishable card
+errors. The real signal turned out to be `error_description`, which does separate
+a bank decline from a temporary issue — but only for netbanking and wallet
+failures, never for cards.
 
 So of seven real captured failures, two are diagnosable and five classify as
 `unknown`. That is the honest result rather than a bug: a generic card failure

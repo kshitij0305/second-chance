@@ -780,3 +780,36 @@ describing steering that never happened, a message recommending an action never
 chosen, a reclassify count reporting rows it skipped, and this. The pattern is
 always the same, and it is always in the part of the system built to be
 transparent. Transparency is a surface where lies can live.
+
+Tested the last remaining theory about the missing error variety, and it was
+wrong. Which settles the question.
+
+Every failure captured so far came through payment links, and every card failure
+returned a generic `payment_failed` regardless of which documented error card was
+used. The obvious explanation was that payment links put a mock bank page in
+front of the card and that page's Failure button overrides whatever went in — and
+that the published error-scenario table, which describes the direct Checkout
+integration, would behave properly.
+
+Built a harness for it: a page that creates an order through the API, opens
+Checkout.js against it, and prints the expected error reason next to the actual
+one from Razorpay's client-side `payment.failed` event. No payment links, no mock
+page wrapper.
+
+Same result. Different cards, identical payloads: `payment_failed` from
+`gateway`, description "Payment failed". Two cards confirmed distinct by their
+`last4`, three failures, no variation at all.
+
+So both integration paths collapse card errors in test mode, and there is no
+route to distinguishable card failures without live mode — which needs full KYC,
+takes weeks, and would mean deliberately failing real payments with real money to
+generate fixtures.
+
+The result is negative and it is worth more than the positive would have been. It
+converts "five of seven real failures are undiagnosable" from something that
+looks like an unfinished classifier into a measured property of the platform,
+tested two independent ways. The classifier handling the full documented
+vocabulary while only part of it can be exercised is now a stated constraint with
+evidence behind it rather than an excuse.
+
+Kept the harness in the repository. It is the evidence.

@@ -69,6 +69,8 @@ export const config = {
    * replaying them on a laptop must not mail those people.
    */
   deliveryRedirectTo: process.env.DELIVERY_REDIRECT_TO ?? "",
+  /** Mounts the checkout investigation harness. Off unless explicitly asked for. */
+  labEnabled: process.env.LAB === "on",
   /**
    * How long a sent recovery waits before being counted as unanswered. Without
    * a horizon the bandit only ever hears about successes and learns nothing.
