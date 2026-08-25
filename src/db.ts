@@ -51,6 +51,10 @@ db.exec(`
     message          TEXT,
     message_source   TEXT,
     excluded_method  TEXT,
+    delivered_to     TEXT,
+    delivered_at     TEXT,
+    delivery_channel TEXT,
+    delivery_error   TEXT,
     error            TEXT,
     payment_link_id  TEXT,
     payment_link_url TEXT,
@@ -93,6 +97,10 @@ for (const [column, ddl] of [
   ["message", "ALTER TABLE recovery_attempts ADD COLUMN message TEXT"],
   ["message_source", "ALTER TABLE recovery_attempts ADD COLUMN message_source TEXT"],
   ["excluded_method", "ALTER TABLE recovery_attempts ADD COLUMN excluded_method TEXT"],
+  ["delivered_to", "ALTER TABLE recovery_attempts ADD COLUMN delivered_to TEXT"],
+  ["delivered_at", "ALTER TABLE recovery_attempts ADD COLUMN delivered_at TEXT"],
+  ["delivery_channel", "ALTER TABLE recovery_attempts ADD COLUMN delivery_channel TEXT"],
+  ["delivery_error", "ALTER TABLE recovery_attempts ADD COLUMN delivery_error TEXT"],
 ] as const) {
   const existing = (db.prepare("PRAGMA table_info(recovery_attempts)").all() as { name: string }[])
     .map((c) => c.name);

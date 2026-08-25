@@ -11,70 +11,71 @@
   }
   * { box-sizing: border-box; }
   body {
-    font: 15px/1.5 var(--sans); color: var(--ink); background: var(--bg);
+    font: 18px/1.55 var(--sans); color: var(--ink); background: var(--bg);
     margin: 0; padding: 1.75rem 2rem 4rem;
   }
-  .wrap { max-width: 78rem; margin: 0 auto; }
+  .wrap { max-width: 92rem; margin: 0 auto; }
 
   header { display: flex; align-items: baseline; gap: .75rem; flex-wrap: wrap; }
-  h1 { font-size: 1.05rem; margin: 0; font-weight: 650; letter-spacing: -.01em; }
-  .tagline { color: var(--dim); font-size: .82rem; }
+  h1 { font-size: 1.3rem; margin: 0; font-weight: 650; letter-spacing: -.01em; }
+  .tagline { color: var(--dim); font-size: .95rem; }
   .flags { display: flex; gap: .4rem; flex-wrap: wrap; margin: .6rem 0 1.5rem; }
   .flag {
     background: #fff6dc; border: 1px solid #e3c04a; color: var(--warn);
-    padding: .1rem .45rem; border-radius: 4px; font-size: .68rem;
+    padding: .1rem .45rem; border-radius: 4px; font-size: .8rem;
     font-weight: 600; letter-spacing: .03em; text-transform: uppercase;
   }
 
   .stats { display: flex; gap: 2.75rem; flex-wrap: wrap; margin-bottom: 2rem; }
-  .stat .n { font-size: 2.1rem; font-weight: 680; line-height: 1; letter-spacing: -.025em; font-variant-numeric: tabular-nums; }
-  .stat .l { font-size: .66rem; text-transform: uppercase; letter-spacing: .09em; color: var(--faint); margin-top: .4rem; font-weight: 600; }
+  .stat .n { font-size: 2.6rem; font-weight: 680; line-height: 1; letter-spacing: -.025em; font-variant-numeric: tabular-nums; }
+  .stat .l { font-size: .78rem; text-transform: uppercase; letter-spacing: .09em; color: var(--faint); margin-top: .4rem; font-weight: 600; }
 
-  h2 { font-size: .68rem; text-transform: uppercase; letter-spacing: .1em;
+  h2 { font-size: .82rem; text-transform: uppercase; letter-spacing: .1em;
        color: var(--faint); font-weight: 700; margin: 0 0 .7rem; }
 
   .rec {
     background: var(--card); border: 1px solid var(--line); border-radius: 8px;
-    padding: .85rem 1rem; margin-bottom: .55rem;
+    padding: 1.1rem 1.25rem; margin-bottom: .7rem;
     display: grid; grid-template-columns: 1.05fr 1.15fr 1.5fr; gap: 1.5rem;
   }
   .rec .top {
     grid-column: 1 / -1; display: flex; align-items: center; gap: .6rem;
     padding-bottom: .7rem; margin-bottom: .1rem; border-bottom: 1px solid var(--line);
   }
-  .pid { font-family: var(--mono); font-size: .76rem; color: var(--dim); }
+  .pid { font-family: var(--mono); font-size: .88rem; color: var(--dim); }
   .amt { font-weight: 650; font-variant-numeric: tabular-nums; }
-  .meth { color: var(--dim); font-size: .8rem; }
+  .meth { color: var(--dim); font-size: .95rem; }
   .spacer { flex: 1; }
 
-  .col .k { font-size: .62rem; text-transform: uppercase; letter-spacing: .09em;
+  .col .k { font-size: .74rem; text-transform: uppercase; letter-spacing: .09em;
             color: var(--faint); font-weight: 700; margin-bottom: .25rem; }
-  .col .v { font-family: var(--mono); font-size: .82rem; font-weight: 600; }
-  .col .note { color: var(--dim); font-size: .78rem; line-height: 1.45; margin-top: .25rem; }
+  .col .v { font-family: var(--mono); font-size: .98rem; font-weight: 600; }
+  .col .note { color: var(--dim); font-size: .88rem; line-height: 1.45; margin-top: .25rem; }
 
-  .msg { font-size: .85rem; line-height: 1.5; margin-top: .3rem; color: var(--ink); }
+  .msg { font-size: 1rem; line-height: 1.5; margin-top: .3rem; color: var(--ink); }
+  .delivered { color: var(--good); }
   .pending { color: var(--faint); font-style: italic; font-size: .8rem; margin-top: .3rem; }
 
-  .tag { font-size: .62rem; padding: .05rem .35rem; border-radius: 3px; border: 1px solid;
+  .tag { font-size: .72rem; padding: .05rem .35rem; border-radius: 3px; border: 1px solid;
          text-transform: uppercase; letter-spacing: .04em; font-weight: 650; white-space: nowrap; }
   .observed, .model { color: var(--good); border-color: #9ed3b1; background: #f1faf4; }
   .documented { color: var(--warn); border-color: #e3c977; background: #fffaeb; }
   .inferred, .template { color: var(--dim); border-color: var(--line); background: #f6f7f9; }
   .template_after_rejection { color: var(--bad); border-color: #edb4af; background: #fdf3f2; }
 
-  .status { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+  .status { font-size: .86rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
   .s-recovered { color: var(--good); } .s-scheduled, .s-sending { color: var(--wait); }
   .s-sent { color: var(--dim); } .s-failed { color: var(--bad); }
   .s-expired, .s-superseded { color: var(--faint); }
-  .due { color: var(--wait); font-variant-numeric: tabular-nums; font-size: .78rem; margin-top: .25rem; }
+  .due { color: var(--wait); font-variant-numeric: tabular-nums; font-size: .92rem; margin-top: .25rem; }
 
   table { border-collapse: collapse; width: 100%; background: var(--card);
           border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
-  th { text-align: left; font-size: .62rem; text-transform: uppercase; letter-spacing: .09em;
+  th { text-align: left; font-size: .74rem; text-transform: uppercase; letter-spacing: .09em;
        color: var(--faint); font-weight: 700; padding: .55rem .8rem; border-bottom: 1px solid var(--line); }
-  td { padding: .5rem .8rem; border-bottom: 1px solid var(--line); font-size: .84rem; }
+  td { padding: .6rem .8rem; border-bottom: 1px solid var(--line); font-size: .95rem; }
   tbody tr:last-child td { border-bottom: none; }
-  td.v { font-family: var(--mono); font-size: .8rem; }
+  td.v { font-family: var(--mono); font-size: .95rem; }
   .bar { height: 5px; background: #eef0f4; border-radius: 3px; overflow: hidden; width: 120px; display: inline-block; vertical-align: middle; }
   .bar > i { display: block; height: 100%; background: var(--wait); }
   .pct { font-variant-numeric: tabular-nums; color: var(--dim); font-size: .78rem; margin-left: .5rem; }
@@ -92,10 +93,10 @@
   <div class="flags" id="flags"></div>
 
   <div class="stats">
-    <div class="stat"><div class="n" id="amount">—</div><div class="l">recovered</div></div>
-    <div class="stat"><div class="n" id="rate">—</div><div class="l">recovery rate</div></div>
-    <div class="stat"><div class="n" id="pipeline">—</div><div class="l">in flight</div></div>
-    <div class="stat"><div class="n" id="atrisk">—</div><div class="l">still at risk</div></div>
+    <div class="stat"><div class="n" id="handled">0</div><div class="l">failures handled</div></div>
+    <div class="stat"><div class="n" id="atrisk">₹0</div><div class="l">revenue at risk</div></div>
+    <div class="stat"><div class="n" id="pipeline">0</div><div class="l">recoveries in flight</div></div>
+    <div class="stat"><div class="n" id="amount">₹0</div><div class="l">recovered</div><div class="l" id="rate"></div></div>
   </div>
 
   <section>
@@ -133,6 +134,17 @@ function dueIn(iso) {
 
 const sourceLabel = { model: "written by model", template: "template", template_after_rejection: "model output rejected" };
 
+function deliveryLine(r) {
+  if (r.delivery_error) return `<div class="note" style="color:var(--bad)">not delivered — ${esc(r.delivery_error)}</div>`;
+  if (!r.delivered_at) return "";
+  // The console channel writes nothing to anybody. Saying "delivered" for it
+  // would be the same lie as an explanation describing a decision never taken.
+  if (r.delivery_channel === "console") {
+    return `<div class="note">would go to ${esc(r.delivered_to)} — not sent, console channel</div>`;
+  }
+  return `<div class="note delivered">delivered to ${esc(r.delivered_to)} via ${esc(r.delivery_channel)}</div>`;
+}
+
 function recovery(r) {
   return `<div class="rec">
     <div class="top">
@@ -163,6 +175,7 @@ function recovery(r) {
       <div class="k">message to the customer
         ${r.message_source ? `<span class="tag ${r.message_source}">${sourceLabel[r.message_source] ?? r.message_source}</span>` : ""}</div>
       ${r.message ? `<div class="msg">${esc(r.message)}</div>` : `<div class="pending">composed when it sends</div>`}
+      ${deliveryLine(r)}
     </div>
   </div>`;
 }
@@ -174,13 +187,19 @@ async function refresh() {
   if (s.link_provider === "stub") flags.push("stub links — not real payment links");
   if (s.time_scale > 1) flags.push("time compressed " + s.time_scale + "× — delays are real intent, wall clock is scaled");
   if (s.learning === false) flags.push("learning off — every class uses its default plan");
+  if (s.delivery_channel !== "email") flags.push("delivery console — messages are logged, not sent");
   document.getElementById("flags").innerHTML = flags.map(f => `<span class="flag">${f}</span>`).join("");
 
   const resolved = (s.recovered || 0) + (s.expired || 0);
-  document.getElementById("amount").textContent = inr(s.recovered_paise);
-  document.getElementById("rate").textContent = resolved ? Math.round(100 * (s.recovered || 0) / resolved) + "%" : "—";
-  document.getElementById("pipeline").textContent = (s.scheduled || 0) + (s.sent_pending || 0);
+  document.getElementById("handled").textContent = s.attempts || 0;
   document.getElementById("atrisk").textContent = inr(s.at_risk_paise || 0);
+  document.getElementById("pipeline").textContent = (s.scheduled || 0) + (s.sent_pending || 0);
+  document.getElementById("amount").textContent = inr(s.recovered_paise);
+  // Only claim a rate once something has actually resolved. A percentage over
+  // zero outcomes is not a small number, it is no number.
+  document.getElementById("rate").textContent = resolved
+    ? Math.round(100 * (s.recovered || 0) / resolved) + "% of " + resolved + " resolved"
+    : "";
 
   document.getElementById("rows").innerHTML = s.recent.length
     ? s.recent.map(recovery).join("")

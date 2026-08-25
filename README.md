@@ -230,6 +230,26 @@ LINK_PROVIDER=stub npm run dev
 The dashboard shows a banner whenever links are stubbed, so a stubbed run cannot
 be presented as a live one. Leave it unset to create real links.
 
+### Delivery
+
+A recovery nobody receives cannot be recovered, so dispatch sends the composed
+message rather than only recording it.
+
+Nothing is sent unless `DELIVERY=email` is set — the same principle as stub
+payment links, a development loop should not be able to contact a customer. With
+it unset, messages are logged and the dashboard says so.
+
+```bash
+DELIVERY=email npm run dev
+```
+
+`DELIVERY_REDIRECT_TO` sends every message to one address regardless of what the
+payment says, and the subject records who it was diverted from. Captured real
+failures carry the email of whoever stood at that checkout, and this repository
+replays those payloads routinely — during development, in the demo runner, and
+whenever a handler fix is applied to traffic that already arrived. Every one of
+those reaches the delivery code with a real person's address on it.
+
 ### Seeing it work without waiting a day
 
 Real delays run from 2 minutes to 24 hours. `TIME_SCALE` divides only the
@@ -292,6 +312,7 @@ where there is enough volume for it to be doing something.
 | `src/recovery/composer.ts` | message generation, validation and fallback |
 | `src/recovery/templates.ts` | deterministic message per failure class |
 | `src/razorpay/links.ts` | payment link creation, real or stubbed |
+| `src/delivery/channel.ts` | sending the message, real or logged |
 | `src/recovery/engine.ts` | scheduling, guarded dispatch, attribution |
 | `src/recovery/mapper.ts` | Razorpay vocabulary to ours |
 | `src/db.ts` | SQLite schema and migrations |
@@ -306,9 +327,8 @@ where there is enough volume for it to be doing something.
 - Link creation is rate-limited by Razorpay and has no backoff, so a burst of
   failures — precisely the case this exists for — would fail to recover some of
   them. Those are recorded as `failed` and surfaced, not silently dropped.
-- Recovery messages are composed and stored but not yet delivered to a customer.
-  Dispatch creates the link, writes the message, and logs it. SMS and WhatsApp
-  adapters are the next piece.
+- Delivery is email only. SMS and WhatsApp are where Indian payment recovery
+  actually happens, and neither is built.
 
 ## Notes
 

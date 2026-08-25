@@ -3,6 +3,7 @@ import { linkProvider } from "../razorpay/links.ts";
 import type { Decision } from "./strategy.ts";
 import { config } from "../config.ts";
 import { compose, formatAmount } from "./composer.ts";
+import { channel, subjectFor } from "../delivery/channel.ts";
 import type { FailureClass } from "./classifier.ts";
 import { recordOutcome } from "./bandit.ts";
 import { findVariant } from "./variants.ts";
@@ -173,16 +174,36 @@ async function send(row: DueRow): Promise<boolean> {
       { steerToAnotherMethod: Boolean(link.excluded_method) },
     );
 
+    // Actually send it. Until this existed the system stopped one step short of
+    // its own premise: a recovery nobody receives cannot be recovered, which is
+    // why the recovered figure was structurally zero rather than merely low.
+    //
+    // A delivery failure does not lose the recovery. The link exists, the
+    // message exists, and both are recorded with the error so an operator can
+    // see that the ask never left rather than wondering why nobody paid.
+    const delivery = await channel.send({
+      to: row.email,
+      subject: subjectFor(formatAmount(row.amount)),
+      body: composed.text,
+    });
+
     db.prepare(
       `UPDATE recovery_attempts
           SET status = 'sent', payment_link_id = ?, payment_link_url = ?,
-              message = ?, message_source = ?, excluded_method = ?, sent_at = datetime('now')
+              message = ?, message_source = ?, excluded_method = ?, sent_at = datetime('now'),
+              delivery_channel = ?, delivered_to = ?, delivery_error = ?,
+              delivered_at = CASE WHEN ? IS NULL THEN datetime('now') ELSE NULL END
         WHERE id = ?`,
-    ).run(link.id, link.short_url, composed.text, composed.source, link.excluded_method ?? null, row.id);
+    ).run(
+      link.id, link.short_url, composed.text, composed.source, link.excluded_method ?? null,
+      delivery.channel, delivery.to || null, delivery.error ?? null, delivery.error ?? null,
+      row.id,
+    );
 
     console.log(
       `[dispatch] ${row.payment_id} -> ${link.short_url} (${row.strategy}, message by ${composed.source}` +
-      (link.excluded_method ? `, ${link.excluded_method} hidden` : "") + ")",
+      (link.excluded_method ? `, ${link.excluded_method} hidden` : "") +
+      (delivery.error ? `, DELIVERY FAILED` : `, delivered via ${delivery.channel}`) + ")",
     );
     console.log(`           "${composed.text}"`);
     return true;

@@ -746,3 +746,37 @@ columns — diagnosis, plan, message — proportional type for prose and monospa
 only for identifiers. The previous version crammed generated messages into a
 monospace table cell, which was fine to read up close and illegible at any
 distance.
+
+Kshitij pointed out the thing I had been calling optional: the track is Revenue
+Recovery and nothing was being recovered. The system diagnosed a failure, chose a
+plan, created a real payment link and wrote a message — and then put all of it on
+a dashboard. Nobody was ever contacted.
+
+He was right and I had been wrong about the priority. I listed channel adapters
+under optional work and said I would skip them. But the recovered figure being
+zero was not a demo artefact or a quirk of test mode; it was structural. Nothing
+could be recovered because the ask never left the building. A system that never
+asks the customer is a classifier with extra steps.
+
+So dispatch now sends. Same shape as the link provider: a console channel that
+writes to the log and an email channel that really sends, defaulting to not
+sending, because a development loop should not be able to contact a customer.
+
+The part that needed care is `DELIVERY_REDIRECT_TO`. Captured real failures carry
+the email address of whoever was standing at that checkout, and this repository
+replays those payloads constantly — in development, in the demo runner, and
+whenever a handler fix is applied to traffic that already arrived. Every one of
+those replays now reaches code that can send email. When the redirect is set,
+every message goes to one address regardless of what the payment says, and the
+subject line names who it was diverted from so a redirected message can never be
+mistaken for a real one.
+
+One small thing caught on the way, and it is the fourth time this exact mistake
+has come up. The console channel recorded `delivered_at` and the dashboard read
+"delivered to customer@example.com" — for a channel that sends nothing at all.
+Words describing something that did not happen. The dashboard now says "would go
+to ... — not sent, console channel". Four times now: an explanation string
+describing steering that never happened, a message recommending an action never
+chosen, a reclassify count reporting rows it skipped, and this. The pattern is
+always the same, and it is always in the part of the system built to be
+transparent. Transparency is a surface where lies can live.

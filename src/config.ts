@@ -49,6 +49,21 @@ export const config = {
    */
   learningEnabled: process.env.LEARNING !== "off",
   /**
+   * "email" actually delivers; anything else logs what would have gone out.
+   * Defaults to not sending, on the same principle as stub payment links: a
+   * development loop should not be able to contact a customer.
+   */
+  deliveryChannel: process.env.DELIVERY === "email" ? "email" : "console",
+  smtpUser: process.env.SMTP_USER ?? "",
+  smtpPass: process.env.SMTP_PASS ?? "",
+  smtpFrom: process.env.SMTP_FROM ?? "",
+  /**
+   * When set, every message goes here instead of the address on the payment.
+   * Captured real failures carry the email of whoever was at that checkout, and
+   * replaying them on a laptop must not mail those people.
+   */
+  deliveryRedirectTo: process.env.DELIVERY_REDIRECT_TO ?? "",
+  /**
    * How long a sent recovery waits before being counted as unanswered. Without
    * a horizon the bandit only ever hears about successes and learns nothing.
    */
