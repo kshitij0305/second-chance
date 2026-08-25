@@ -105,8 +105,13 @@ test("the two diagnosable real failures get genuinely different plans", () => {
   const netbanking = observed.find((e) => e.method === "netbanking")!;
   const wallet = observed.find((e) => e.method === "wallet")!;
 
-  const a = selectStrategy(classify(netbanking), NOW);
-  const b = selectStrategy(classify(wallet), NOW);
+  // Learning pinned off. This asserts what the classification implies, which is
+  // deterministic; with the bandit active the arm is drawn at random and the
+  // delay comparison below flips whenever transient_provider draws its 5-minute
+  // arm against instrument_rejected's 30-minute one. That made this test flaky
+  // from the moment the bandit landed.
+  const a = selectStrategy(classify(netbanking), NOW, { learning: false });
+  const b = selectStrategy(classify(wallet), NOW, { learning: false });
 
   assert.notEqual(a.strategy.name, b.strategy.name);
   // The netbanking failure said the bank declined it: switch rails, promptly.

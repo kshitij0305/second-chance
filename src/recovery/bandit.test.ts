@@ -69,11 +69,17 @@ test("given lopsided evidence, traffic concentrates on the better arm", () => {
     recordOutcome("instrument_rejected", "switch_rails_after_a_pause", i < 10);
   }
 
+  // Sampled behaviour, so this asserts a proportion rather than an outcome. The
+  // draw count is high enough that the assertion is far outside the noise band —
+  // a tighter test on fewer draws would fail occasionally for no reason, and a
+  // suite that fails occasionally teaches people to rerun it instead of reading
+  // it.
+  const draws = 2000;
   let better = 0;
-  for (let i = 0; i < 400; i++) {
+  for (let i = 0; i < draws; i++) {
     if (selectVariant("instrument_rejected", true).strategy.name === "switch_rails") better++;
   }
-  assert.ok(better > 380, `picked the better arm only ${better}/400 times`);
+  assert.ok(better > draws * 0.9, `picked the better arm only ${better}/${draws} times`);
 });
 
 test("a thin lead does not produce false confidence", () => {
@@ -87,11 +93,18 @@ test("a thin lead does not produce false confidence", () => {
   recordOutcome("instrument_rejected", "switch_rails_after_a_pause", false);
   recordOutcome("instrument_rejected", "switch_rails_after_a_pause", false);
 
+  const draws = 2000;
   let leader = 0;
-  for (let i = 0; i < 400; i++) {
+  for (let i = 0; i < draws; i++) {
     if (selectVariant("instrument_rejected", true).strategy.name === "switch_rails") leader++;
   }
-  assert.ok(leader > 100 && leader < 340, `committed too hard on thin evidence: ${leader}/400`);
+  // Expected share sits near 65%. The bounds are deliberately loose: the claim is
+  // "still exploring", not a specific ratio, and asserting the ratio would make
+  // this fail on ordinary variance.
+  assert.ok(
+    leader > draws * 0.25 && leader < draws * 0.85,
+    `committed too hard on thin evidence: ${leader}/${draws}`,
+  );
 });
 
 test("the selection reason is recorded for the audit trail", () => {

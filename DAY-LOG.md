@@ -672,3 +672,45 @@ itself reassuring. And that first run showed the few-shot variant at 3.5 seconds
 median against 617ms, which I flagged as possibly noise rather than asserting;
 at the larger sample all three variants land within 100ms of each other. It was
 noise. Worth having said so at the time rather than building an argument on it.
+
+A test failed once, passed twenty-two times, and I fixed the wrong thing.
+
+Running the suite after the composer benchmark, one test failed. Reran it —
+passed. Ran the bandit tests twelve times and the full suite ten times: all
+clean. So I reasoned about which tests *could* be flaky, decided it was the two
+bandit tests that assert statistical properties over sampled draws, and hardened
+them by raising the draw count.
+
+That was a guess dressed up as a diagnosis. Fifteen runs later it failed three
+times — more often than before — which finally made it reproducible enough to
+actually look at.
+
+It was not the bandit tests at all. It was `strategy.test.ts`: "the two
+diagnosable real failures get genuinely different plans". When I made selection
+options explicit parameters, I pinned `learning: false` in two tests that needed
+it and missed a third. That one falls through to config, learning defaults on,
+and the bandit draws arms at random — so `transient_provider` sometimes gets its
+five-minute arm while `instrument_rejected` gets its thirty-minute one, and the
+assertion that one waits longer than the other flips.
+
+It had been flaky since the bandit landed. Every clean run before this was luck.
+
+Three things worth keeping.
+
+I had the evidence and did not read it. The first failure printed the failing
+test name and the assertion; I skimmed past it, formed a theory from what I knew
+about the code, and acted on the theory. Twenty-two green runs then confirmed the
+theory by not contradicting it, which is not confirmation of anything.
+
+Making it fail *more* was what solved it. The instinct with an intermittent
+failure is to make it stop; here the useful move was the opposite, and the
+harder-to-reproduce version would have shipped.
+
+And the cause was the same class of mistake as the bug itself: a test that reads
+global config instead of stating what it depends on. Explicit parameters were
+introduced precisely to fix this, and one call site was left behind. Partial
+application of a fix is how a fixed problem stays broken.
+
+Verified across twenty-five consecutive runs. The larger draw counts in the
+bandit tests are kept — they were not the problem, but a statistical assertion
+with more samples is better regardless.
