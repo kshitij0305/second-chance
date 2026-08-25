@@ -223,6 +223,27 @@ TIME_SCALE=60 npm run dev
 A 20-minute wait becomes 20 seconds. Any value above 1 puts a visible banner on
 the dashboard, so a compressed run cannot be mistaken for real timing.
 
+## Recording a walkthrough
+
+```bash
+LEARNING=off LINK_PROVIDER=stub TIME_SCALE=400 EXPIRY_HOURS=6 npm run dev
+npm run demo
+```
+
+Fires a fixed five-beat sequence at a fixed pace, printing the narration for each
+beat as it lands, so a walkthrough can be scripted against it and repeated
+identically. `npm run demo -- --reset` clears the database between takes.
+
+The first three beats are real captured payloads. Two of them carry an identical
+`error_reason` and receive opposite strategies, which is the product in two
+frames; the third cannot be diagnosed at all and says so.
+
+`LEARNING=off` is required and the script refuses to run without it. With the
+bandit active and no outcomes recorded, Thompson sampling explores at random, so
+each class picks a different plan every run and the narration stops matching the
+screen. The learning layer is demonstrated separately by `npm run simulate`,
+where there is enough volume for it to be doing something.
+
 ## Tooling
 
 | Command | What it does |
@@ -233,6 +254,7 @@ the dashboard, so a compressed run cannot be mistaken for real timing.
 | `npm run reclassify` | re-runs classification over stored failures without repeating the webhook handler side effects |
 | `npm run export-fixtures` | regenerates the scrubbed test fixtures from captured traffic |
 | `npm run simulate -- <n>` | drives the bandit against invented ground truth so learning is observable |
+| `npm run demo` | scripted walkthrough at a fixed pace; `-- --reset` clears state between takes |
 | `npm test` / `npm run typecheck` | 60 tests, strict TypeScript |
 
 ## Layout

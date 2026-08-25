@@ -13,3 +13,4 @@ node_modules/
 
 *.log
 simulation.db
+demo.db

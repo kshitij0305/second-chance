@@ -572,3 +572,34 @@ from — and each time I applied it only to the table that had just burned me
 rather than to the pattern. The guard is the first fix that generalises, and it
 only exists because I finally treated it as a recurring problem rather than three
 separate accidents.
+
+## Day 5
+
+Built a scripted demo runner so a walkthrough can be recorded without typing
+commands between sentences, and it exposed a conflict between two things that
+were each correct on their own.
+
+The script fires a fixed sequence with fixed gaps and prints the narration for
+each beat. The first dry run contradicted itself: the narration said "the fastest
+re-offer the safety floor allows" while the dashboard showed
+`reoffer_after_the_dust_settles`, the slower arm.
+
+Not a bug. That is the bandit doing its job. With no outcomes recorded, Thompson
+sampling explores at random, so every class picks a different plan on every run.
+Correct behaviour for a learning system, and fatal for a scripted walkthrough,
+where the same command has to produce the same screen every time.
+
+Trying to have both would have meant either seeding fake outcomes so the bandit
+"chooses" the intended arm — inventing evidence to make a demo look good, which
+is the thing I have spent this whole build avoiding — or writing narration vague
+enough to be true whatever it picked, which would have thrown away the specificity
+that makes the walkthrough worth watching.
+
+So the demo runs with learning off, the script refuses to start otherwise, and
+the dashboard shows a LEARNING OFF banner throughout. The learning layer gets
+demonstrated separately by the simulator, where it has the volume to actually be
+learning rather than guessing. Two demonstrations of two different claims, rather
+than one demonstration quietly making both look like the same thing.
+
+Verified: five beats, five classes, five plans, matching the narration exactly,
+repeatably.

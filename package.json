@@ -15,7 +15,8 @@
     "taxonomy": "tsx scripts/taxonomy.ts",
     "reclassify": "tsx scripts/reclassify.ts",
     "export-fixtures": "node scripts/export-fixtures.mjs",
-    "simulate": "tsx scripts/simulate.ts"
+    "simulate": "tsx scripts/simulate.ts",
+    "demo": "tsx scripts/demo.ts"
   },
   "dependencies": {
     "dotenv": "^17.2.3",
