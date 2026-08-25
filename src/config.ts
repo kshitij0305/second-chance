@@ -55,7 +55,13 @@ export const config = {
    */
   deliveryChannel: process.env.DELIVERY === "email" ? "email" : "console",
   smtpUser: process.env.SMTP_USER ?? "",
-  smtpPass: process.env.SMTP_PASS ?? "",
+  /**
+   * Whitespace stripped because Google displays app passwords in four groups of
+   * four and everyone copies them that way. The literal value with spaces fails
+   * authentication with a generic "username and password not accepted", which
+   * points at the wrong problem entirely.
+   */
+  smtpPass: (process.env.SMTP_PASS ?? "").replace(/s+/g, ""),
   smtpFrom: process.env.SMTP_FROM ?? "",
   /**
    * When set, every message goes here instead of the address on the payment.
