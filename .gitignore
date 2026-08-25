@@ -14,3 +14,4 @@ node_modules/
 *.log
 simulation.db
 demo.db
+VIDEO-SCRIPT.md
