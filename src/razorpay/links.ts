@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { razorpay } from "./client.ts";
+import { getRazorpay } from "./client.ts";
 import { config } from "../config.ts";
 
 /**
@@ -69,7 +69,7 @@ const razorpayProvider: LinkProvider = {
   async create(input) {
     const methods = checkoutMethods(input.excludeMethod);
 
-    const link = await razorpay.paymentLink.create({
+    const link = await getRazorpay().paymentLink.create({
       amount: input.amount,
       currency: input.currency,
       accept_partial: false,

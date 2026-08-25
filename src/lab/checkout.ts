@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { razorpay } from "../razorpay/client.ts";
+import { getRazorpay } from "../razorpay/client.ts";
 import { config } from "../config.ts";
 
 /**
@@ -23,7 +23,7 @@ export const labRouter: Router = Router();
 labRouter.post("/order", async (req, res) => {
   const amount = Number((req.body as { amount?: number })?.amount ?? 149900);
   try {
-    const order = await razorpay.orders.create({
+    const order = await getRazorpay().orders.create({
       amount,
       currency: "INR",
       receipt: `lab_${Date.now()}`,
