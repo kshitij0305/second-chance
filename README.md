@@ -331,6 +331,15 @@ where there is enough volume for it to be doing something.
 
 ## Known gaps
 
+- The dashboard has no authentication. It shows payment identifiers, amounts,
+  customer-facing messages and live payment links to anyone who can reach the
+  port — including anyone holding the tunnel URL while one is running. Fine for a
+  local tool, not fine anywhere else.
+- Webhook signatures prove authenticity but not freshness: a captured payload
+  stays valid indefinitely and can be replayed. Duplicate deliveries no longer
+  produce duplicate recoveries, but a genuine replay attack is not defended
+  against. A timestamp window or event-id ledger would fix it.
+
 - A recovery interrupted mid-send stays in `sending` and is not retried
   automatically. The provider call may have succeeded before the crash, so
   retrying risks a second live payment link. The proper fix is an idempotency key

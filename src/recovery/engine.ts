@@ -29,6 +29,31 @@ export function scheduleRecovery(payment: FailedPayment, decision: Decision): vo
     "SELECT COUNT(*) n FROM recovery_attempts WHERE payment_id = ?",
   ).get(payment.payment_id) as { n: number };
 
+  // An attempt that has not yet resolved means this failure is already being
+  // handled, and a second one would put two live payment links in front of the
+  // same customer for the same failure.
+  //
+  // This is not hypothetical. Razorpay retries webhook delivery on any non-2xx
+  // and on network trouble, so the same payment.failed arrives more than once as
+  // a matter of course — delivering one event three times produced two live
+  // recovery links here.
+  //
+  // The bug was a confusion about what maxAttempts means. It means up to N asks
+  // spread over time, each after the previous went unanswered. It does not mean
+  // N asks may exist at once. Attempt two is legitimate only once attempt one has
+  // expired, failed or been superseded.
+  const inFlight = db.prepare(
+    `SELECT COUNT(*) n FROM recovery_attempts
+      WHERE payment_id = ? AND status IN ('scheduled', 'sending', 'sent')`,
+  ).get(payment.payment_id) as { n: number };
+
+  if (inFlight.n > 0) {
+    console.log(
+      `[schedule] ${payment.payment_id} already has a recovery in flight — not scheduling another`,
+    );
+    return;
+  }
+
   if (existing.n >= decision.strategy.maxAttempts) {
     console.log(
       `[schedule] ${payment.payment_id} already at ${existing.n}/${decision.strategy.maxAttempts} attempts — not scheduling`,

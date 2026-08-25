@@ -890,3 +890,36 @@ were in the logic. Code that computes something wrong gets caught by a test. Cod
 that *describes* something wrong has nothing checking it, because the description
 is not the behaviour. Transparency is a surface where lies can live, and it needs
 the same scrutiny as the thing it describes.
+
+Asked whether anything was left, went looking properly, and found the same bug a
+third time wearing different clothes.
+
+Razorpay retries webhook delivery on any non-2xx and on network trouble, so the
+same `payment.failed` arrives more than once as normal operation. Delivered one
+event three times: two live payment links for a single failure. Two links means
+the customer can pay twice, which is precisely what the delay floor and the
+atomic claim were both built to prevent — and this route went around both of
+them.
+
+The cause was semantic rather than technical. `maxAttempts: 2` was read as "two
+recoveries are permitted", when what it means is "up to two asks spread over
+time, each after the previous went unanswered". Nothing in the code said an
+attempt had to resolve before the next one began, so a duplicate delivery counted
+as progress toward the cap instead of being recognised as the same event arriving
+twice. Scheduling now refuses while any attempt is still scheduled, sending or
+sent, and a second attempt is only permitted once the first has expired or
+failed. Four deliveries of one event now produce one recovery, and the tests
+cover both the refusal and the legitimate second attempt.
+
+Third instance of the same failure mode: the dispatcher race, this, and the
+double-charge risk the delay floor addresses. Each arrived by a route the
+previous fix did not cover. The pattern is that "do not send twice" is not one
+rule enforced in one place — it is a property that has to survive every path
+into the sending code, and each new entry point is a fresh chance to lose it.
+
+Also documented two gaps found while looking rather than fixed, because both are
+real and neither is appropriate to solve in a test-mode project this week. The
+dashboard has no authentication and is exposed to anyone holding the tunnel URL
+while one is running. And webhook signatures prove authenticity but not
+freshness, so a captured payload stays valid forever — duplicate deliveries are
+handled now, but a deliberate replay is not defended against.
