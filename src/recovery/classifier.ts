@@ -166,6 +166,14 @@ export function classify(entity: RazorpayPaymentEntity): Classification {
   }
 }
 
+/**
+ * Trims at a word boundary. Cutting mid-word — "Any debite..." — reads as a
+ * rendering fault rather than an abbreviation, and this string is shown to an
+ * operator as the grounds for a decision.
+ */
 function truncate(text: string, max = 70): string {
-  return text.length > max ? text.slice(0, max - 3) + "..." : text;
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max - 1);
+  const lastSpace = cut.lastIndexOf(" ");
+  return (lastSpace > max * 0.6 ? cut.slice(0, lastSpace) : cut).replace(/[,.;:]$/, "") + "…";
 }

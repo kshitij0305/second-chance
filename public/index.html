@@ -21,9 +21,9 @@
   .tagline { color: var(--dim); font-size: .95rem; }
   .flags { display: flex; gap: .4rem; flex-wrap: wrap; margin: .6rem 0 1.5rem; }
   .flag {
-    background: #fff6dc; border: 1px solid #e3c04a; color: var(--warn);
-    padding: .1rem .45rem; border-radius: 4px; font-size: .8rem;
-    font-weight: 600; letter-spacing: .03em; text-transform: uppercase;
+    background: transparent; border: 1px solid #e0d3a8; color: #8a7333;
+    padding: .05rem .45rem; border-radius: 999px; font-size: .72rem;
+    font-weight: 600; letter-spacing: .02em;
   }
 
   .stats { display: flex; gap: 2.75rem; flex-wrap: wrap; margin-bottom: 2rem; }
@@ -35,9 +35,15 @@
 
   .rec {
     background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+    border-left: 4px solid var(--line);
     padding: 1.1rem 1.25rem; margin-bottom: .7rem;
     display: grid; grid-template-columns: 1.05fr 1.15fr 1.5fr; gap: 1.5rem;
   }
+  .rec.r-scheduled, .rec.r-sending { border-left-color: var(--wait); }
+  .rec.r-sent      { border-left-color: #b9c0ca; }
+  .rec.r-recovered { border-left-color: var(--good); }
+  .rec.r-failed    { border-left-color: var(--bad); }
+  .rec.r-expired, .rec.r-superseded { border-left-color: #dfe3e8; }
   .rec .top {
     grid-column: 1 / -1; display: flex; align-items: center; gap: .6rem;
     padding-bottom: .7rem; margin-bottom: .1rem; border-bottom: 1px solid var(--line);
@@ -146,7 +152,7 @@ function deliveryLine(r) {
 }
 
 function recovery(r) {
-  return `<div class="rec">
+  return `<div class="rec r-${r.status}">
     <div class="top">
       <span class="amt">${inr(r.amount)}</span>
       <span class="meth">${esc(r.method ?? "unknown method")}</span>
