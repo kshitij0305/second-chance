@@ -853,3 +853,40 @@ environments, it is a statement about which paths have actually been executed. I
 had run the test suite fifty times and never once from a state a reader would
 start in. The instruction in my own README was untested, and testing it took four
 minutes.
+
+Scanned the configuration surface for the same class of problem, and found three
+more.
+
+The question that started it: if the SMTP variables are never filled in, does the
+system fail or skip? Answer, tested rather than reasoned about: it degrades
+correctly. The recovery is still created, the link exists, the message exists,
+and `Missing credentials for "PLAIN"` is recorded against the attempt and shown
+in red on the dashboard. Nothing crashes and no recovery is lost.
+
+But the startup line said `DELIVERY email — messages are really sent`, which was
+false. It printed that on a machine where every send would fail. The same
+mistake, for the fifth time in this build: a component announcing something it
+was not going to do.
+
+Then the numeric settings. `PORT`, `DISPATCH_INTERVAL_MS` and `EXPIRY_HOURS` were
+each `Number(process.env.X ?? default)`, which returns NaN for a typo and accepts
+zero and negatives silently. `TIME_SCALE` had a guard only because I happened to
+write that one carefully. The failure modes are quiet and none of them look like
+a configuration problem when you hit them: `EXPIRY_HOURS=abc` makes the expiry
+cutoff an Invalid Date, the comparison matches nothing, and recoveries simply
+never resolve — which would present as "the bandit is not learning" and send you
+looking in entirely the wrong file. `DISPATCH_INTERVAL_MS=0` is a busy loop
+against both the database and the payment provider.
+
+All three now go through one helper that refuses a non-positive value, says which
+setting was wrong and what it used instead. And startup warns when
+`DELIVERY=email` has no credentials, or has credentials but no redirect address
+while real customer emails are sitting in the captured payloads.
+
+The pattern across all five instances is worth stating once: every one of them
+was in the part of the system built to be transparent — an explanation string, a
+customer message, a progress count, a delivery record, a startup banner. None
+were in the logic. Code that computes something wrong gets caught by a test. Code
+that *describes* something wrong has nothing checking it, because the description
+is not the behaviour. Transparency is a surface where lies can live, and it needs
+the same scrutiny as the thing it describes.

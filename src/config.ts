@@ -20,6 +20,29 @@ const REQUIRED_TO_SERVE = [
   "RAZORPAY_WEBHOOK_SECRET",
 ] as const;
 
+/**
+ * Warns about settings that are individually valid but together mean the system
+ * cannot do what it is about to announce.
+ *
+ * DELIVERY=email without SMTP credentials printed "messages are really sent" and
+ * then failed on every message. The failure was recorded correctly and visible on
+ * the dashboard, but the startup line said the opposite of the truth.
+ */
+export function warnAboutConfig(): void {
+  if (config.deliveryChannel === "email" && (!config.smtpUser || !config.smtpPass)) {
+    console.warn([
+      "[config] DELIVERY=email but SMTP_USER or SMTP_PASS is empty — every send will fail.",
+      "         Messages are still composed and recorded, with the delivery error against each one.",
+    ].join("\n"));
+  }
+  if (config.deliveryChannel === "email" && !config.deliveryRedirectTo) {
+    console.warn([
+      "[config] DELIVERY=email with no DELIVERY_REDIRECT_TO — mail goes to the address on each payment.",
+      "         Captured real failures carry real customer addresses. Set it unless this is production.",
+    ].join("\n"));
+  }
+}
+
 export function assertServerConfig(): void {
   const missing = REQUIRED_TO_SERVE.filter((name) => !process.env[name]);
   if (missing.length) {
@@ -28,6 +51,31 @@ export function assertServerConfig(): void {
       "Copy .env.example to .env and fill it in, then run npm run setup:secret.",
     );
   }
+}
+
+/**
+ * Reads a numeric setting, falling back to the default when the value is absent
+ * or nonsense.
+ *
+ * Every one of these was `Number(process.env.X ?? default)`, which returns NaN
+ * for a typo and accepts zero and negatives without comment. The failures are
+ * quiet and none of them look like a config problem when you hit them:
+ * `EXPIRY_HOURS=abc` makes the expiry cutoff an Invalid Date, so the comparison
+ * matches nothing and recoveries simply never resolve. `DISPATCH_INTERVAL_MS=0`
+ * is a busy loop against the database and the payment provider.
+ *
+ * Refusing the value and saying so beats propagating a NaN into date arithmetic.
+ */
+function positiveNumber(name: string, fallback: number): number {
+  const raw = process.env[name];
+  if (raw === undefined || raw === "") return fallback;
+
+  const value = Number(raw);
+  if (!Number.isFinite(value) || value <= 0) {
+    console.warn(`[config] ${name}="${raw}" is not a positive number — using ${fallback}`);
+    return fallback;
+  }
+  return value;
 }
 
 /**
@@ -41,7 +89,7 @@ export function assertServerConfig(): void {
  * 1 in production. Anything above 1 is visibly labelled in the UI, so a
  * compressed demo can never be mistaken for real timing.
  */
-const timeScale = Number(process.env.TIME_SCALE ?? 1);
+const timeScale = positiveNumber("TIME_SCALE", 1);
 
 /**
  * Message generation is optional by design. Without a key the composer falls
@@ -54,10 +102,10 @@ export const config = {
   razorpayKeyId: process.env.RAZORPAY_KEY_ID ?? "",
   razorpayKeySecret: process.env.RAZORPAY_KEY_SECRET ?? "",
   webhookSecret: process.env.RAZORPAY_WEBHOOK_SECRET ?? "",
-  port: Number(process.env.PORT ?? 3000),
+  port: positiveNumber("PORT", 3000),
   dbPath: process.env.DB_PATH ?? "./second-chance.db",
-  timeScale: Number.isFinite(timeScale) && timeScale >= 1 ? timeScale : 1,
-  dispatchIntervalMs: Number(process.env.DISPATCH_INTERVAL_MS ?? 5000),
+  timeScale: timeScale >= 1 ? timeScale : 1,
+  dispatchIntervalMs: positiveNumber("DISPATCH_INTERVAL_MS", 5000),
   /**
    * "stub" creates fake payment links locally instead of calling Razorpay.
    * Test mode allows thirty links per account for its entire lifetime and
@@ -99,7 +147,7 @@ export const config = {
    * How long a sent recovery waits before being counted as unanswered. Without
    * a horizon the bandit only ever hears about successes and learns nothing.
    */
-  expiryHours: Number(process.env.EXPIRY_HOURS ?? 48),
+  expiryHours: positiveNumber("EXPIRY_HOURS", 48),
   groqApiKey,
   groqEnabled: Boolean(groqApiKey),
   /**

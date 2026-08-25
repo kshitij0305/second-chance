@@ -1,5 +1,5 @@
 import express from "express";
-import { config, assertServerConfig } from "./config.ts";
+import { config, assertServerConfig, warnAboutConfig } from "./config.ts";
 import { db } from "./db.ts";
 import { webhookRouter } from "./razorpay/webhook.ts";
 import { startDispatcher } from "./recovery/engine.ts";
@@ -9,6 +9,7 @@ import { allClasses } from "./recovery/variants.ts";
 
 // Fail loudly at startup rather than on the first request.
 assertServerConfig();
+warnAboutConfig();
 
 const app = express();
 
@@ -90,10 +91,16 @@ app.listen(config.port, () => {
   if (config.linkProvider === "stub") {
     console.log("LINK PROVIDER stub — payment links are fake and no Razorpay quota is used");
   }
+  // Says what will actually happen, not what the setting asks for. Announcing
+  // "messages are really sent" three lines after warning that every send will
+  // fail is the system contradicting itself in its own startup output.
+  const canSend = config.deliveryChannel === "email" && config.smtpUser && config.smtpPass;
   console.log(
-    config.deliveryChannel === "email"
+    canSend
       ? `DELIVERY email — messages are really sent${config.deliveryRedirectTo ? `, redirected to ${config.deliveryRedirectTo}` : ""}`
-      : "DELIVERY console — messages are logged, not sent",
+      : config.deliveryChannel === "email"
+        ? "DELIVERY email — but credentials are missing, so every send will fail"
+        : "DELIVERY console — messages are logged, not sent",
   );
   if (config.labEnabled) {
     console.log(`LAB enabled — checkout error lab at http://localhost:${config.port}/lab`);
