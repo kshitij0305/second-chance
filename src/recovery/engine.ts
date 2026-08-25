@@ -160,12 +160,18 @@ async function send(row: DueRow): Promise<boolean> {
     // Composed only once the link exists, so the message can carry the real
     // URL. Never blocks the send: compose() falls back to a template if
     // generation is unavailable or produces something that fails validation.
-    const composed = await compose(row.failure_class ?? "unknown", {
-      name: null,
-      method: row.method ?? "payment method",
-      amount: formatAmount(row.amount),
-      link: link.short_url,
-    });
+    const composed = await compose(
+      row.failure_class ?? "unknown",
+      {
+        name: null,
+        method: row.method ?? "payment method",
+        amount: formatAmount(row.amount),
+        link: link.short_url,
+      },
+      // What the plan actually did, not what the class usually implies. If no
+      // method was hidden, the message must not tell the customer to switch.
+      { steerToAnotherMethod: Boolean(link.excluded_method) },
+    );
 
     db.prepare(
       `UPDATE recovery_attempts

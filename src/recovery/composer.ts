@@ -1,6 +1,6 @@
 import Groq from "groq-sdk";
 import type { FailureClass } from "./classifier.ts";
-import { INTENT, renderTemplate, type MessageContext } from "./templates.ts";
+import { INTENT, steeringInstruction, renderTemplate, type MessageContext } from "./templates.ts";
 import { config } from "../config.ts";
 
 /**
@@ -77,15 +77,24 @@ function getClient(): Groq | null {
   return client;
 }
 
+export interface ComposeOptions {
+  /**
+   * Whether the plan actually hid the failed method on the checkout. The message
+   * has to match the decision, not the failure class in general.
+   */
+  steerToAnotherMethod?: boolean;
+}
+
 export async function compose(
   failureClass: FailureClass,
   context: MessageContext,
+  options: ComposeOptions = {},
 ): Promise<ComposedMessage> {
   const fallback = renderTemplate(failureClass, context);
 
   let raw: string;
   try {
-    const generated = await generate(failureClass, context);
+    const generated = await generate(failureClass, context, options.steerToAnotherMethod ?? false);
     if (generated === null) return { text: fallback, source: "template" };
     raw = generated;
   } catch (error) {
@@ -109,6 +118,7 @@ export async function compose(
 async function generate(
   failureClass: FailureClass,
   context: MessageContext,
+  steerToAnotherMethod: boolean,
 ): Promise<string | null> {
   const groq = getClient();
   if (!groq) return null;
@@ -135,6 +145,7 @@ async function generate(
         content:
           `Payment method that failed: ${context.method}\n` +
           `What happened, and how to handle it: ${INTENT[failureClass]}\n` +
+          `${steeringInstruction(steerToAnotherMethod)}\n` +
           (context.name
             ? `Customer's first name: ${context.name}\n`
             : "The customer's name is unknown; do not invent one.\n") +

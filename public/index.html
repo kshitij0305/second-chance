@@ -3,91 +3,120 @@
 <title>Second Chance</title>
 <style>
   :root {
-    --ink: #14161a; --muted: #6b7280; --line: #e3e6ea; --bg: #fbfbfc;
-    --good: #0a7d00; --bad: #b3261e; --wait: #0b5cad; --warn: #8a6100;
+    --ink: #16181d; --dim: #5f6570; --faint: #8b929c;
+    --line: #e4e7ec; --bg: #f7f8fa; --card: #ffffff;
+    --good: #0a7a34; --bad: #b3261e; --wait: #0a58c2; --warn: #8a6100;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, system-ui, sans-serif;
   }
   * { box-sizing: border-box; }
   body {
-    font: 15px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
-    margin: 0; padding: 2rem 2.5rem; color: var(--ink); background: var(--bg);
+    font: 15px/1.5 var(--sans); color: var(--ink); background: var(--bg);
+    margin: 0; padding: 1.75rem 2rem 4rem;
   }
-  header { display: flex; align-items: baseline; gap: 1rem; margin-bottom: .4rem; }
-  h1 { font-size: 1.15rem; margin: 0; letter-spacing: -.01em; }
-  h2 { font-size: .8rem; text-transform: uppercase; letter-spacing: .08em;
-       color: var(--muted); margin: 2.2rem 0 .7rem; font-weight: 600; }
-  .flags { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1.4rem; }
-  .flag { background: #fff5d6; border: 1px solid #d9b400; color: var(--warn);
-          padding: .15rem .5rem; border-radius: 4px; font-size: 11.5px; }
-  .headline { display: flex; gap: 3rem; align-items: flex-end; flex-wrap: wrap; }
-  .stat .n { font-size: 2.5rem; font-weight: 700; line-height: 1; letter-spacing: -.02em; }
-  .stat .l { font-size: 11.5px; text-transform: uppercase; letter-spacing: .07em;
-             color: var(--muted); margin-top: .35rem; }
-  table { border-collapse: collapse; width: 100%; background: #fff;
-          border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
-  th { text-align: left; font-size: 10.5px; text-transform: uppercase; letter-spacing: .07em;
-       color: var(--muted); font-weight: 600; padding: .6rem .7rem;
-       border-bottom: 1px solid var(--line); background: #f6f7f9; }
-  td { padding: .65rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
-  tr:last-child td { border-bottom: none; }
-  .sub { color: var(--muted); font-size: 11.5px; margin-top: .2rem; }
-  .cls { font-weight: 600; }
-  .msg { background: #f4f7fb; border-left: 3px solid #c3d4e8; padding: .45rem .6rem;
-         margin-top: .35rem; font-size: 12.5px; line-height: 1.5; border-radius: 0 4px 4px 0; }
-  .tag { font-size: 10px; padding: .05rem .35rem; border-radius: 3px;
-         border: 1px solid; text-transform: uppercase; letter-spacing: .04em; }
-  .observed, .model, .recovered { color: var(--good); border-color: var(--good); }
-  .documented { color: var(--warn); border-color: var(--warn); }
-  .inferred, .template, .expired, .superseded { color: var(--muted); border-color: #c9cdd3; }
-  .template_after_rejection { color: var(--bad); border-color: var(--bad); }
-  .st-recovered { color: var(--good); font-weight: 700; }
-  .st-scheduled, .st-sending { color: var(--wait); }
-  .st-sent { color: var(--muted); }
-  .st-failed { color: var(--bad); }
-  .st-expired, .st-superseded { color: var(--muted); }
-  .bar { height: 6px; background: #eceff3; border-radius: 3px; overflow: hidden; width: 130px; }
+  .wrap { max-width: 78rem; margin: 0 auto; }
+
+  header { display: flex; align-items: baseline; gap: .75rem; flex-wrap: wrap; }
+  h1 { font-size: 1.05rem; margin: 0; font-weight: 650; letter-spacing: -.01em; }
+  .tagline { color: var(--dim); font-size: .82rem; }
+  .flags { display: flex; gap: .4rem; flex-wrap: wrap; margin: .6rem 0 1.5rem; }
+  .flag {
+    background: #fff6dc; border: 1px solid #e3c04a; color: var(--warn);
+    padding: .1rem .45rem; border-radius: 4px; font-size: .68rem;
+    font-weight: 600; letter-spacing: .03em; text-transform: uppercase;
+  }
+
+  .stats { display: flex; gap: 2.75rem; flex-wrap: wrap; margin-bottom: 2rem; }
+  .stat .n { font-size: 2.1rem; font-weight: 680; line-height: 1; letter-spacing: -.025em; font-variant-numeric: tabular-nums; }
+  .stat .l { font-size: .66rem; text-transform: uppercase; letter-spacing: .09em; color: var(--faint); margin-top: .4rem; font-weight: 600; }
+
+  h2 { font-size: .68rem; text-transform: uppercase; letter-spacing: .1em;
+       color: var(--faint); font-weight: 700; margin: 0 0 .7rem; }
+
+  .rec {
+    background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+    padding: .85rem 1rem; margin-bottom: .55rem;
+    display: grid; grid-template-columns: 1.05fr 1.15fr 1.5fr; gap: 1.5rem;
+  }
+  .rec .top {
+    grid-column: 1 / -1; display: flex; align-items: center; gap: .6rem;
+    padding-bottom: .7rem; margin-bottom: .1rem; border-bottom: 1px solid var(--line);
+  }
+  .pid { font-family: var(--mono); font-size: .76rem; color: var(--dim); }
+  .amt { font-weight: 650; font-variant-numeric: tabular-nums; }
+  .meth { color: var(--dim); font-size: .8rem; }
+  .spacer { flex: 1; }
+
+  .col .k { font-size: .62rem; text-transform: uppercase; letter-spacing: .09em;
+            color: var(--faint); font-weight: 700; margin-bottom: .25rem; }
+  .col .v { font-family: var(--mono); font-size: .82rem; font-weight: 600; }
+  .col .note { color: var(--dim); font-size: .78rem; line-height: 1.45; margin-top: .25rem; }
+
+  .msg { font-size: .85rem; line-height: 1.5; margin-top: .3rem; color: var(--ink); }
+  .pending { color: var(--faint); font-style: italic; font-size: .8rem; margin-top: .3rem; }
+
+  .tag { font-size: .62rem; padding: .05rem .35rem; border-radius: 3px; border: 1px solid;
+         text-transform: uppercase; letter-spacing: .04em; font-weight: 650; white-space: nowrap; }
+  .observed, .model { color: var(--good); border-color: #9ed3b1; background: #f1faf4; }
+  .documented { color: var(--warn); border-color: #e3c977; background: #fffaeb; }
+  .inferred, .template { color: var(--dim); border-color: var(--line); background: #f6f7f9; }
+  .template_after_rejection { color: var(--bad); border-color: #edb4af; background: #fdf3f2; }
+
+  .status { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+  .s-recovered { color: var(--good); } .s-scheduled, .s-sending { color: var(--wait); }
+  .s-sent { color: var(--dim); } .s-failed { color: var(--bad); }
+  .s-expired, .s-superseded { color: var(--faint); }
+  .due { color: var(--wait); font-variant-numeric: tabular-nums; font-size: .78rem; margin-top: .25rem; }
+
+  table { border-collapse: collapse; width: 100%; background: var(--card);
+          border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  th { text-align: left; font-size: .62rem; text-transform: uppercase; letter-spacing: .09em;
+       color: var(--faint); font-weight: 700; padding: .55rem .8rem; border-bottom: 1px solid var(--line); }
+  td { padding: .5rem .8rem; border-bottom: 1px solid var(--line); font-size: .84rem; }
+  tbody tr:last-child td { border-bottom: none; }
+  td.v { font-family: var(--mono); font-size: .8rem; }
+  .bar { height: 5px; background: #eef0f4; border-radius: 3px; overflow: hidden; width: 120px; display: inline-block; vertical-align: middle; }
   .bar > i { display: block; height: 100%; background: var(--wait); }
-  .best { color: var(--good); font-weight: 600; }
-  .empty { color: var(--muted); padding: 1.2rem .7rem; }
-  .due { font-variant-numeric: tabular-nums; color: var(--wait); }
-  a { color: var(--wait); }
+  .pct { font-variant-numeric: tabular-nums; color: var(--dim); font-size: .78rem; margin-left: .5rem; }
+  .lead { color: var(--good); font-weight: 650; }
+  .empty { color: var(--faint); padding: 1.4rem .8rem; font-size: .85rem; }
+  .grpstart td { border-top: 1px solid var(--line); }
+  section { margin-bottom: 2rem; }
 </style>
 
-<header>
-  <h1>Second Chance</h1>
-  <span class="sub">recovering failed payments by diagnosing why they failed</span>
-</header>
-<div class="flags" id="flags"></div>
+<div class="wrap">
+  <header>
+    <h1>Second Chance</h1>
+    <span class="tagline">recovering failed payments by working out why they failed</span>
+  </header>
+  <div class="flags" id="flags"></div>
 
-<div class="headline">
-  <div class="stat"><div class="n" id="amount">—</div><div class="l">recovered</div></div>
-  <div class="stat"><div class="n" id="rate">—</div><div class="l">recovery rate</div></div>
-  <div class="stat"><div class="n" id="pipeline">—</div><div class="l">in flight</div></div>
-  <div class="stat"><div class="n" id="atrisk">—</div><div class="l">at risk</div></div>
+  <div class="stats">
+    <div class="stat"><div class="n" id="amount">—</div><div class="l">recovered</div></div>
+    <div class="stat"><div class="n" id="rate">—</div><div class="l">recovery rate</div></div>
+    <div class="stat"><div class="n" id="pipeline">—</div><div class="l">in flight</div></div>
+    <div class="stat"><div class="n" id="atrisk">—</div><div class="l">still at risk</div></div>
+  </div>
+
+  <section>
+    <h2>Recoveries</h2>
+    <div id="rows"></div>
+  </section>
+
+  <section>
+    <h2>What it has learned</h2>
+    <table>
+      <thead><tr>
+        <th style="width:20%">failure class</th>
+        <th style="width:28%">plan</th>
+        <th style="width:26%">share of traffic</th>
+        <th style="width:13%">recovered</th>
+        <th style="width:13%">observations</th>
+      </tr></thead>
+      <tbody id="arms"></tbody>
+    </table>
+  </section>
 </div>
-
-<h2>Recoveries</h2>
-<table>
-  <thead><tr>
-    <th style="width:15%">payment</th>
-    <th style="width:22%">diagnosis</th>
-    <th style="width:20%">plan</th>
-    <th style="width:32%">message</th>
-    <th style="width:11%">status</th>
-  </tr></thead>
-  <tbody id="rows"></tbody>
-</table>
-
-<h2>What it has learned</h2>
-<table>
-  <thead><tr>
-    <th style="width:22%">failure class</th>
-    <th style="width:26%">plan</th>
-    <th style="width:24%">share of traffic</th>
-    <th style="width:14%">recovered</th>
-    <th style="width:14%">observations</th>
-  </tr></thead>
-  <tbody id="arms"></tbody>
-</table>
 
 <script>
 const inr = p => "₹" + (p / 100).toLocaleString("en-IN", { maximumFractionDigits: 0 });
@@ -97,52 +126,74 @@ function dueIn(iso) {
   if (!iso) return "";
   const secs = Math.round((new Date(iso) - Date.now()) / 1000);
   if (secs <= 0) return "due now";
-  if (secs < 90) return `sends in ${secs}s`;
+  if (secs < 90) return "sends in " + secs + "s";
   const mins = Math.round(secs / 60);
-  return mins < 90 ? `sends in ${mins}m` : `sends in ${(mins / 60).toFixed(1)}h`;
+  return mins < 90 ? "sends in " + mins + "m" : "sends in " + (mins / 60).toFixed(1) + "h";
+}
+
+const sourceLabel = { model: "written by model", template: "template", template_after_rejection: "model output rejected" };
+
+function recovery(r) {
+  return `<div class="rec">
+    <div class="top">
+      <span class="amt">${inr(r.amount)}</span>
+      <span class="meth">${esc(r.method ?? "unknown method")}</span>
+      <span class="pid">${esc(r.payment_id)}</span>
+      ${r.attempt_number > 1 ? `<span class="meth">attempt ${r.attempt_number}</span>` : ""}
+      <span class="spacer"></span>
+      <span class="status s-${r.status}">${r.status}</span>
+    </div>
+
+    <div class="col">
+      <div class="k">diagnosis</div>
+      <div class="v">${esc(r.failure_class ?? "—")}
+        ${r.evidence ? `<span class="tag ${r.evidence}">${r.evidence}</span>` : ""}</div>
+      <div class="note">${esc(r.basis)}</div>
+    </div>
+
+    <div class="col">
+      <div class="k">plan</div>
+      <div class="v">${esc(r.strategy)}</div>
+      ${r.status === "scheduled" ? `<div class="due">${dueIn(r.scheduled_for)}</div>` : ""}
+      ${r.excluded_method ? `<div class="note">${esc(r.excluded_method)} hidden on the checkout</div>` : ""}
+      ${r.error ? `<div class="note" style="color:var(--bad)">${esc(r.error)}</div>` : ""}
+    </div>
+
+    <div class="col">
+      <div class="k">message to the customer
+        ${r.message_source ? `<span class="tag ${r.message_source}">${sourceLabel[r.message_source] ?? r.message_source}</span>` : ""}</div>
+      ${r.message ? `<div class="msg">${esc(r.message)}</div>` : `<div class="pending">composed when it sends</div>`}
+    </div>
+  </div>`;
 }
 
 async function refresh() {
   const s = await (await fetch("/api/stats")).json();
 
   const flags = [];
-  if (s.link_provider === "stub") flags.push("STUB LINKS — not real payment links");
-  if (s.time_scale > 1) flags.push(`TIME COMPRESSED ${s.time_scale}× — delays are real intent, wall-clock is scaled`);
-  if (s.learning === false) flags.push("LEARNING OFF — every class uses its default plan");
+  if (s.link_provider === "stub") flags.push("stub links — not real payment links");
+  if (s.time_scale > 1) flags.push("time compressed " + s.time_scale + "× — delays are real intent, wall clock is scaled");
+  if (s.learning === false) flags.push("learning off — every class uses its default plan");
   document.getElementById("flags").innerHTML = flags.map(f => `<span class="flag">${f}</span>`).join("");
 
   const resolved = (s.recovered || 0) + (s.expired || 0);
   document.getElementById("amount").textContent = inr(s.recovered_paise);
-  document.getElementById("rate").textContent = resolved
-    ? Math.round(100 * (s.recovered || 0) / resolved) + "%" : "—";
+  document.getElementById("rate").textContent = resolved ? Math.round(100 * (s.recovered || 0) / resolved) + "%" : "—";
   document.getElementById("pipeline").textContent = (s.scheduled || 0) + (s.sent_pending || 0);
   document.getElementById("atrisk").textContent = inr(s.at_risk_paise || 0);
 
-  document.getElementById("rows").innerHTML = s.recent.length ? s.recent.map(r => `<tr>
-    <td>${esc(r.payment_id)}<div class="sub">${esc(r.method ?? "-")} · attempt ${r.attempt_number}</div></td>
-    <td><span class="cls">${esc(r.failure_class ?? "-")}</span>
-        ${r.evidence ? `<span class="tag ${r.evidence}">${r.evidence}</span>` : ""}
-        <div class="sub">${esc(r.basis)}</div></td>
-    <td><span class="cls">${esc(r.strategy)}</span>
-        ${r.status === "scheduled" ? `<div class="due">${dueIn(r.scheduled_for)}</div>` : ""}
-        ${r.excluded_method ? `<div class="sub">${esc(r.excluded_method)} hidden on the checkout</div>` : ""}
-        ${r.payment_link_url ? `<div class="sub">${esc(r.payment_link_url)}</div>` : ""}</td>
-    <td>${r.message
-        ? `<span class="tag ${r.message_source}">${r.message_source === "model" ? "written by model" : r.message_source === "template" ? "template" : "model rejected"}</span>
-           <div class="msg">${esc(r.message)}</div>`
-        : `<span class="sub">composed when it sends</span>`}</td>
-    <td class="st-${r.status}">${r.status}${r.error ? `<div class="sub">${esc(r.error)}</div>` : ""}</td>
-  </tr>`).join("") : `<tr><td colspan="5" class="empty">No failures yet.</td></tr>`;
+  document.getElementById("rows").innerHTML = s.recent.length
+    ? s.recent.map(recovery).join("")
+    : `<div class="rec" style="display:block"><div class="empty">No failures yet.</div></div>`;
 
   const arms = s.arms || [];
-  document.getElementById("arms").innerHTML = arms.length ? arms.map(a => `<tr>
-    <td>${a.first ? `<span class="cls">${esc(a.failure_class)}</span>` : ""}</td>
-    <td class="${a.leading ? "best" : ""}">${esc(a.variant)}${a.leading ? " ◄" : ""}</td>
-    <td><div class="bar"><i style="width:${Math.round(a.share * 100)}%"></i></div>
-        <div class="sub">${Math.round(a.share * 100)}%</div></td>
+  document.getElementById("arms").innerHTML = arms.length ? arms.map(a => `<tr${a.first ? ' class="grpstart"' : ""}>
+    <td>${a.first ? esc(a.failure_class) : ""}</td>
+    <td class="v ${a.leading ? "lead" : ""}">${esc(a.variant)}</td>
+    <td><span class="bar"><i style="width:${Math.round(a.share * 100)}%"></i></span><span class="pct">${Math.round(a.share * 100)}%</span></td>
     <td>${a.observations ? Math.round(a.rate * 100) + "%" : "—"}</td>
-    <td class="sub">${a.observations || "never tried"}</td>
-  </tr>`).join("") : `<tr><td colspan="5" class="empty">No outcomes recorded yet — the bandit has nothing to learn from.</td></tr>`;
+    <td style="color:var(--dim)">${a.observations || "never tried"}</td>
+  </tr>`).join("") : `<tr><td colspan="5" class="empty">No outcomes yet — the bandit has nothing to learn from until recoveries resolve.</td></tr>`;
 }
 refresh(); setInterval(refresh, 1000);
 </script>

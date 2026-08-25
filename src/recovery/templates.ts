@@ -45,6 +45,25 @@ export const INTENT: Record<FailureClass, string> = {
     "The cause could not be determined. Do not speculate about why it failed. Keep it short and simply offer a way to complete the payment.",
 };
 
+/**
+ * Tells the model what the strategy actually decided about the payment method.
+ *
+ * Without this the message drifts from the decision. An `unknown` failure was
+ * observed producing "please try a different payment method" while the chosen
+ * plan had explicitly not steered anywhere and hidden nothing on the checkout —
+ * not false, since every method was still available, but the message described
+ * an action the system never took.
+ *
+ * The same shape of mistake as `avoidFailedMethod` describing itself in an
+ * explanation string without doing anything. Both times the fix is the same:
+ * words about a decision have to be generated from the decision.
+ */
+export function steeringInstruction(steerToAnotherMethod: boolean): string {
+  return steerToAnotherMethod
+    ? "The failed payment method has been hidden on the checkout. Tell them to use a different payment method."
+    : "The same payment method is still available and should work. Do NOT suggest switching to a different payment method.";
+}
+
 const BODIES: Record<FailureClass, (c: MessageContext) => string> = {
   transient_provider: (c) =>
     `${greet(c)}your ${c.amount} payment didn't go through — that was a temporary issue on the payment provider's side, not anything to do with your ${c.method}. You can try again here: ${c.link}`,

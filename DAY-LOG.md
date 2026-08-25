@@ -714,3 +714,35 @@ application of a fix is how a fixed problem stays broken.
 Verified across twenty-five consecutive runs. The larger draw counts in the
 bandit tests are kept — they were not the problem, but a statistical assertion
 with more samples is better regardless.
+
+Third instance of the same mistake, and this time I recognised it as the pattern
+rather than the instance.
+
+Watching the dashboard, an `unknown` failure produced "please try a different
+payment method" — while the plan chosen for it had explicitly not steered
+anywhere and hidden nothing on the checkout. Not false, since every method was
+still available, but the message described an action the system never took.
+
+That is exactly the `avoidFailedMethod` bug in a different costume. There, the
+intent lived only in an explanation string; here, it lives only in the message.
+Both times the words about a decision were produced from something other than the
+decision itself — the failure class in general rather than what this particular
+plan did.
+
+So the fix is structural rather than a reworded brief. The composer is now told
+what actually happened: whether a method was hidden on this specific link. That
+value comes from the link the provider returned, not from the class, not from the
+strategy table, not from an assumption. Twenty generations across four classes,
+all consistent with the decision made.
+
+Filed under things I would say in an interview: a system that explains itself is
+better than one that does not, and it introduces a failure mode that silent
+systems do not have. Every explanation is a claim, and a claim assembled from
+anything except the actual decision will eventually be wrong. Generate them from
+the outcome, not from the intent.
+
+Also cleaned up the dashboard: each recovery is now a card with three labelled
+columns — diagnosis, plan, message — proportional type for prose and monospace
+only for identifiers. The previous version crammed generated messages into a
+monospace table cell, which was fine to read up close and illegible at any
+distance.
