@@ -3,11 +3,19 @@ import type { RazorpayPaymentEntity } from "../razorpay/types.ts";
 /**
  * Turns a failed payment into a class that implies a recovery strategy.
  *
- * This is deliberately a lookup table and not a language model. The input is a
- * closed vocabulary published by the payment provider and the output is one of
- * six classes; a model would be slower, non-deterministic and untestable, and
- * would add nothing a table cannot do. The model earns its place later, writing
- * the message to the customer, where the output is genuinely open-ended.
+ * Two mechanisms, split by what each is good at.
+ *
+ * The rules below own the documented vocabulary. For a closed set of published
+ * error codes a lookup table is faster, deterministic, unit-testable, and cannot
+ * be wrong in a way a test would not catch. A model there would be strictly
+ * worse at a problem that is already solved.
+ *
+ * What a table cannot do is read a sentence it has never seen. Production sends
+ * descriptions this project never captured — a card that expired, a transaction
+ * a risk system refused, an issuer unavailable in a region — and each one lands
+ * in `unknown` and gets the conservative plan, when a human reading it would
+ * know exactly what to do. That is the open-ended half, and `classifyDeep` hands
+ * it to a model constrained to the same six classes. See model-classifier.ts.
  *
  * Where the signal actually lives took a wrong turn to find. `error_reason` is
  * the obvious field and it is useless in test mode — it reads `payment_failed`
@@ -51,6 +59,13 @@ export interface Classification {
   evidence: Evidence;
   /** Human-readable grounds. Surfaced in the UI so a decision is never opaque. */
   basis: string;
+  /**
+   * Which mechanism produced this. The rules cover the documented vocabulary;
+   * the model reads descriptions the rules have never seen. Recorded separately
+   * from evidence because "how confident are we" and "what worked it out" are
+   * different questions, and an operator will want both.
+   */
+  classifier: "rules" | "model";
 }
 
 /** Documented error reasons. Production sends these; test mode never has. */
@@ -112,6 +127,7 @@ export function classify(entity: RazorpayPaymentEntity): Classification {
     return {
       failureClass: byReason,
       evidence: "documented",
+      classifier: "rules" as const,
       basis: `error_reason "${reason}" is a documented failure mode`,
     };
   }
@@ -123,6 +139,7 @@ export function classify(entity: RazorpayPaymentEntity): Classification {
       return {
         failureClass,
         evidence: seen ? "observed" : "documented",
+        classifier: "rules" as const,
         basis: `error_description indicates ${failureClass.replace(/_/g, " ")}: "${truncate(description)}"`,
       };
     }
@@ -133,6 +150,7 @@ export function classify(entity: RazorpayPaymentEntity): Classification {
     return {
       failureClass: "unknown",
       evidence: "inferred",
+      classifier: "rules" as const,
       basis: `error_reason "${reason}" is not in the known vocabulary and the description says nothing specific`,
     };
   }
@@ -145,6 +163,7 @@ export function classify(entity: RazorpayPaymentEntity): Classification {
       return {
         failureClass: "transient_provider",
         evidence,
+        classifier: "rules" as const,
         basis: `generic ${method} failure; provider-side problems dominate this method and are usually temporary`,
       };
 
@@ -154,6 +173,7 @@ export function classify(entity: RazorpayPaymentEntity): Classification {
       return {
         failureClass: "unknown",
         evidence,
+        classifier: "rules" as const,
         basis: "generic card failure; decline, outage and authentication failure are indistinguishable here",
       };
 
@@ -161,6 +181,7 @@ export function classify(entity: RazorpayPaymentEntity): Classification {
       return {
         failureClass: "unknown",
         evidence: "inferred",
+        classifier: "rules" as const,
         basis: `generic error on an unrecognised method "${method}"`,
       };
   }
@@ -177,3 +198,56 @@ function truncate(text: string, max = 70): string {
   const lastSpace = cut.lastIndexOf(" ");
   return (lastSpace > max * 0.6 ? cut.slice(0, lastSpace) : cut).replace(/[,.;:]$/, "") + "…";
 }
+
+/**
+ * Classifies a failure, asking a model only about descriptions the rules could
+ * not read.
+ *
+ * The division of labour is the point. Rules own the documented vocabulary,
+ * where the answer is known and a table is faster, deterministic and testable.
+ * The model owns the tail — a production account sends descriptions this project
+ * has never captured, and every one of them currently lands in `unknown` and
+ * gets the conservative plan when a human reading the sentence would know
+ * exactly what to do.
+ *
+ * The model is consulted only when three things are true: the rules produced no
+ * class, there is a description worth reading, and that description is not one
+ * of the generic strings that genuinely carry no information. Asking a model
+ * what "Payment failed" means is asking it to invent something.
+ *
+ * It can only ever improve the answer. If it is unavailable, slow, or replies
+ * with anything outside the six classes, the rules' answer stands unchanged.
+ */
+export async function classifyDeep(entity: RazorpayPaymentEntity): Promise<Classification> {
+  const fromRules = classify(entity);
+  if (fromRules.failureClass !== "unknown") return fromRules;
+
+  const description = (entity.error_description ?? "").trim();
+  if (!description || GENERIC_DESCRIPTIONS.has(description.toLowerCase())) return fromRules;
+
+  const { classifyWithModel } = await import("./model-classifier.ts");
+  const fromModel = await classifyWithModel(description);
+  if (!fromModel || fromModel.failureClass === "unknown") return fromRules;
+
+  return {
+    failureClass: fromModel.failureClass,
+    // Never "observed". Nothing about this was seen arriving — a model read a
+    // sentence and made a judgement, and the audit trail should say so.
+    evidence: "inferred",
+    classifier: "model",
+    basis: fromModel.basis,
+  };
+}
+
+/**
+ * Descriptions that say something went wrong without saying what. Every real
+ * card failure captured in test mode reads "Payment failed", and handing that to
+ * a model is asking it to guess.
+ */
+const GENERIC_DESCRIPTIONS = new Set([
+  "payment failed",
+  "transaction failed",
+  "transaction declined",
+  "an error occurred",
+  "error",
+]);

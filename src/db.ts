@@ -32,6 +32,7 @@ db.exec(`
     description  TEXT,
     failure_class TEXT,
     evidence      TEXT,
+    classifier    TEXT,
     basis         TEXT,
     source        TEXT NOT NULL DEFAULT 'razorpay',
     failed_at    TEXT NOT NULL DEFAULT (datetime('now'))
@@ -111,6 +112,7 @@ for (const [column, ddl] of [
   ["failure_class", "ALTER TABLE failed_payments ADD COLUMN failure_class TEXT"],
   ["evidence", "ALTER TABLE failed_payments ADD COLUMN evidence TEXT"],
   ["basis", "ALTER TABLE failed_payments ADD COLUMN basis TEXT"],
+  ["classifier", "ALTER TABLE failed_payments ADD COLUMN classifier TEXT"],
   ["source", "ALTER TABLE failed_payments ADD COLUMN source TEXT NOT NULL DEFAULT 'razorpay'"],
 ] as const) {
   const existing = (db.prepare("PRAGMA table_info(failed_payments)").all() as { name: string }[])

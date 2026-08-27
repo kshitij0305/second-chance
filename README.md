@@ -118,10 +118,27 @@ identical to the version before the bandit existed.
 
 ### Where a model is and is not used
 
-Classification and strategy selection are lookup tables, deliberately. The input
-is a closed vocabulary of provider error codes and the output is one of six
-classes. A model would be slower, non-deterministic, impossible to unit test, and
-no more accurate than a table encoding the same mapping.
+Classification is split by what each mechanism is good at.
+
+**Rules own the documented vocabulary.** A closed set of published error codes
+mapped to six classes is a lookup table: faster, deterministic, unit-testable,
+and correct for every input it was written for. A model there would be strictly
+worse at a problem already solved. Strategy selection is a table for the same
+reason.
+
+**A model owns the tail.** What a table cannot do is read a sentence it has never
+seen, and production sends plenty — a card that expired, a transaction a risk
+system refused, an issuer unavailable in a region. Every one currently lands in
+`unknown` and gets the conservative plan, when a human reading it would know
+exactly what to do. The model is consulted only when the rules found nothing and
+the description is not one of the generic strings that genuinely carry no
+information; asking it what "Payment failed" means is asking it to invent a cause.
+
+It picks from the same six classes and anything else is discarded, so it cannot
+extend the vocabulary. It is never load-bearing: if it is unavailable or answers
+with something unrecognised, the rules' answer stands. Adding the model can
+improve a classification; it cannot break one. Every row records which mechanism
+decided.
 
 The model earns its place at message composition, where the output is genuinely
 open-ended — the register has to shift with the reason for the failure, and

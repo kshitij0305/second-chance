@@ -126,6 +126,12 @@ const BEATS: Beat[] = [
       error_description: "Your payment could not be completed due to insufficient account balance." }, 4),
     real: false,
   },
+  {
+    say: "And this one my rules cannot read. An expired card is not in the documented vocabulary and no pattern matches it, so it would land in unknown and get the cautious plan. Instead a model reads the sentence, picks from the same six classes, and gets it right — the card will keep failing, so switch rails. If it answered with anything outside those six, the rules' answer would stand.",
+    entity: synthetic({ error_reason: "payment_failed", amount: 459900,
+      error_description: "Your card has expired. Please use a different card." }, 5),
+    real: false,
+  },
 ];
 
 async function fire(beat: Beat, index: number): Promise<void> {

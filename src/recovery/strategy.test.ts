@@ -79,7 +79,7 @@ test("an undiagnosed failure is treated cautiously, not optimistically", () => {
 
 test("scheduledFor is the delay applied to the supplied clock", () => {
   const decision = selectStrategy(
-    { failureClass: "transient_provider", evidence: "observed", basis: "test" },
+    { failureClass: "transient_provider", evidence: "observed", classifier: "rules", basis: "test" },
     NOW,
     { learning: false, timeScale: 1 },
   );
@@ -88,7 +88,7 @@ test("scheduledFor is the delay applied to the supplied clock", () => {
 
 test("the explanation records the finding, the evidence and the plan", () => {
   const decision = selectStrategy(
-    { failureClass: "insufficient_funds", evidence: "documented", basis: "error_reason says so" },
+    { failureClass: "insufficient_funds", evidence: "documented", classifier: "rules", basis: "error_reason says so" },
     NOW,
     { learning: false, timeScale: 1 },
   );

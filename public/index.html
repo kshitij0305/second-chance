@@ -165,7 +165,8 @@ function recovery(r) {
     <div class="col">
       <div class="k">diagnosis</div>
       <div class="v">${esc(r.failure_class ?? "—")}
-        ${r.evidence ? `<span class="tag ${r.evidence}">${r.evidence}</span>` : ""}</div>
+        ${r.evidence ? `<span class="tag ${r.evidence}">${r.evidence}</span>` : ""}
+        ${r.classifier === "model" ? `<span class="tag model">by model</span>` : ""}</div>
       <div class="note">${esc(r.basis)}</div>
     </div>
 
