@@ -136,6 +136,16 @@ export const config = {
   smtpPass: (process.env.SMTP_PASS ?? "").replace(/\s+/g, ""),
   smtpFrom: process.env.SMTP_FROM ?? "",
   /**
+   * The merchant the recovery is sent on behalf of.
+   *
+   * Used as the From display name and shown in the email itself. Without it the
+   * recipient sees a bare Gmail address asking about a failed payment, which is
+   * the exact shape of a phishing attempt — and mail providers score it that way
+   * too. Nothing in this system knows the real merchant's name, so it is
+   * configuration rather than something to infer.
+   */
+  merchantName: process.env.MERCHANT_NAME || "Second Chance",
+  /**
    * When set, every message goes here instead of the address on the payment.
    * Captured real failures carry the email of whoever was at that checkout, and
    * replaying them on a laptop must not mail those people.

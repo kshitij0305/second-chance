@@ -278,6 +278,38 @@ replays those payloads routinely — during development, in the demo runner, and
 whenever a handler fix is applied to traffic that already arrived. Every one of
 those reaches the delivery code with a real person's address on it.
 
+`MERCHANT_NAME` is the name the recovery is sent on behalf of. It is the From
+display name and it appears in the email, and it is worth setting for a reason
+that is not cosmetic — see below.
+
+### Why an email is not the message
+
+The composer writes for SMS: under 300 characters, link inline, no structure.
+Those exact bytes were sent as an email for a while, and the result read as a
+phishing attempt — because it has one's exact shape. An unfamiliar address, the
+words "your payment failed", a shortened URL, and nothing else. A person reads
+that as a scam and a spam filter scores it the same way, so the best-composed
+message in the system was landing somewhere nobody would act on it.
+
+Rewriting the words would not have fixed it. The mistake was treating two media
+as one.
+
+The seam that fixes it already existed for a different reason. The composer never
+handles facts: it writes `{{amount}}` and `{{link}}` and code substitutes the
+real values, so a model cannot misstate a number it was never given. Keeping the
+unsubstituted form lets each medium decide what a fact should look like. SMS
+substitutes a URL because a URL is all SMS has. Email substitutes an anchor and
+puts the ask on a button, adds the amount as a stated figure rather than a phrase
+inside prose, carries the payment id so an unexpected email can be tied to a real
+attempt, and says in the footer that no money has been taken.
+
+Both parts are always sent. An HTML-only message is itself a spam signal, and
+some clients render only the text one.
+
+Model-written prose ends up inside that markup, which is the one place in this
+system where untrusted text meets a document that gets interpreted. It is escaped
+before any markup goes near it, and there is a test that says so.
+
 ### Seeing it work without waiting a day
 
 Real delays run from 2 minutes to 24 hours. `TIME_SCALE` divides only the
@@ -341,6 +373,7 @@ where there is enough volume for it to be doing something.
 | `src/recovery/templates.ts` | deterministic message per failure class |
 | `src/razorpay/links.ts` | payment link creation, real or stubbed |
 | `src/delivery/channel.ts` | sending the message, real or logged |
+| `src/delivery/email.ts` | rendering the message for email rather than SMS |
 | `src/recovery/engine.ts` | scheduling, guarded dispatch, attribution |
 | `src/recovery/mapper.ts` | Razorpay vocabulary to ours |
 | `src/db.ts` | SQLite schema and migrations |
