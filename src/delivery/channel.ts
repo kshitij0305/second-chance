@@ -26,7 +26,13 @@ export interface DeliveryRequest {
   /** The address on the failed payment. May be absent, may be a real customer. */
   to: string | null;
   subject: string;
+  /** Plain text. The only thing a console channel or an SMS would ever show. */
   body: string;
+  /**
+   * The email rendering of the same message. Optional: a channel that cannot
+   * display it ignores it, and email falls back to sending text alone.
+   */
+  html?: string;
 }
 
 export interface Channel {
@@ -82,12 +88,18 @@ const emailChannel: Channel = {
 
     try {
       await transporter.sendMail({
-        from: config.smtpFrom || config.smtpUser,
+        // A display name, because the alternative is a bare Gmail address
+        // telling someone their payment failed — indistinguishable from a
+        // phishing attempt, to a person and to a spam filter alike.
+        from: { name: config.merchantName, address: config.smtpFrom || config.smtpUser },
         to: resolved.to,
         // A redirected message says so in the subject. A test email that looks
         // exactly like a production one is how someone eventually believes it.
         subject: resolved.redirected ? `[redirected from ${request.to}] ${request.subject}` : request.subject,
+        // Both parts, always. An HTML-only message is itself a spam signal, and
+        // some clients will only ever render the text one.
         text: request.body,
+        html: request.html,
       });
       console.log(`[deliver] email sent to ${resolved.to}${resolved.redirected ? " (redirected)" : ""}`);
       return { channel: "email", to: resolved.to };

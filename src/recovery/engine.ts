@@ -4,6 +4,7 @@ import type { Decision } from "./strategy.ts";
 import { config } from "../config.ts";
 import { compose, formatAmount } from "./composer.ts";
 import { channel, subjectFor } from "../delivery/channel.ts";
+import { renderEmail } from "../delivery/email.ts";
 import type { FailureClass } from "./classifier.ts";
 import { recordOutcome } from "./bandit.ts";
 import { findVariant } from "./variants.ts";
@@ -206,10 +207,24 @@ async function send(row: DueRow): Promise<boolean> {
     // A delivery failure does not lose the recovery. The link exists, the
     // message exists, and both are recorded with the error so an operator can
     // see that the ask never left rather than wondering why nobody paid.
+    // The composed message is written for SMS: 300 characters, link inline,
+    // no structure. Sent as an email verbatim it read as phishing, because it
+    // has a phishing message's exact shape. Rendering it for the medium is what
+    // fixes that, not rewriting the words — the placeholders the composer left
+    // in let the amount become a stated fact and the link become a button.
+    const amount = formatAmount(row.amount);
+    const email = renderEmail({
+      template: composed.template,
+      amount,
+      link: link.short_url,
+      reference: row.payment_id,
+    });
+
     const delivery = await channel.send({
       to: row.email,
-      subject: subjectFor(formatAmount(row.amount)),
-      body: composed.text,
+      subject: subjectFor(amount),
+      body: email.text,
+      html: email.html,
     });
 
     db.prepare(

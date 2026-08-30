@@ -32,7 +32,18 @@ import { config } from "../config.ts";
 export type MessageSource = "model" | "template" | "template_after_rejection";
 
 export interface ComposedMessage {
+  /** The message with real values in it. What SMS sends and the dashboard shows. */
   text: string;
+  /**
+   * The same message with the amount and link placeholders still in place.
+   *
+   * Kept because substitution is a rendering decision, and different media make
+   * it differently. SMS has nothing to put in place of a link but the URL;
+   * email has a button. Discarding the placeholder form here would force the
+   * email renderer to go looking for a URL inside finished prose and hope it
+   * found the right one.
+   */
+  template: string;
   source: MessageSource;
   /** Set when a generated message was rejected, naming what was wrong with it. */
   rejectionReason?: string;
@@ -91,15 +102,21 @@ export async function compose(
   options: ComposeOptions = {},
 ): Promise<ComposedMessage> {
   const fallback = renderTemplate(failureClass, context);
+  // The same template rendered against the placeholder tokens rather than the
+  // real values, so the fallback path hands the email renderer exactly what the
+  // model path does.
+  const fallbackTemplate = renderTemplate(failureClass, {
+    ...context, amount: AMOUNT_TOKEN, link: LINK_TOKEN,
+  });
 
   let raw: string;
   try {
     const generated = await generate(failureClass, context, options.steerToAnotherMethod ?? false);
-    if (generated === null) return { text: fallback, source: "template" };
+    if (generated === null) return { text: fallback, template: fallbackTemplate, source: "template" };
     raw = generated;
   } catch (error) {
     console.warn(`[compose] generation unavailable, using template: ${describe(error)}`);
-    return { text: fallback, source: "template" };
+    return { text: fallback, template: fallbackTemplate, source: "template" };
   }
 
   const problem = validate(raw);
@@ -108,10 +125,10 @@ export async function compose(
     // of rejections becomes visible rather than silent — a rising rejection rate
     // is the signal that the model is too small for the brief.
     console.warn(`[compose] rejected generated message (${problem})`);
-    return { text: fallback, source: "template_after_rejection", rejectionReason: problem };
+    return { text: fallback, template: fallbackTemplate, source: "template_after_rejection", rejectionReason: problem };
   }
 
-  return { text: substitute(raw, context), source: "model" };
+  return { text: substitute(raw, context), template: raw, source: "model" };
 }
 
 /** Returns null when no provider is configured. Throws on provider failure. */
