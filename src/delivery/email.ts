@@ -55,7 +55,7 @@ function renderText(content: EmailContent): string {
     `Amount: ${content.amount}`,
     `Reference: ${content.reference}`,
     "",
-    whyThisArrived(content.amount),
+    whyThisArrived(),
     `Sent by ${config.merchantName}.`,
   ].join("\n");
 }
@@ -81,7 +81,9 @@ function renderHtml(content: EmailContent): string {
      Declaring a scheme keeps the card readable instead of leaving it to them. -->
 <meta name="color-scheme" content="light">
 <meta name="supported-color-schemes" content="light">
-<title>Your ${escapeHtml(content.amount)} payment</title>
+<!-- Clients strip the head entirely; the subject is the real title. Kept
+     only so the document is well formed. -->
+<title>${merchant}</title>
 </head>
 <body style="margin:0;padding:24px 12px;background:#f4f4f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
 <!-- Tables rather than flexbox: Outlook renders on Word's engine and does not
@@ -95,8 +97,12 @@ function renderHtml(content: EmailContent): string {
   </td></tr>
 
   <tr><td style="padding:32px;">
+    <!-- Not a restatement of the subject. This line used to be the subject
+         verbatim, which meant opening the email bought the reader nothing. The
+         subject says what happened; this says what can be done about it; the
+         prose says why; the button does it. Each line earns its place. -->
     <h1 style="margin:0 0 16px;font-size:19px;line-height:1.35;font-weight:600;color:#18181b;letter-spacing:-0.01em;">
-      Your ${escapeHtml(content.amount)} payment didn&rsquo;t go through
+      You can still complete it
     </h1>
     <p style="margin:0 0 28px;font-size:15px;line-height:1.6;color:#3f3f46;">${prose}</p>
 
@@ -117,7 +123,7 @@ function renderHtml(content: EmailContent): string {
 
   <tr><td style="padding:18px 32px;background:#fafafa;border-top:1px solid #f4f4f5;border-radius:0 0 12px 12px;">
     <p style="margin:0;font-size:12px;line-height:1.6;color:#71717a;">
-      ${escapeHtml(whyThisArrived(content.amount))}<br>
+      ${escapeHtml(whyThisArrived())}<br>
       Sent by ${merchant}.
     </p>
   </td></tr>
@@ -136,8 +142,11 @@ function renderHtml(content: EmailContent): string {
  * Saying that no money has been taken removes the reason a confused recipient
  * would otherwise report it, and a reported message is worse than an ignored one.
  */
-function whyThisArrived(amount: string): string {
-  return `You're receiving this because a ${amount} payment to ${config.merchantName} didn't complete. ` +
+function whyThisArrived(): string {
+  // No amount here. It is already stated twice above, and a figure repeated at
+  // every level of a message stops reading as information and starts reading as
+  // a template padding itself out.
+  return `You're receiving this because a payment to ${config.merchantName} didn't complete. ` +
     "If that wasn't you, no payment has been taken and you can ignore this.";
 }
 
