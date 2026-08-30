@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { renderEmail } from "./email.ts";
+import { subjectFor } from "./channel.ts";
 import { AMOUNT_TOKEN, LINK_TOKEN } from "../recovery/composer.ts";
 
 /**
@@ -76,4 +77,22 @@ test("nothing in the rendering applies pressure", () => {
   for (const rendered of [text, html]) {
     assert.ok(!/urgent|hurry|last chance|act now|expires soon/i.test(rendered));
   }
+});
+
+test("the heading does not restate the subject", () => {
+  // It did, word for word, which meant the most valuable line in the message
+  // told the reader something they had already read in the inbox list.
+  const { html } = renderEmail(content);
+  assert.ok(
+    !html.includes(subjectFor(content.amount)),
+    "the subject line is repeated verbatim inside the email",
+  );
+});
+
+test("the amount is stated a few times, not at every level", () => {
+  // Subject, heading, prose, button, amount line and footer all carried it at
+  // one point. A figure repeated six times stops reading as information.
+  const { html } = renderEmail(content);
+  const occurrences = html.split(content.amount).length - 1;
+  assert.ok(occurrences <= 3, `amount appears ${occurrences} times in the email`);
 });

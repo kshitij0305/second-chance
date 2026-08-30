@@ -113,7 +113,22 @@ const emailChannel: Channel = {
 
 export const channel: Channel = config.deliveryChannel === "email" ? emailChannel : consoleChannel;
 
+/**
+ * The subject line.
+ *
+ * Deliberately says nothing about why the payment failed, and takes no failure
+ * class so that it cannot start to. A subject is displayed on a lock screen, in
+ * a notification, and over the shoulder of whoever is holding the phone. The
+ * insufficient_funds message goes out of its way not to state its reason to the
+ * person it is addressed to; putting that reason in the subject would announce
+ * it to everyone else instead.
+ *
+ * The amount leads because it is the identifying fact — it is what tells someone
+ * scanning an inbox which payment this is about. It is short enough that a phone
+ * will not truncate it.
+ *
+ * No urgency and no marketing, the same register as the body.
+ */
 export function subjectFor(amount: string): string {
-  // No urgency, no marketing. The same register as the message body.
-  return `Your ${amount} payment didn't go through`;
+  return `Your ${amount} payment didn't complete`;
 }

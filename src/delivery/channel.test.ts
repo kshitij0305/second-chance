@@ -63,3 +63,16 @@ test("the subject carries the amount and applies no pressure", () => {
   assert.ok(!subject.includes("!"));
   assert.ok(!/urgent|hurry|last chance|expires|act now/i.test(subject));
 });
+
+test("the subject never discloses why the payment failed", () => {
+  // A subject shows up on a lock screen. The insufficient_funds message is
+  // written specifically not to tell its recipient why it failed; leaking that
+  // into a notification would tell everyone standing near them instead.
+  //
+  // Structurally it cannot happen — subjectFor takes an amount and no failure
+  // class — and this test exists so that adding one is a deliberate act.
+  const subject = subjectFor("₹2,749");
+  for (const word of ["declined", "insufficient", "balance", "expired", "bank", "rejected", "cancelled"]) {
+    assert.ok(!subject.toLowerCase().includes(word), `subject discloses "${word}"`);
+  }
+});
