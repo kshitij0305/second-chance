@@ -17,7 +17,8 @@
     "export-fixtures": "node scripts/export-fixtures.mjs",
     "simulate": "tsx scripts/simulate.ts",
     "demo": "tsx scripts/demo.ts",
-    "bench:composer": "tsx scripts/bench-composer.ts"
+    "bench:composer": "tsx scripts/bench-composer.ts",
+    "email-test": "tsx scripts/email-test.ts"
   },
   "dependencies": {
     "dotenv": "^17.2.3",
