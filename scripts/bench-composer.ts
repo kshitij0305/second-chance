@@ -7,6 +7,13 @@
  * validator, same failure classes, varying only the model and whether examples
  * are supplied.
  *
+ * It measures the prompt production actually sends, which it did not always do.
+ * The steering instruction was missing here while every real send included it,
+ * so the reported rate was for a prompt one line shorter than the live one — and
+ * that line turned out to be the one carrying most of the rejections. A benchmark
+ * measuring something adjacent to the system is worse than no benchmark, because
+ * the number it prints gets believed.
+ *
  * The metric is the validator rejection rate. A rejected message is not a
  * stylistic complaint — it is one the system refused to send because it
  * fabricated a figure, dropped a placeholder or ran long, and the template went
@@ -19,7 +26,7 @@
 import "dotenv/config";
 import Groq from "groq-sdk";
 import { SYSTEM_PROMPT, validate, AMOUNT_TOKEN, LINK_TOKEN } from "../src/recovery/composer.ts";
-import { INTENT } from "../src/recovery/templates.ts";
+import { INTENT, steeringInstruction } from "../src/recovery/templates.ts";
 import type { FailureClass } from "../src/recovery/classifier.ts";
 
 const apiKey = process.env.GROQ_API_KEY;
@@ -99,6 +106,9 @@ async function runVariant(variant: Variant): Promise<Result> {
               content:
                 `Payment method that failed: card\n` +
                 `What happened, and how to handle it: ${INTENT[failureClass]}\n` +
+                // Both branches, alternating. Production sends one of them on every
+                // single call, and they do not perform the same.
+                `${steeringInstruction(i % 2 === 0)}\n` +
                 (i % 2 === 0 ? "Customer's first name: Asha\n" : "The customer's name is unknown; do not invent one.\n") +
                 `\nWrite the message.`,
             },

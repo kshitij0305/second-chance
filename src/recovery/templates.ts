@@ -59,9 +59,25 @@ export const INTENT: Record<FailureClass, string> = {
  * words about a decision have to be generated from the decision.
  */
 export function steeringInstruction(steerToAnotherMethod: boolean): string {
+  // Both branches say what the message should tell the customer. Neither states
+  // what the system did, and that distinction is not stylistic.
+  //
+  // The steering branch used to open with "The failed payment method has been
+  // hidden on the checkout." The model treated it as copy rather than context
+  // and put it in a customer's inbox — "The card is hidden from checkout" — which
+  // is an internal detail nobody paying a bill needs. Removing the sentence
+  // removed the leak: 0 of 20 generations mentioned it afterwards, against a
+  // reproducible occurrence before.
+  //
+  // It did not change how often the validator rejects a message. That was the
+  // hypothesis — an irrelevant fact competing for a small model's attention,
+  // costing it the amount placeholder — and the measurement did not support it:
+  // 2 of 20 before, 4 of 20 after, which at this sample size is one number, not
+  // two. Why this branch drops the placeholder more than the others is still
+  // open, and `npm run bench:composer` is where to settle it.
   return steerToAnotherMethod
-    ? "The failed payment method has been hidden on the checkout. Tell them to use a different payment method."
-    : "The same payment method is still available and should work. Do NOT suggest switching to a different payment method.";
+    ? "Tell them to pay by a different method."
+    : "Tell them the same payment method should work, and do not suggest switching.";
 }
 
 const BODIES: Record<FailureClass, (c: MessageContext) => string> = {
