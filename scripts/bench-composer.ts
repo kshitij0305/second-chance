@@ -147,10 +147,14 @@ async function runVariant(variant: Variant): Promise<Result> {
               content:
                 `Payment method that failed: card\n` +
                 `What happened, and how to handle it: ${INTENT[failureClass]}\n` +
-                // Both branches, alternating. Production sends one of them on every
-                // single call, and they do not perform the same.
+                // Steering alternates because production sends both branches. The name
+                // does not, because production has none: engine.ts passes name: null on
+                // every dispatch and nothing anywhere sets it. Alternating it here spent
+                // half the run measuring a branch that never executes — and, while it
+                // shared a period with steering, hid the one combination already observed
+                // to fail. Restore the alternation the day a real name is plumbed through.
                 `${steeringInstruction(i % 2 === 0)}\n` +
-                (i % 2 === 0 ? "Customer's first name: Asha\n" : "The customer's name is unknown; do not invent one.\n") +
+                "The customer's name is unknown; do not invent one.\n" +
                 `\nWrite the message.`,
             },
           ],

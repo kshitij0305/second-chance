@@ -165,24 +165,38 @@ passing unchanged, because the tests cover the validation fence rather than the
 model.
 
 **The model size was measured, not assumed.** `npm run bench:composer` varies
-only the model and whether the prompt carries examples, across 150 generations
-each:
+only the model and whether the prompt carries examples twice, across 72
+generations per variant:
 
 | Variant | Rejected by the validator | Cost per 1000 messages |
 |---|---|---|
-| 20b, plain prompt | 4.7% | $0.041 |
-| 20b, few-shot | 0.7% | $0.050 |
-| 120b, plain prompt | 0.0% | $0.093 |
+| 20b, current prompt | 1.4% | $0.052 |
+| 20b, examples twice | 0.0% | $0.061 |
+| 120b, current prompt | 0.0% | $0.121 |
 
-Every rejection in every variant had the same cause: the model omitting the
-amount placeholder. That is an instruction-following miss, not a capability
-limit, and instruction-following misses are fixed by showing rather than by
-paying. Two examples in the system prompt close almost the whole gap to a model
-eight times the size, for 22% more cost instead of 130% more — and at this sample
-0.7% and 0.0% are one rejection apart, which is not a distinguishable difference.
+One rejection against none is not a difference to act on, and the larger model
+asks double the price and 200ms more latency to deliver it. The small model
+stays.
 
-So the small model stays, with examples. The rejection rate remains the signal if
-that ever stops being true.
+Every rejection has the same cause: the model omitting the amount placeholder.
+That is an instruction-following miss, not a capability limit, which is why two
+examples in the system prompt were worth more than eight times the parameters —
+an earlier run of this benchmark measured 4.7% without them and is the reason
+they are there.
+
+Those earlier figures are not comparable to the ones above, and the reason is
+worth stating. The benchmark did not send the steering instruction, which every
+real dispatch does, so every number it had ever printed described a prompt one
+line shorter than the live one. It also alternated a customer name that
+production never supplies, and for a while gated that alternation on the same
+expression as the steering branch — so two variables moved together and neither
+was isolated. A benchmark measuring something adjacent to the system is worse
+than no benchmark, because the number it prints gets believed.
+
+Rejections also concentrate rather than spread. Sampled on its own,
+`instrument_rejected` with the steering branch rejects around 10-20%; across six
+classes that dilutes to the 1.4% above. The rejection rate remains the signal if
+the small model ever stops being enough.
 
 ## What this can and cannot demonstrate
 
