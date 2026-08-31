@@ -1,94 +1,179 @@
 <!doctype html>
 <meta charset="utf-8">
 <title>Second Chance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  /*
+   * Palette and type taken from hierly.xyz, so the two projects read as the same
+   * hand: warm paper rather than white, one deep green doing all the affirmative
+   * work, amber for anything provisional, and a serif carrying the headline and
+   * the numbers.
+   *
+   * Every face has a real fallback. A demo that depends on a font CDN is a demo
+   * that renders wrong the one time the wifi drops mid-recording, and Georgia
+   * standing in for Fraunces is a good day compared to that.
+   */
   :root {
-    --ink: #16181d; --dim: #5f6570; --faint: #8b929c;
-    --line: #e4e7ec; --bg: #f7f8fa; --card: #ffffff;
-    --good: #0a7a34; --bad: #b3261e; --wait: #0a58c2; --warn: #8a6100;
-    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
-    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, system-ui, sans-serif;
+    --paper: #f8f6f1; --card: #ffffff; --ink: #1b1d19; --dim: #70746c; --faint: #9a9d94;
+    --line: #e5e1d6; --green: #1e5c41; --green-tint: #e9f1ec;
+    --amber: #e08a2e; --amber-tint: #fbf1e3; --brick: #a8392a; --brick-tint: #f9ecea;
+    --serif: "Fraunces", Georgia, "Times New Roman", serif;
+    --sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
   }
   * { box-sizing: border-box; }
   body {
-    font: 18px/1.55 var(--sans); color: var(--ink); background: var(--bg);
-    margin: 0; padding: 1.75rem 2rem 4rem;
+    font: 16px/1.6 var(--sans); color: var(--ink); background: var(--paper);
+    margin: 0; padding: 2.25rem 2rem 5rem; -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 92rem; margin: 0 auto; }
+  .wrap { max-width: 84rem; margin: 0 auto; }
 
-  header { display: flex; align-items: baseline; gap: .75rem; flex-wrap: wrap; }
-  h1 { font-size: 1.3rem; margin: 0; font-weight: 650; letter-spacing: -.01em; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: #ded9cc; border-radius: 999px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+
+  @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  /*
+   * Applied to a section once, never to the rows.
+   *
+   * The rows are rebuilt on a one-second poll, and an entrance animation on
+   * something rebuilt every second never finishes entering — every row sat
+   * permanently part-way through its own fade, which read as a page that had
+   * not finished loading. See the guard in refresh() for the other half of this.
+   */
+  .rise { animation: rise .22s ease-out both; }
+
+  header { display: flex; align-items: baseline; gap: .85rem; flex-wrap: wrap; }
+  h1 { font-family: var(--serif); font-size: 2rem; margin: 0; font-weight: 400;
+       letter-spacing: -.02em; line-height: 1.05; }
   .tagline { color: var(--dim); font-size: .95rem; }
-  .flags { display: flex; gap: .4rem; flex-wrap: wrap; margin: .6rem 0 1.5rem; }
-  .flag {
-    background: transparent; border: 1px solid #e0d3a8; color: #8a7333;
-    padding: .05rem .45rem; border-radius: 999px; font-size: .72rem;
-    font-weight: 600; letter-spacing: .02em;
-  }
 
-  .stats { display: flex; gap: 2.75rem; flex-wrap: wrap; margin-bottom: 2rem; }
-  .stat .n { font-size: 2.6rem; font-weight: 680; line-height: 1; letter-spacing: -.025em; font-variant-numeric: tabular-nums; }
-  .stat .l { font-size: .78rem; text-transform: uppercase; letter-spacing: .09em; color: var(--faint); margin-top: .4rem; font-weight: 600; }
+  /*
+   * The demo caveats. They must stay on screen — a stubbed, time-compressed run
+   * that looks like a live one is the single most dishonest thing this page
+   * could do. But they were four amber pills directly under the title, which
+   * made the first thing anyone read a list of reasons not to believe the
+   * second thing. Same words, stated once, quietly.
+   */
+  .flags { display: flex; gap: .5rem; flex-wrap: wrap; align-items: baseline;
+           margin: .8rem 0 2rem; font-size: .76rem; color: var(--faint); }
+  .flags .lead { font-weight: 600; text-transform: uppercase; letter-spacing: .09em; color: var(--amber); }
+  .flag { color: var(--dim); }
+  .flag + .flag::before { content: "·"; color: var(--line); margin-right: .5rem; }
 
-  h2 { font-size: .82rem; text-transform: uppercase; letter-spacing: .1em;
-       color: var(--faint); font-weight: 700; margin: 0 0 .7rem; }
+  /*
+   * A funnel, not four unrelated numbers.
+   *
+   * Recovered is the number this project exists to move, and it is zero until
+   * somebody actually pays. Sat beside three healthy figures with no relation
+   * drawn between them, that zero read as a broken system rather than as a
+   * pipeline nobody has reached the end of yet. Reading left to right — failures
+   * seen, money at stake, recoveries working, money back — puts it where it
+   * belongs, and the bar underneath gives it somewhere to go.
+   */
+  .stats { display: flex; align-items: flex-start; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
+  .stat { min-width: 8.5rem; }
+  .stat .n { font-family: var(--serif); font-size: 2.7rem; font-weight: 400; line-height: 1;
+             letter-spacing: -.025em; font-variant-numeric: tabular-nums; }
+  .stat .l { font-size: .71rem; text-transform: uppercase; letter-spacing: .11em;
+             color: var(--faint); margin-top: .55rem; font-weight: 600; }
+  .stat .sub { font-size: .76rem; color: var(--dim); margin-top: .35rem; font-variant-numeric: tabular-nums; }
+  .arrow { color: #d8d3c6; font-size: 1.3rem; align-self: center; margin-top: -1.4rem; user-select: none; }
+  .stat.goal .n { color: var(--faint); transition: color .35s; }
+  .stat.goal.hit .n { color: var(--green); }
+  .track { height: 4px; width: 100%; max-width: 11rem; background: var(--line);
+           border-radius: 2px; overflow: hidden; margin-top: .6rem; }
+  .track > i { display: block; height: 100%; width: 0; background: var(--green); transition: width .45s ease-out; }
+
+  h2 { font-size: .73rem; text-transform: uppercase; letter-spacing: .12em;
+       color: var(--faint); font-weight: 600; margin: 0 0 .8rem; }
 
   .rec {
-    background: var(--card); border: 1px solid var(--line); border-radius: 8px;
-    border-left: 4px solid var(--line);
+    background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+    border-left: 3px solid var(--line);
     padding: 1.1rem 1.25rem; margin-bottom: .7rem;
-    display: grid; grid-template-columns: 1.05fr 1.15fr 1.5fr; gap: 1.5rem;
+    display: grid; grid-template-columns: 1.05fr 1.1fr 1.55fr; gap: 1.6rem;
   }
-  .rec.r-scheduled, .rec.r-sending { border-left-color: var(--wait); }
-  .rec.r-sent      { border-left-color: #b9c0ca; }
-  .rec.r-recovered { border-left-color: var(--good); }
-  .rec.r-failed    { border-left-color: var(--bad); }
-  .rec.r-expired, .rec.r-superseded { border-left-color: #dfe3e8; }
+  .rec.r-scheduled, .rec.r-sending { border-left-color: var(--amber); }
+  .rec.r-sent      { border-left-color: #cfcabc; }
+  .rec.r-recovered { border-left-color: var(--green); background: linear-gradient(90deg, var(--green-tint), var(--card) 42%); }
+  .rec.r-failed    { border-left-color: var(--brick); }
+  /* Dimmed, not greyed out. A run where everything has expired is a normal run,
+     and at .74 the whole page looked like it had failed to load. */
+  .rec.r-expired, .rec.r-superseded { border-left-color: var(--line); opacity: .88; }
   .rec .top {
-    grid-column: 1 / -1; display: flex; align-items: center; gap: .6rem;
-    padding-bottom: .7rem; margin-bottom: .1rem; border-bottom: 1px solid var(--line);
+    grid-column: 1 / -1; display: flex; align-items: center; gap: .65rem;
+    padding-bottom: .75rem; margin-bottom: .1rem; border-bottom: 1px solid var(--line);
   }
-  .pid { font-family: var(--mono); font-size: .88rem; color: var(--dim); }
-  .amt { font-weight: 650; font-variant-numeric: tabular-nums; }
-  .meth { color: var(--dim); font-size: .95rem; }
+  .pid { font-family: var(--mono); font-size: .82rem; color: var(--faint); }
+  .amt { font-family: var(--serif); font-weight: 500; font-size: 1.25rem;
+         font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+  .meth { color: var(--dim); font-size: .9rem; }
   .spacer { flex: 1; }
 
-  .col .k { font-size: .74rem; text-transform: uppercase; letter-spacing: .09em;
-            color: var(--faint); font-weight: 700; margin-bottom: .25rem; }
-  .col .v { font-family: var(--mono); font-size: .98rem; font-weight: 600; }
-  .col .note { color: var(--dim); font-size: .88rem; line-height: 1.45; margin-top: .25rem; }
+  .col .k { font-size: .68rem; text-transform: uppercase; letter-spacing: .11em;
+            color: var(--faint); font-weight: 600; margin-bottom: .35rem; }
+  .col .v { font-family: var(--mono); font-size: .93rem; font-weight: 600; color: var(--ink); }
+  .col .note { color: var(--dim); font-size: .85rem; line-height: 1.5; margin-top: .3rem; }
 
-  .msg { font-size: 1rem; line-height: 1.5; margin-top: .3rem; color: var(--ink); }
-  .delivered { color: var(--good); }
-  .pending { color: var(--faint); font-style: italic; font-size: .8rem; margin-top: .3rem; }
+  /*
+   * The message is the payoff — it is the thing a model wrote and the thing a
+   * customer would actually read — and it was set smaller than the machine
+   * values beside it. It gets the emphasis now.
+   */
+  .msg { font-size: 1rem; line-height: 1.6; margin-top: .4rem; color: var(--ink); }
+  /*
+   * The link inside the prose, given an edge. A raw URL wrapping across two
+   * lines mid-sentence reads as a rendering fault; code knows the exact string
+   * it substituted, so it can mark it without guessing at one.
+   */
+  .msg .lnk { font-family: var(--mono); font-size: .8rem; background: var(--green-tint);
+              border: 1px solid #cfe0d6; color: var(--green); border-radius: 5px;
+              padding: .08rem .34rem; white-space: nowrap; }
+  .delivered { color: var(--green); }
+  .pending { color: var(--faint); font-style: italic; font-size: .82rem; margin-top: .35rem; }
+  /* Full address on hover; a screen recording does not need it spelled out. */
+  .addr { border-bottom: 1px dotted #cfcabc; cursor: help; }
 
-  .tag { font-size: .72rem; padding: .05rem .35rem; border-radius: 3px; border: 1px solid;
-         text-transform: uppercase; letter-spacing: .04em; font-weight: 650; white-space: nowrap; }
-  .observed, .model { color: var(--good); border-color: #9ed3b1; background: #f1faf4; }
-  .documented { color: var(--warn); border-color: #e3c977; background: #fffaeb; }
-  .inferred, .template { color: var(--dim); border-color: var(--line); background: #f6f7f9; }
-  .template_after_rejection { color: var(--bad); border-color: #edb4af; background: #fdf3f2; }
+  .tag { font-size: .66rem; padding: .1rem .4rem; border-radius: 5px; border: 1px solid;
+         text-transform: uppercase; letter-spacing: .06em; font-weight: 700; white-space: nowrap; }
+  .observed, .model { color: var(--green); border-color: #cfe0d6; background: var(--green-tint); }
+  .documented { color: #9a5f14; border-color: #ecd7b4; background: var(--amber-tint); }
+  .inferred, .template { color: var(--dim); border-color: var(--line); background: var(--paper); }
+  .template_after_rejection { color: var(--brick); border-color: #edc9c3; background: var(--brick-tint); }
 
-  .status { font-size: .86rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
-  .s-recovered { color: var(--good); } .s-scheduled, .s-sending { color: var(--wait); }
-  .s-sent { color: var(--dim); } .s-failed { color: var(--bad); }
+  .status { font-size: .71rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+  .s-recovered { color: var(--green); } .s-scheduled, .s-sending { color: var(--amber); }
+  .s-sent { color: var(--dim); } .s-failed { color: var(--brick); }
   .s-expired, .s-superseded { color: var(--faint); }
-  .due { color: var(--wait); font-variant-numeric: tabular-nums; font-size: .92rem; margin-top: .25rem; }
+
+  /*
+   * A scheduled recovery is the only thing on this page that is visibly going to
+   * happen, and it was grey six-point text. It is the clock the whole demo runs
+   * on, so it ticks where you can see it.
+   */
+  .due { color: #9a5f14; font-variant-numeric: tabular-nums; font-size: .9rem;
+         font-family: var(--mono); margin-top: .4rem; }
+  .due .dot { animation: blink 1.2s infinite; color: var(--amber); }
+  @keyframes blink { 0%, 80%, 100% { opacity: .25; } 40% { opacity: 1; } }
 
   table { border-collapse: collapse; width: 100%; background: var(--card);
-          border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
-  th { text-align: left; font-size: .74rem; text-transform: uppercase; letter-spacing: .09em;
-       color: var(--faint); font-weight: 700; padding: .55rem .8rem; border-bottom: 1px solid var(--line); }
-  td { padding: .6rem .8rem; border-bottom: 1px solid var(--line); font-size: .95rem; }
+          border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  th { text-align: left; font-size: .68rem; text-transform: uppercase; letter-spacing: .11em;
+       color: var(--faint); font-weight: 600; padding: .65rem .9rem; border-bottom: 1px solid var(--line); }
+  td { padding: .65rem .9rem; border-bottom: 1px solid var(--line); font-size: .92rem; }
   tbody tr:last-child td { border-bottom: none; }
-  td.v { font-family: var(--mono); font-size: .95rem; }
-  .bar { height: 5px; background: #eef0f4; border-radius: 3px; overflow: hidden; width: 120px; display: inline-block; vertical-align: middle; }
-  .bar > i { display: block; height: 100%; background: var(--wait); }
+  td.v { font-family: var(--mono); font-size: .9rem; }
+  .bar { height: 5px; background: var(--line); border-radius: 3px; overflow: hidden;
+         width: 120px; display: inline-block; vertical-align: middle; }
+  .bar > i { display: block; height: 100%; background: var(--green); }
   .pct { font-variant-numeric: tabular-nums; color: var(--dim); font-size: .78rem; margin-left: .5rem; }
-  .lead { color: var(--good); font-weight: 650; }
-  .empty { color: var(--faint); padding: 1.4rem .8rem; font-size: .85rem; }
+  .lead-arm { color: var(--green); font-weight: 700; }
+  .empty { color: var(--faint); padding: 1.5rem .9rem; font-size: .86rem; }
   .grpstart td { border-top: 1px solid var(--line); }
-  section { margin-bottom: 2rem; }
+  section { margin-bottom: 2.5rem; }
 </style>
 
 <div class="wrap">
@@ -98,11 +183,19 @@
   </header>
   <div class="flags" id="flags"></div>
 
-  <div class="stats">
+  <div class="stats" id="stats">
     <div class="stat"><div class="n" id="handled">0</div><div class="l">failures handled</div></div>
-    <div class="stat"><div class="n" id="atrisk">₹0</div><div class="l">revenue at risk</div></div>
+    <span class="arrow">&rsaquo;</span>
+    <div class="stat"><div class="n" id="atrisk">&#8377;0</div><div class="l">revenue at risk</div></div>
+    <span class="arrow">&rsaquo;</span>
     <div class="stat"><div class="n" id="pipeline">0</div><div class="l">recoveries in flight</div></div>
-    <div class="stat"><div class="n" id="amount">₹0</div><div class="l">recovered</div><div class="l" id="rate"></div></div>
+    <span class="arrow">&rsaquo;</span>
+    <div class="stat goal" id="goal">
+      <div class="n" id="amount">&#8377;0</div>
+      <div class="l">recovered</div>
+      <div class="track"><i id="trackfill"></i></div>
+      <div class="sub" id="rate"></div>
+    </div>
   </div>
 
   <section>
@@ -129,6 +222,19 @@
 const inr = p => "₹" + (p / 100).toLocaleString("en-IN", { maximumFractionDigits: 0 });
 const esc = s => String(s ?? "").replace(/[<>&]/g, c => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c]));
 
+/*
+ * Shows enough of an address to tell two customers apart, and not enough to
+ * read one off a screen recording. The whole value stays in the title
+ * attribute, so an operator who needs it still has it.
+ */
+function maskAddress(address) {
+  const value = String(address ?? "");
+  const at = value.indexOf("@");
+  if (at < 1) return esc(value);
+  const hidden = "•".repeat(Math.max(3, Math.min(8, at - 1)));
+  return `<span class="addr" title="${esc(value)}">${esc(value[0])}${hidden}${esc(value.slice(at))}</span>`;
+}
+
 function dueIn(iso) {
   if (!iso) return "";
   const secs = Math.round((new Date(iso) - Date.now()) / 1000);
@@ -140,15 +246,54 @@ function dueIn(iso) {
 
 const sourceLabel = { model: "written by model", template: "template", template_after_rejection: "model output rejected" };
 
+/** Replaces a container's markup only when it changed. See the caller. */
+const painted = new Map();
+function paint(id, html) {
+  if (painted.get(id) === html) return;
+  painted.set(id, html);
+  document.getElementById(id).innerHTML = html;
+  tick();
+}
+
+/*
+ * Advances the countdowns without touching the rows they sit in.
+ *
+ * The countdown was rendered into the row markup, which meant the markup
+ * differed every second, which meant the guard above never held and the whole
+ * list was rebuilt once a second anyway — losing the scroll position each time.
+ * The deadline is a stable attribute now and only this text changes.
+ */
+function tick() {
+  for (const el of document.querySelectorAll(".due-t")) {
+    const next = dueIn(el.dataset.due);
+    if (el.textContent !== next) el.textContent = next;
+  }
+}
+
 function deliveryLine(r) {
-  if (r.delivery_error) return `<div class="note" style="color:var(--bad)">not delivered — ${esc(r.delivery_error)}</div>`;
+  if (r.delivery_error) return `<div class="note" style="color:var(--brick)">not delivered &mdash; ${esc(r.delivery_error)}</div>`;
   if (!r.delivered_at) return "";
   // The console channel writes nothing to anybody. Saying "delivered" for it
   // would be the same lie as an explanation describing a decision never taken.
   if (r.delivery_channel === "console") {
-    return `<div class="note">would go to ${esc(r.delivered_to)} — not sent, console channel</div>`;
+    return `<div class="note">would go to ${maskAddress(r.delivered_to)} &mdash; not sent, console channel</div>`;
   }
-  return `<div class="note delivered">delivered to ${esc(r.delivered_to)} via ${esc(r.delivery_channel)}</div>`;
+  return `<div class="note delivered">delivered to ${maskAddress(r.delivered_to)} via ${esc(r.delivery_channel)}</div>`;
+}
+
+/*
+ * Marks the payment link inside the composed message.
+ *
+ * The URL is matched, never guessed at: the row carries the exact string that
+ * was substituted in, so this either finds that string or leaves the prose
+ * untouched. A regex hunting for anything URL-shaped could decorate something
+ * the model wrote, which is the one thing this page must not do.
+ */
+function withLink(message, url) {
+  const text = esc(message);
+  if (!url) return text;
+  const needle = esc(url);
+  return text.split(needle).join(`<span class="lnk">${needle}</span>`);
 }
 
 function recovery(r) {
@@ -173,15 +318,15 @@ function recovery(r) {
     <div class="col">
       <div class="k">plan</div>
       <div class="v">${esc(r.strategy)}</div>
-      ${r.status === "scheduled" ? `<div class="due">${dueIn(r.scheduled_for)}</div>` : ""}
+      ${r.status === "scheduled" ? `<div class="due"><span class="dot">&bull;</span> <span class="due-t" data-due="${esc(r.scheduled_for)}"></span></div>` : ""}
       ${r.excluded_method ? `<div class="note">${esc(r.excluded_method)} hidden on the checkout</div>` : ""}
-      ${r.error ? `<div class="note" style="color:var(--bad)">${esc(r.error)}</div>` : ""}
+      ${r.error ? `<div class="note" style="color:var(--brick)">${esc(r.error)}</div>` : ""}
     </div>
 
     <div class="col">
       <div class="k">message to the customer
         ${r.message_source ? `<span class="tag ${r.message_source}">${sourceLabel[r.message_source] ?? r.message_source}</span>` : ""}</div>
-      ${r.message ? `<div class="msg">${esc(r.message)}</div>` : `<div class="pending">composed when it sends</div>`}
+      ${r.message ? `<div class="msg">${withLink(r.message, r.payment_link_url)}</div>` : `<div class="pending">composed when it sends</div>`}
       ${deliveryLine(r)}
     </div>
   </div>`;
@@ -191,35 +336,55 @@ async function refresh() {
   const s = await (await fetch("/api/stats")).json();
 
   const flags = [];
-  if (s.link_provider === "stub") flags.push("stub links — not real payment links");
-  if (s.time_scale > 1) flags.push("time compressed " + s.time_scale + "× — delays are real intent, wall clock is scaled");
-  if (s.learning === false) flags.push("learning off — every class uses its default plan");
-  if (s.delivery_channel !== "email") flags.push("delivery console — messages are logged, not sent");
-  document.getElementById("flags").innerHTML = flags.map(f => `<span class="flag">${f}</span>`).join("");
+  if (s.link_provider === "stub") flags.push("stub links &mdash; not real payment links");
+  if (s.time_scale > 1) flags.push("time compressed " + s.time_scale + "× &mdash; delays are real intent, wall clock is scaled");
+  if (s.learning === false) flags.push("learning off &mdash; every class uses its default plan");
+  if (s.delivery_channel !== "email") flags.push("delivery console &mdash; messages are logged, not sent");
+  document.getElementById("flags").innerHTML = flags.length
+    ? `<span class="lead">demo settings</span>` + flags.map(f => `<span class="flag">${f}</span>`).join("")
+    : "";
 
   const resolved = (s.recovered || 0) + (s.expired || 0);
+  const atRisk = s.at_risk_paise || 0;
+  const recoveredPaise = s.recovered_paise || 0;
+
   document.getElementById("handled").textContent = s.attempts || 0;
-  document.getElementById("atrisk").textContent = inr(s.at_risk_paise || 0);
+  document.getElementById("atrisk").textContent = inr(atRisk);
   document.getElementById("pipeline").textContent = (s.scheduled || 0) + (s.sent_pending || 0);
-  document.getElementById("amount").textContent = inr(s.recovered_paise);
+  document.getElementById("amount").textContent = inr(recoveredPaise);
+
+  // The bar is recovered against everything that was ever at stake, so an empty
+  // one reads as a pipeline nobody has reached the end of rather than as a
+  // failure. The total is the denominator whether or not anything has resolved.
+  const total = atRisk + recoveredPaise;
+  document.getElementById("trackfill").style.width =
+    total > 0 ? Math.round(100 * recoveredPaise / total) + "%" : "0%";
+  document.getElementById("goal").classList.toggle("hit", recoveredPaise > 0);
+
   // Only claim a rate once something has actually resolved. A percentage over
   // zero outcomes is not a small number, it is no number.
   document.getElementById("rate").textContent = resolved
     ? Math.round(100 * (s.recovered || 0) / resolved) + "% of " + resolved + " resolved"
-    : "";
+    : "nothing resolved yet";
 
-  document.getElementById("rows").innerHTML = s.recent.length
+  // Written only when it actually differs. At a one-second poll this is almost
+  // always the same markup, and replacing it anyway restarted every animation,
+  // dropped any text the operator had selected, and closed any tooltip they
+  // were reading. A dashboard that will not hold still cannot be read.
+  paint("rows", s.recent.length
     ? s.recent.map(recovery).join("")
-    : `<div class="rec" style="display:block"><div class="empty">No failures yet.</div></div>`;
+    : `<div class="rec" style="display:block"><div class="empty">No failures yet.</div></div>`);
 
   const arms = s.arms || [];
-  document.getElementById("arms").innerHTML = arms.length ? arms.map(a => `<tr${a.first ? ' class="grpstart"' : ""}>
+  paint("arms", arms.length ? arms.map(a => `<tr${a.first ? ' class="grpstart"' : ""}>
     <td>${a.first ? esc(a.failure_class) : ""}</td>
-    <td class="v ${a.leading ? "lead" : ""}">${esc(a.variant)}</td>
+    <td class="v ${a.leading ? "lead-arm" : ""}">${esc(a.variant)}</td>
     <td><span class="bar"><i style="width:${Math.round(a.share * 100)}%"></i></span><span class="pct">${Math.round(a.share * 100)}%</span></td>
     <td>${a.observations ? Math.round(a.rate * 100) + "%" : "—"}</td>
     <td style="color:var(--dim)">${a.observations || "never tried"}</td>
-  </tr>`).join("") : `<tr><td colspan="5" class="empty">No outcomes yet — the bandit has nothing to learn from until recoveries resolve.</td></tr>`;
+  </tr>`).join("") : `<tr><td colspan="5" class="empty">No outcomes yet &mdash; the bandit has nothing to learn from until recoveries resolve.</td></tr>`);
 }
-refresh(); setInterval(refresh, 1000);
+refresh();
+setInterval(refresh, 1000);
+setInterval(tick, 1000);
 </script>
