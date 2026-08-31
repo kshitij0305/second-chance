@@ -25,6 +25,10 @@
  */
 import "dotenv/config";
 import Groq from "groq-sdk";
+import type {
+  ChatCompletion,
+  ChatCompletionCreateParamsNonStreaming,
+} from "groq-sdk/resources/chat/completions";
 import { SYSTEM_PROMPT, validate, AMOUNT_TOKEN, LINK_TOKEN } from "../src/recovery/composer.ts";
 import { INTENT, steeringInstruction } from "../src/recovery/templates.ts";
 import type { FailureClass } from "../src/recovery/classifier.ts";
@@ -87,6 +91,43 @@ interface Result {
   errors: number;
 }
 
+/**
+ * Rate limiting is not a benchmark result.
+ *
+ * The free tier allows 8000 tokens a minute and this loop, run flat out, asks
+ * for several times that. Every refusal was landing in the catch below and
+ * being counted as a generation that errored, which reads on the summary as
+ * the model failing. It is the opposite: those calls never reached a model.
+ *
+ * So a 429 is waited out and retried rather than recorded, and every call is
+ * paced. Slower, and the number at the end means something.
+ */
+const RATE_LIMITED = 429;
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+/** Seconds Groq asks us to wait, when it says. Falls back to a widening backoff. */
+function retryAfter(error: unknown, attempt: number): number {
+  const message = error instanceof Groq.APIError ? String(error.message) : "";
+  const asked = message.match(/try again in ([0-9.]+)s/);
+  return asked ? Math.ceil(Number(asked[1]) * 1000) + 500 : 5000 * (attempt + 1);
+}
+
+async function completeWithRetry(
+  // The non-streaming overload specifically. The general parameter type admits
+  // a stream, and a stream has no usage or choices to read.
+  body: ChatCompletionCreateParamsNonStreaming,
+): Promise<ChatCompletion> {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await groq.chat.completions.create(body);
+    } catch (error) {
+      const limited = error instanceof Groq.APIError && error.status === RATE_LIMITED;
+      if (!limited || attempt >= 8) throw error;
+      await sleep(retryAfter(error, attempt));
+    }
+  }
+}
+
 async function runVariant(variant: Variant): Promise<Result> {
   const result: Result = { rejected: 0, total: 0, reasons: {}, latencies: [], inTokens: 0, outTokens: 0, errors: 0 };
 
@@ -94,7 +135,7 @@ async function runVariant(variant: Variant): Promise<Result> {
     for (let i = 0; i < perClass; i++) {
       const started = Date.now();
       try {
-        const completion = await groq.chat.completions.create({
+        const completion = await completeWithRetry({
           model: variant.model,
           reasoning_effort: "low",
           max_completion_tokens: 512,
@@ -131,6 +172,9 @@ async function runVariant(variant: Variant): Promise<Result> {
         result.errors++;
         result.total++;
       }
+      // Roughly 16 calls a minute, which is what 8000 tokens a minute buys at
+      // this prompt size. Keeps the retry path rare rather than routine.
+      await sleep(3800);
     }
   }
   return result;
