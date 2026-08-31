@@ -161,21 +161,26 @@ export const config = {
   groqApiKey,
   groqEnabled: Boolean(groqApiKey),
   /**
-   * A small model, measured rather than assumed. Across 150 generations each
-   * (`npm run bench:composer`):
+   * A small model, measured rather than assumed. Across 72 generations per
+   * variant (`npm run bench:composer -- 12`):
    *
-   *   20b, plain prompt    4.7% rejected   $0.041 per 1000 messages
-   *   20b, few-shot        0.7% rejected   $0.050
-   *   120b, plain prompt   0.0% rejected   $0.093
+   *   20b, current prompt    1.4% rejected   $0.052 per 1000 messages
+   *   20b, examples twice    0.0%            $0.061
+   *   120b, current prompt   0.0%            $0.121
    *
-   * Two examples in the system prompt close almost the whole gap to a model
-   * eight times the size, for 22% more cost rather than 130% more. At this
-   * sample 0.7% and 0.0% are one rejection apart and not distinguishable.
+   * One rejection against none is not a difference to act on, and the larger
+   * model asks double the price and 200ms more latency to deliver it.
    *
-   * Every rejection in every variant had the same cause — the model omitting the
-   * amount placeholder — which is an instruction-following miss, not a
-   * capability limit. Instruction-following misses are fixed by showing rather
-   * than by paying.
+   * An earlier run reported 4.7% / 0.7% / 0.0% and is the reason the system
+   * prompt carries two examples at all. Those numbers were taken on a prompt
+   * missing the steering instruction that every real send includes, so they are
+   * the history of a decision rather than a current measurement.
+   *
+   * Rejections all have the same cause — the model omitting the amount
+   * placeholder — and they concentrate rather than spread. Sampled alone,
+   * instrument_rejected with the steering branch rejects around 10-20%; across
+   * six classes that dilutes to the 1.4% above. An instruction-following miss
+   * rather than a capability limit, and the template ships whenever it happens.
    */
   composerModel: process.env.COMPOSER_MODEL ?? "openai/gpt-oss-20b",
 };
