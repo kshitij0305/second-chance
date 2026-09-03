@@ -1,5 +1,6 @@
 import express from "express";
 import { config, assertServerConfig, warnAboutConfig } from "./config.ts";
+import { dashboardAuth } from "./auth.ts";
 import { db } from "./db.ts";
 import { webhookRouter } from "./razorpay/webhook.ts";
 import { startDispatcher } from "./recovery/engine.ts";
@@ -13,8 +14,12 @@ warnAboutConfig();
 
 const app = express();
 
+// Before the auth gate: the provider calls this and authenticates with an HMAC
+// signature over the raw body, not with a password it does not have.
 app.use("/webhooks", webhookRouter);
+
 app.use(express.json());
+app.use(dashboardAuth);
 app.use(express.static("public"));
 
 // Investigation harness, not product surface. Gated so it cannot be mounted by
