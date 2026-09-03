@@ -18,6 +18,13 @@ export function warnAboutConfig(): void {
       "         Messages are still composed and recorded, with the delivery error against each one.",
     ].join("\n"));
   }
+  if (!config.dashboardPassword) {
+    console.warn([
+      "[config] DASHBOARD_PASSWORD is empty — the dashboard and /api are open to anyone",
+      "         who can reach this port. They return customer email addresses, payment ids",
+      "         and every composed message. Set it before exposing this beyond localhost.",
+    ].join("\n"));
+  }
   if (config.deliveryChannel === "email" && !config.deliveryRedirectTo) {
     console.warn([
       "[config] DELIVERY=email with no DELIVERY_REDIRECT_TO — mail goes to the address on each payment.",
@@ -84,6 +91,10 @@ export const config = {
   // Overrides the address on the payment. Captured real failures carry real
   // customers' addresses and this repo replays them constantly.
   deliveryRedirectTo: process.env.DELIVERY_REDIRECT_TO ?? "",
+  // Basic-auth password for the dashboard and /api. Unset means open, which is
+  // fine on a laptop and not fine anywhere reachable — the API returns customer
+  // addresses and every composed message.
+  dashboardPassword: process.env.DASHBOARD_PASSWORD ?? "",
   labEnabled: process.env.LAB === "on",
   // Without a horizon the bandit only hears about successes.
   expiryHours: positiveNumber("EXPIRY_HOURS", 48),
