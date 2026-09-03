@@ -18,12 +18,14 @@ export function warnAboutConfig(): void {
       "         Messages are still composed and recorded, with the delivery error against each one.",
     ].join("\n"));
   }
-  if (!config.dashboardPassword) {
-    console.warn([
-      "[config] DASHBOARD_PASSWORD is empty — the dashboard and /api are open to anyone",
-      "         who can reach this port. They return customer email addresses, payment ids",
-      "         and every composed message. Set it before exposing this beyond localhost.",
-    ].join("\n"));
+  // Only when it can actually reach anyone. Bound to loopback with no password
+  // the dashboard is as exposed as any other localhost process, and warning
+  // about that every run trains people to ignore the warning that matters.
+  if (!config.dashboardPassword && !isLoopback(config.host)) {
+    console.warn(
+      `[config] HOST=${config.host} with no DASHBOARD_PASSWORD — the dashboard and /api are ` +
+      "open to anyone who can reach this port, and they return customer addresses.",
+    );
   }
   if (config.deliveryChannel === "email" && !config.deliveryRedirectTo) {
     console.warn([
@@ -31,6 +33,10 @@ export function warnAboutConfig(): void {
       "         Captured real failures carry real customer addresses. Set it unless this is production.",
     ].join("\n"));
   }
+}
+
+export function isLoopback(host: string): boolean {
+  return host === "127.0.0.1" || host === "localhost" || host === "::1";
 }
 
 export function assertServerConfig(): void {
@@ -71,6 +77,10 @@ export const config = {
   razorpayKeySecret: process.env.RAZORPAY_KEY_SECRET ?? "",
   webhookSecret: process.env.RAZORPAY_WEBHOOK_SECRET ?? "",
   port: positiveNumber("PORT", 3000),
+  // Loopback by default. Listening on every interface put a dashboard carrying
+  // customer addresses on the local network of whatever café this was open in.
+  // A tunnel still reaches it — set DASHBOARD_PASSWORD for that.
+  host: process.env.HOST || "127.0.0.1",
   dbPath: process.env.DB_PATH ?? "./second-chance.db",
   timeScale: timeScale >= 1 ? timeScale : 1,
   dispatchIntervalMs: positiveNumber("DISPATCH_INTERVAL_MS", 5000),

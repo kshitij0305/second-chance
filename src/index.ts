@@ -87,7 +87,7 @@ app.get("/api/stats", (_req, res) => {
   });
 });
 
-app.listen(config.port, () => {
+app.listen(config.port, config.host, () => {
   console.log(`second-chance listening on http://localhost:${config.port}`);
   console.log(`webhook endpoint: POST /webhooks/razorpay`);
   if (config.timeScale > 1) {
