@@ -2,19 +2,13 @@ import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { unlinkSync, existsSync } from "node:fs";
 
-/**
- * Regression test for duplicate recoveries from retried webhooks.
- *
- * Razorpay retries webhook delivery on any non-2xx and on network trouble, so
- * the same `payment.failed` arrives more than once as a matter of course.
- * Delivering one event three times produced two live payment links for a single
- * failure — the exact outcome the delay floor exists to prevent, arriving by a
- * different route than the dispatcher race did.
- *
- * The cause was a confusion about what `maxAttempts` means. It means up to N
- * asks spread over time, each one after the previous went unanswered. It does
- * not mean N asks may be outstanding at once.
- */
+// Regression test for duplicate recoveries from retried webhooks. Razorpay
+// retries delivery on any non-2xx, so the same payment.failed arrives more than
+// once routinely — one event delivered three times gave one failure two live
+// payment links, by a different route than the dispatcher race.
+//
+// The cause was misreading maxAttempts: it means N asks over time, each after
+// the last went unanswered, not N outstanding at once.
 
 const DB = "./schedule-test.db";
 process.env.DB_PATH = DB;

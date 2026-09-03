@@ -3,49 +3,27 @@ import type { FailureClass } from "./classifier.ts";
 import { INTENT, steeringInstruction, renderTemplate, type MessageContext } from "./templates.ts";
 import { config } from "../config.ts";
 
-/**
- * Writes the message the customer actually receives.
- *
- * This is the one place in the system where a model belongs. Classification and
- * strategy selection are closed problems with enumerable answers, so they are
- * lookup tables. This is not: the output is prose, the register has to shift
- * with the reason for the failure, and "your bank declined this card" and "there
- * wasn't enough balance" need very different handling for the same customer.
- *
- * Two rules make it safe to use one here.
- *
- * The model never handles facts. It is given no amount, no link and no name — it
- * writes a body with placeholders and code substitutes the real values. A model
- * cannot misstate a number it was never given.
- *
- * The model is never load-bearing. Every failure class has a deterministic
- * template, and if generation is unavailable, slow, or produces something that
- * fails validation, the template ships. A recovery must never be lost because an
- * inference provider was down.
- *
- * The provider is deliberately shallow here — one chat completion behind one
- * function. The parts worth keeping are the validation and the fallback, and
- * neither knows or cares which model wrote the words. Swapping providers touched
- * only `generate()` and left every test passing unchanged.
- */
+// Two rules keep the model safe here.
+//
+// It never handles facts — no amount, no link, no name. It writes placeholders
+// and code substitutes. It can't misstate a number it was never given.
+//
+// It's never load-bearing. Every class has a template, and if generation is
+// down, slow, or fails validation, the template ships.
 
 export type MessageSource = "model" | "template" | "template_after_rejection";
 
 export interface ComposedMessage {
-  /** The message with real values in it. What SMS sends and the dashboard shows. */
+  /** Real values substituted. What SMS sends and the dashboard shows. */
   text: string;
   /**
-   * The same message with the amount and link placeholders still in place.
-   *
-   * Kept because substitution is a rendering decision, and different media make
-   * it differently. SMS has nothing to put in place of a link but the URL;
-   * email has a button. Discarding the placeholder form here would force the
-   * email renderer to go looking for a URL inside finished prose and hope it
-   * found the right one.
+   * Same message, placeholders intact. Substitution is a rendering decision and
+   * each medium makes it differently — SMS has only a URL to offer, email has a
+   * button. Without this the email renderer would have to hunt for a URL inside
+   * finished prose and hope it found the right one.
    */
   template: string;
   source: MessageSource;
-  /** Set when a generated message was rejected, naming what was wrong with it. */
   rejectionReason?: string;
 }
 
@@ -102,9 +80,8 @@ export async function compose(
   options: ComposeOptions = {},
 ): Promise<ComposedMessage> {
   const fallback = renderTemplate(failureClass, context);
-  // The same template rendered against the placeholder tokens rather than the
-  // real values, so the fallback path hands the email renderer exactly what the
-  // model path does.
+  // Placeholder form too, so the fallback path hands the email renderer the same
+  // thing the model path does.
   const fallbackTemplate = renderTemplate(failureClass, {
     ...context, amount: AMOUNT_TOKEN, link: LINK_TOKEN,
   });
@@ -121,9 +98,7 @@ export async function compose(
 
   const problem = validate(raw);
   if (problem) {
-    // Something we will not send. Ship the template and record why, so a pattern
-    // of rejections becomes visible rather than silent — a rising rejection rate
-    // is the signal that the model is too small for the brief.
+    // Record why. A rising rejection rate is the signal the model is too small.
     console.warn(`[compose] rejected generated message (${problem})`);
     return { text: fallback, template: fallbackTemplate, source: "template_after_rejection", rejectionReason: problem };
   }
@@ -142,17 +117,12 @@ async function generate(
 
   const completion = await groq.chat.completions.create({
     model: config.composerModel,
-    // gpt-oss models reason before answering, and reasoning is billed against
-    // the same completion budget as the answer. At the default effort this task
-    // spent 298 of 300 tokens thinking, hit the length limit, and returned an
-    // empty string — every message silently fell back to a template.
-    //
-    // Writing two sentences from a supplied brief needs no deliberation, so
-    // effort is pinned low. That took reasoning from 298 tokens to 7.
+    // gpt-oss reasons against the same token budget as the answer. At the
+    // default effort this spent 298 of 300 tokens thinking, hit the limit, and
+    // returned "" — every message silently fell back to a template. Low takes
+    // reasoning to 7 tokens.
     reasoning_effort: "low",
-    // Generous relative to a 300-character message, because this budget covers
-    // reasoning as well as output. The message length limit is enforced by the
-    // validator, which is the check that actually matters.
+    // Covers reasoning as well as output; the validator enforces message length.
     max_completion_tokens: 512,
     temperature: 0.6,
     messages: [
@@ -174,21 +144,15 @@ async function generate(
   return (completion.choices[0]?.message?.content ?? "").trim();
 }
 
-/**
- * Rejects any generated message we would not stand behind.
- *
- * The checks are blunt on purpose. A missing link is unusable; a fabricated
- * figure is a false promise about money. Both are worth losing a nicer sentence
- * over.
- */
+// Blunt on purpose. A missing link is unusable and an invented figure is a
+// false promise about money — both worth losing a nicer sentence over.
 export function validate(text: string): string | null {
   if (!text) return "empty";
   if (text.length > MAX_CHARS) return `too long (${text.length} chars)`;
   if (!text.includes(LINK_TOKEN)) return "no link placeholder";
   if (!text.includes(AMOUNT_TOKEN)) return "no amount placeholder";
 
-  // Any digit outside the placeholders is a number the model invented — an
-  // amount, a deadline, a discount, an account fragment. None are acceptable.
+  // Any digit outside the placeholders was invented: amount, deadline, discount.
   const stripped = text.split(AMOUNT_TOKEN).join("").split(LINK_TOKEN).join("");
   if (/\d/.test(stripped)) return "contains a number the model invented";
 

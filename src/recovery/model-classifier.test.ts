@@ -3,15 +3,10 @@ import assert from "node:assert/strict";
 import { classifyDeep } from "./classifier.ts";
 import type { RazorpayPaymentEntity } from "../razorpay/types.ts";
 
-/**
- * The model half of classification.
- *
- * These tests do not call the model. They assert the boundary around it: that a
- * rules answer is never overridden, that a generic description is never sent to
- * be interpreted, and that a failure of the model leaves the rules' answer
- * standing. Whether the model classifies well is a question for
- * `npm run bench:classifier`, not for a unit test that would need a network.
- */
+// These don't call the model. They assert the boundary around it: a rules answer
+// is never overridden, a generic description is never sent, and a model failure
+// leaves the rules standing. Whether it classifies well is a different question
+// and not one for a unit test that would need a network.
 
 const entity = (over: Partial<RazorpayPaymentEntity> = {}): RazorpayPaymentEntity => ({
   id: "pay_test", amount: 249900, currency: "INR", status: "failed", method: "card",

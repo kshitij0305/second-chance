@@ -18,31 +18,17 @@ export interface FailedPayment {
   order_id?: string | null;
 }
 
-/**
- * Records a recovery to be sent later, rather than sending it now.
- *
- * Nothing goes out at failure time. The strategy decides when, and a customer
- * who has just failed a payment is frequently still at the checkout retrying —
- * a link arriving mid-retry risks a double charge.
- */
+// Nothing goes out at failure time. A customer who just failed is often still
+// at the checkout retrying, and a link arriving mid-retry risks a double charge.
 export function scheduleRecovery(payment: FailedPayment, decision: Decision): void {
   const existing = db.prepare(
     "SELECT COUNT(*) n FROM recovery_attempts WHERE payment_id = ?",
   ).get(payment.payment_id) as { n: number };
 
-  // An attempt that has not yet resolved means this failure is already being
-  // handled, and a second one would put two live payment links in front of the
-  // same customer for the same failure.
-  //
-  // This is not hypothetical. Razorpay retries webhook delivery on any non-2xx
-  // and on network trouble, so the same payment.failed arrives more than once as
-  // a matter of course — delivering one event three times produced two live
-  // recovery links here.
-  //
-  // The bug was a confusion about what maxAttempts means. It means up to N asks
-  // spread over time, each after the previous went unanswered. It does not mean
-  // N asks may exist at once. Attempt two is legitimate only once attempt one has
-  // expired, failed or been superseded.
+  // Razorpay retries webhook delivery on any non-2xx, so the same payment.failed
+  // arrives more than once routinely — one event delivered three times gave one
+  // customer two live recovery links. maxAttempts means N asks over time, each
+  // after the last went unanswered; not N at once.
   const inFlight = db.prepare(
     `SELECT COUNT(*) n FROM recovery_attempts
       WHERE payment_id = ? AND status IN ('scheduled', 'sending', 'sent')`,
@@ -92,13 +78,9 @@ interface DueRow {
   failure_class: FailureClass | null;
 }
 
-/**
- * Sends any recovery that has come due.
- *
- * Called on a timer. Every send is guarded: between scheduling and dispatch the
- * customer may have completed the payment by some other route, and a recovery
- * link sent after that is at best noise and at worst a second charge.
- */
+// Between scheduling and dispatch the customer may have paid some other way, so
+// every send is guarded. A link sent after that is noise at best, a second
+// charge at worst.
 let dispatchInFlight = false;
 
 export async function dispatchDue(now: Date = new Date()): Promise<number> {
@@ -125,12 +107,10 @@ async function runDispatch(now: Date): Promise<number> {
 
   let sent = 0;
   for (const row of due) {
-    // Claim the row before doing anything slow. The in-flight guard above stops
-    // overlapping passes within one process; this is the actual correctness
-    // guarantee, and it is a single atomic statement so two readers cannot both
-    // win. Without it the dispatcher creates two live payment links for one
-    // recovery — observed, and invisible in the data afterwards because the
-    // second send simply overwrites the first link's URL.
+    // Claim before doing anything slow. One atomic statement, so two readers
+    // can't both win. Without it the dispatcher made two live payment links for
+    // one recovery — and it was invisible afterwards, because the second send
+    // just overwrote the first link's URL.
     const claimed = db.prepare(
       "UPDATE recovery_attempts SET status = 'sending' WHERE id = ? AND status = 'scheduled'",
     ).run(row.id);
@@ -148,13 +128,8 @@ async function runDispatch(now: Date): Promise<number> {
   return sent;
 }
 
-/**
- * Has this order been settled since the failure?
- *
- * Answered from captured webhooks rather than by polling the provider: the
- * events are already on disk, and a lookup per due recovery would burn the same
- * rate limit the recovery itself needs.
- */
+// Answered from captured webhooks, not by polling — the events are already on
+// disk and a lookup per due recovery burns the rate limit the send needs.
 function alreadyPaid(row: DueRow): boolean {
   if (!row.order_id) return false;
   const hit = db.prepare(
@@ -167,10 +142,8 @@ function alreadyPaid(row: DueRow): boolean {
 
 async function send(row: DueRow): Promise<boolean> {
   try {
-    // When the failure was a property of the instrument rather than the moment,
-    // the plan says to steer away from it — and until now that intent only ever
-    // reached an explanation string. Hide the failed method on the checkout so
-    // the recovery actually offers a different route.
+    // This intent used to reach nothing but an explanation string. Actually hide
+    // the failed method so the recovery offers a different route.
     const variant = row.failure_class ? findVariant(row.failure_class, row.strategy) : undefined;
     const excludeMethod = variant?.avoidFailedMethod ? (row.method ?? undefined) : undefined;
 
@@ -184,9 +157,8 @@ async function send(row: DueRow): Promise<boolean> {
       excludeMethod,
     });
 
-    // Composed only once the link exists, so the message can carry the real
-    // URL. Never blocks the send: compose() falls back to a template if
-    // generation is unavailable or produces something that fails validation.
+    // After the link exists, so the message can carry the real URL. Never blocks
+    // the send — compose() falls back to a template.
     const composed = await compose(
       row.failure_class ?? "unknown",
       {
@@ -195,8 +167,8 @@ async function send(row: DueRow): Promise<boolean> {
         amount: formatAmount(row.amount),
         link: link.short_url,
       },
-      // What the plan actually did, not what the class usually implies. If no
-      // method was hidden, the message must not tell the customer to switch.
+      // What the plan did, not what the class usually implies. If nothing was
+      // hidden, the message must not tell them to switch.
       { steerToAnotherMethod: Boolean(link.excluded_method) },
     );
 
@@ -207,11 +179,9 @@ async function send(row: DueRow): Promise<boolean> {
     // A delivery failure does not lose the recovery. The link exists, the
     // message exists, and both are recorded with the error so an operator can
     // see that the ask never left rather than wondering why nobody paid.
-    // The composed message is written for SMS: 300 characters, link inline,
-    // no structure. Sent as an email verbatim it read as phishing, because it
-    // has a phishing message's exact shape. Rendering it for the medium is what
-    // fixes that, not rewriting the words — the placeholders the composer left
-    // in let the amount become a stated fact and the link become a button.
+    // The composed message is an SMS. Sent as email verbatim it read as
+    // phishing, because it has the same shape. The placeholders let the amount
+    // become a stated fact and the link a button.
     const amount = formatAmount(row.amount);
     const email = renderEmail({
       template: composed.template,
@@ -248,9 +218,8 @@ async function send(row: DueRow): Promise<boolean> {
     console.log(`           "${composed.text}"`);
     return true;
   } catch (error) {
-    // Record the failure rather than only logging it. A recovery that never
-    // went out is the most important thing for an operator to see, and a line
-    // in a scrolling terminal is not seeing it.
+    // Recorded, not just logged. A recovery that never went out is the thing an
+    // operator most needs to see, and a line in a scrolling terminal isn't seen.
     const message = describeError(error);
     db.prepare("UPDATE recovery_attempts SET status = 'failed', error = ? WHERE id = ?")
       .run(message, row.id);
@@ -278,15 +247,12 @@ export function markRecovered(paymentLinkId: string): boolean {
   return result.changes > 0;
 }
 
-/**
- * Attributes a recovery using the original payment id planted in the link notes.
- * Razorpay copies those notes onto the payment that settles the link, so
- * payment.captured alone is enough; payment_link.paid is a second route to the
- * same conclusion. Idempotent, because both can arrive for one recovery.
- */
+// Razorpay copies the link notes onto the payment that settles it, so
+// payment.captured carries the original payment id. payment_link.paid is a
+// second route to the same conclusion, so this has to be idempotent.
 export function markRecoveredByOriginalPayment(originalPaymentId: string): boolean {
-  // Read the arm before the update, so the outcome is attributed to the plan
-  // that was actually used rather than to whatever is current.
+  // Read the arm before the update, so the outcome lands on the plan that was
+  // actually used rather than whatever is current.
   const arm = armFor(originalPaymentId);
 
   const result = db.prepare(
@@ -312,16 +278,9 @@ function armFor(paymentId: string): Arm | null {
   return row ?? null;
 }
 
-/**
- * Resolves recoveries that were sent and never paid.
- *
- * Without this the bandit only ever hears about successes, so every arm looks
- * perfect and it learns nothing. A recovery that goes unanswered is the more
- * common outcome and the more informative one.
- *
- * The horizon scales with TIME_SCALE alongside the delays, so a compressed demo
- * resolves outcomes at the same compressed rate rather than never.
- */
+// Without this the bandit only hears about successes, every arm looks perfect,
+// and it learns nothing. The horizon scales with TIME_SCALE so a compressed demo
+// still resolves outcomes.
 export function expireStale(now: Date = new Date()): number {
   const horizonMs = (config.expiryHours * 3600_000) / config.timeScale;
   const cutoff = new Date(now.getTime() - horizonMs).toISOString();
@@ -341,15 +300,10 @@ export function expireStale(now: Date = new Date()): number {
   return stale.length;
 }
 
-/**
- * Reports recoveries left mid-send by a process that died.
- *
- * Deliberately does not reset them to 'scheduled'. The provider call may have
- * succeeded before the crash, so retrying risks the second live payment link
- * this whole mechanism exists to prevent. Surfacing them for a human to judge
- * is the safe default; automatic recovery here needs an idempotency key on the
- * provider call, which is the proper fix rather than a guess.
- */
+// Left mid-send by a dead process. Deliberately not reset to 'scheduled': the
+// provider call may have succeeded before the crash, and retrying risks exactly
+// the duplicate link this guards against. Doing it automatically needs an
+// idempotency key on the provider call.
 export function reportStuckSends(): number {
   const stuck = db.prepare(
     "SELECT COUNT(*) n FROM recovery_attempts WHERE status = 'sending'",

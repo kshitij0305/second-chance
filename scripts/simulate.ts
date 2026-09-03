@@ -1,17 +1,13 @@
 /**
  * Drives the bandit against a simulated merchant so learning can be observed.
  *
- * The honest framing matters here. Real traffic in this project is seven
- * captured failures, which is nowhere near enough for a bandit to converge. This
- * simulator does not claim to show which recovery plan is best in the real
- * world. It shows that the selection mechanism, given outcomes, finds the arm
- * with the highest success rate — a claim about the machinery, not about
- * payments.
+ * Real traffic here is seven captured failures, nowhere near enough to
+ * converge. This shows the selection mechanism finds the best arm given
+ * outcomes — a claim about the machinery, not about payments.
  *
- * The success rates below are invented. They are chosen so that for three of the
- * six failure classes the hand-authored default is deliberately NOT the best
- * arm, because a learning layer that only ever confirms its author's guesses
- * demonstrates nothing.
+ * The success rates below are invented, and for three of the six classes the
+ * hand-authored default is deliberately not the best arm. A learning layer that
+ * only confirms its author's guesses demonstrates nothing.
  *
  *   npm run simulate
  *   npm run simulate -- 4000
@@ -19,14 +15,9 @@
 import "dotenv/config";
 import { DatabaseSync } from "node:sqlite";
 
-/**
- * Always a scratch database, never the working one.
- *
- * This was `??=` and it did not work: `dotenv/config` above sets DB_PATH from
- * .env first, and dotenv does not override, so the default never applied and the
- * simulator wrote invented outcomes straight into the live database. Assign
- * unconditionally, and let SIM_DB be the only way to point it elsewhere.
- */
+// Always a scratch database. This was `??=`, and dotenv/config above had already
+// set DB_PATH from .env — so the default never applied and 3000 invented
+// outcomes went straight into the live database.
 process.env.DB_PATH = process.env.SIM_DB ?? "./simulation.db";
 process.env.LEARNING = "on";
 
@@ -61,16 +52,9 @@ const MIX: [FailureClass, number][] = [
   ["customer_cancelled", 0.03],
 ];
 
-/**
- * Refuse to run against a database holding real recovery attempts.
- *
- * The outcomes this writes are invented, and `strategy_outcomes` records no
- * provenance — simulated and real outcomes are indistinguishable once written.
- * Pointing DB_PATH at the working database would silently poison the learning
- * state with fabricated evidence, which is the same mistake that put synthetic
- * webhooks in with real ones earlier in this build. A guard is cheaper than
- * discovering it later.
- */
+// Refuse to run against a database holding real attempts. strategy_outcomes
+// records no provenance, so simulated and real are indistinguishable once
+// written — the same mistake that mixed synthetic webhooks in with real ones.
 const realAttempts = (db.prepare(
   "SELECT COUNT(*) n FROM recovery_attempts",
 ).get() as { n: number }).n;
@@ -158,11 +142,8 @@ function runOnce(): RunResult {
 }
 
 if (repeats > 1) {
-  /**
-   * One simulation is an anecdote. Convergence on a low-volume class where the
-   * arms are close is genuinely a coin flip, and a single run will report
-   * whichever side it landed on as though it were the result.
-   */
+  // One run is an anecdote. On a low-volume class with close arms, convergence
+  // is a coin flip, and a single run reports whichever side it landed on.
   const runs = Array.from({ length: repeats }, runOnce);
   const converged: Record<string, number> = {};
   for (const run of runs) {
