@@ -1,28 +1,18 @@
 /**
- * Drives a scripted demonstration at a controlled pace.
+ * Fires a fixed sequence of failures at fixed intervals, so the narration can be
+ * written against it and take one and take nine are identical.
  *
- * Recording a live system by hand means typing commands between sentences, and
- * every take comes out slightly different. This fires a fixed sequence with
- * fixed gaps, so the narration can be written against it and take one and take
- * nine are identical.
+ * Start the app yourself first — this doesn't:
  *
- * It deliberately does not start the app. Run the server yourself so the
- * dashboard is already up and visible before anything happens:
- *
- *   LEARNING=off LINK_PROVIDER=stub TIME_SCALE=400 EXPIRY_HOURS=6 npm run dev
+ *   LEARNING=off LINK_PROVIDER=stub TIME_SCALE=400 npm run dev
  *   npm run demo
  *
- * LEARNING=off matters. With the bandit active and no outcomes recorded yet,
- * Thompson sampling explores at random, so each class picks a different arm on
- * every run and the narration below stops matching what appears on screen — it
- * will claim the fastest re-offer while the slower arm is on the dashboard.
- * Turning learning off makes the decision path deterministic, which is what a
- * scripted walkthrough needs. Demonstrate the learning layer separately with
- * `npm run simulate`, where it has enough volume to actually be doing something.
+ * LEARNING=off matters. With no outcomes recorded the bandit explores at random,
+ * so each class picks a different arm every run and the narration stops matching
+ * the screen. Show the learning layer separately with `npm run simulate`.
  *
- * Drop LINK_PROVIDER to create real Razorpay links, which look considerably
- * better on camera — but note test mode allows only thirty per account for its
- * lifetime, so use a fresh account and keep takes to a minimum.
+ * Drop LINK_PROVIDER for real links, which look better on camera — but test mode
+ * allows thirty per account for its lifetime.
  *
  *   npm run demo -- --reset     clear the database and stop
  *   npm run demo -- --pace 12   seconds between beats (default 9)
@@ -90,14 +80,9 @@ function synthetic(over: Record<string, unknown>, i: number): Record<string, unk
   };
 }
 
-/**
- * The order is the argument.
- *
- * Beats one and two are the product in two frames: two real captured failures
- * carrying an identical `error_reason`, which get opposite strategies because
- * the description says different things. Beat three is the honest limitation.
- * Beats four and five show the range of the strategy table.
- */
+// The order is the argument. One and two are two real captures with an identical
+// error_reason that get opposite strategies, because the descriptions differ.
+// Three is the honest limitation. Four and five show the range of the table.
 const BEATS: Beat[] = [
   {
     say: "A real netbanking failure. The description says the bank declined it and to try another method — so: switch rails, and quickly, because waiting changes nothing.",
@@ -175,8 +160,7 @@ async function fire(beat: Beat, index: number): Promise<void> {
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 // The narration names specific plans, which only hold when selection is
-// deterministic. Better to refuse than to have the operator discover mid-take
-// that the dashboard disagrees with what they are saying.
+// deterministic. Better to refuse than to find out mid-take.
 const stats = await fetch(`http://localhost:${port}/api/stats`)
   .then((r) => r.json() as Promise<{ learning?: boolean }>)
   .catch(() => null);

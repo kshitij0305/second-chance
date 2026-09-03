@@ -5,16 +5,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  /*
-   * Palette and type taken from hierly.xyz, so the two projects read as the same
-   * hand: warm paper rather than white, one deep green doing all the affirmative
-   * work, amber for anything provisional, and a serif carrying the headline and
-   * the numbers.
-   *
-   * Every face has a real fallback. A demo that depends on a font CDN is a demo
-   * that renders wrong the one time the wifi drops mid-recording, and Georgia
-   * standing in for Fraunces is a good day compared to that.
-   */
+  /* Palette and type from hierly.xyz. Every face has a real fallback — this gets
+     screen-recorded, and a font CDN is one more thing that can be down. */
   :root {
     --paper: #f8f6f1; --card: #ffffff; --ink: #1b1d19; --dim: #70746c; --faint: #9a9d94;
     --line: #e5e1d6; --green: #1e5c41; --green-tint: #e9f1ec;
@@ -35,14 +27,9 @@
   ::-webkit-scrollbar-track { background: transparent; }
 
   @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-  /*
-   * Applied to a section once, never to the rows.
-   *
-   * The rows are rebuilt on a one-second poll, and an entrance animation on
-   * something rebuilt every second never finishes entering — every row sat
-   * permanently part-way through its own fade, which read as a page that had
-   * not finished loading. See the guard in refresh() for the other half of this.
-   */
+  /* Sections only, never rows. Rows are rebuilt on a one-second poll, so an
+     entrance animation on them never finished — every row sat permanently
+     part-way through its own fade. */
   .rise { animation: rise .22s ease-out both; }
 
   header { display: flex; align-items: baseline; gap: .85rem; flex-wrap: wrap; }
@@ -50,29 +37,18 @@
        letter-spacing: -.02em; line-height: 1.05; }
   .tagline { color: var(--dim); font-size: .95rem; }
 
-  /*
-   * The demo caveats. They must stay on screen — a stubbed, time-compressed run
-   * that looks like a live one is the single most dishonest thing this page
-   * could do. But they were four amber pills directly under the title, which
-   * made the first thing anyone read a list of reasons not to believe the
-   * second thing. Same words, stated once, quietly.
-   */
+  /* These stay on screen — a stubbed, time-compressed run that looks live is the
+     worst thing this page could do. But as four amber pills under the title, the
+     first thing anyone read was reasons not to believe the second thing. */
   .flags { display: flex; gap: .5rem; flex-wrap: wrap; align-items: baseline;
            margin: .8rem 0 2rem; font-size: .76rem; color: var(--faint); }
   .flags .lead { font-weight: 600; text-transform: uppercase; letter-spacing: .09em; color: var(--amber); }
   .flag { color: var(--dim); }
   .flag + .flag::before { content: "·"; color: var(--line); margin-right: .5rem; }
 
-  /*
-   * A funnel, not four unrelated numbers.
-   *
-   * Recovered is the number this project exists to move, and it is zero until
-   * somebody actually pays. Sat beside three healthy figures with no relation
-   * drawn between them, that zero read as a broken system rather than as a
-   * pipeline nobody has reached the end of yet. Reading left to right — failures
-   * seen, money at stake, recoveries working, money back — puts it where it
-   * belongs, and the bar underneath gives it somewhere to go.
-   */
+  /* A funnel, not four unrelated numbers. Recovered is zero until someone pays,
+     and beside three healthy figures that read as broken rather than as a
+     pipeline nobody has reached the end of. */
   .stats { display: flex; align-items: flex-start; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 2.5rem; }
   .stat { min-width: 8.5rem; }
   .stat .n { font-family: var(--serif); font-size: 2.7rem; font-weight: 400; line-height: 1;
@@ -118,17 +94,10 @@
   .col .v { font-family: var(--mono); font-size: .93rem; font-weight: 600; color: var(--ink); }
   .col .note { color: var(--dim); font-size: .85rem; line-height: 1.5; margin-top: .3rem; }
 
-  /*
-   * The message is the payoff — it is the thing a model wrote and the thing a
-   * customer would actually read — and it was set smaller than the machine
-   * values beside it. It gets the emphasis now.
-   */
+  /* The payoff, and it was set smaller than the machine values beside it. */
   .msg { font-size: 1rem; line-height: 1.6; margin-top: .4rem; color: var(--ink); }
-  /*
-   * The link inside the prose, given an edge. A raw URL wrapping across two
-   * lines mid-sentence reads as a rendering fault; code knows the exact string
-   * it substituted, so it can mark it without guessing at one.
-   */
+  /* A raw URL wrapping mid-sentence looks like a bug. Code knows the exact
+     string it substituted, so it can mark it without guessing. */
   .msg .lnk { font-family: var(--mono); font-size: .8rem; background: var(--green-tint);
               border: 1px solid #cfe0d6; color: var(--green); border-radius: 5px;
               padding: .08rem .34rem; white-space: nowrap; }
@@ -149,11 +118,8 @@
   .s-sent { color: var(--dim); } .s-failed { color: var(--brick); }
   .s-expired, .s-superseded { color: var(--faint); }
 
-  /*
-   * A scheduled recovery is the only thing on this page that is visibly going to
-   * happen, and it was grey six-point text. It is the clock the whole demo runs
-   * on, so it ticks where you can see it.
-   */
+  /* The only thing on this page visibly about to happen, and it was grey
+     six-point text. It's the clock the demo runs on. */
   .due { color: #9a5f14; font-variant-numeric: tabular-nums; font-size: .9rem;
          font-family: var(--mono); margin-top: .4rem; }
   .due .dot { animation: blink 1.2s infinite; color: var(--amber); }
@@ -222,11 +188,8 @@
 const inr = p => "₹" + (p / 100).toLocaleString("en-IN", { maximumFractionDigits: 0 });
 const esc = s => String(s ?? "").replace(/[<>&]/g, c => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[c]));
 
-/*
- * Shows enough of an address to tell two customers apart, and not enough to
- * read one off a screen recording. The whole value stays in the title
- * attribute, so an operator who needs it still has it.
- */
+// Enough to tell two customers apart, not enough to read off a screen
+// recording. Full value stays in the title attribute.
 function maskAddress(address) {
   const value = String(address ?? "");
   const at = value.indexOf("@");
@@ -255,14 +218,9 @@ function paint(id, html) {
   tick();
 }
 
-/*
- * Advances the countdowns without touching the rows they sit in.
- *
- * The countdown was rendered into the row markup, which meant the markup
- * differed every second, which meant the guard above never held and the whole
- * list was rebuilt once a second anyway — losing the scroll position each time.
- * The deadline is a stable attribute now and only this text changes.
- */
+// The countdown used to live in the row markup, so the markup differed every
+// second, the guard above never held, and the list was rebuilt once a second
+// anyway — losing the scroll position each time.
 function tick() {
   for (const el of document.querySelectorAll(".due-t")) {
     const next = dueIn(el.dataset.due);
@@ -281,14 +239,9 @@ function deliveryLine(r) {
   return `<div class="note delivered">delivered to ${maskAddress(r.delivered_to)} via ${esc(r.delivery_channel)}</div>`;
 }
 
-/*
- * Marks the payment link inside the composed message.
- *
- * The URL is matched, never guessed at: the row carries the exact string that
- * was substituted in, so this either finds that string or leaves the prose
- * untouched. A regex hunting for anything URL-shaped could decorate something
- * the model wrote, which is the one thing this page must not do.
- */
+// Matched, never guessed at. The row carries the exact string that was
+// substituted in, so this either finds it or leaves the prose alone. A regex
+// hunting for URL-shaped things could decorate something the model wrote.
 function withLink(message, url) {
   const text = esc(message);
   if (!url) return text;
@@ -353,9 +306,8 @@ async function refresh() {
   document.getElementById("pipeline").textContent = (s.scheduled || 0) + (s.sent_pending || 0);
   document.getElementById("amount").textContent = inr(recoveredPaise);
 
-  // The bar is recovered against everything that was ever at stake, so an empty
-  // one reads as a pipeline nobody has reached the end of rather than as a
-  // failure. The total is the denominator whether or not anything has resolved.
+  // Recovered against everything ever at stake, so an empty bar reads as a
+  // pipeline nobody has reached the end of rather than a failure.
   const total = atRisk + recoveredPaise;
   document.getElementById("trackfill").style.width =
     total > 0 ? Math.round(100 * recoveredPaise / total) + "%" : "0%";
@@ -367,10 +319,9 @@ async function refresh() {
     ? Math.round(100 * (s.recovered || 0) / resolved) + "% of " + resolved + " resolved"
     : "nothing resolved yet";
 
-  // Written only when it actually differs. At a one-second poll this is almost
-  // always the same markup, and replacing it anyway restarted every animation,
-  // dropped any text the operator had selected, and closed any tooltip they
-  // were reading. A dashboard that will not hold still cannot be read.
+  // Written only when it differs. At a one-second poll it's almost always the
+  // same markup, and replacing it anyway dropped any selected text and closed
+  // any open tooltip.
   paint("rows", s.recent.length
     ? s.recent.map(recovery).join("")
     : `<div class="rec" style="display:block"><div class="empty">No failures yet.</div></div>`);

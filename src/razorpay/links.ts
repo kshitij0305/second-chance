@@ -2,20 +2,10 @@ import { randomUUID } from "node:crypto";
 import { getRazorpay } from "./client.ts";
 import { config } from "../config.ts";
 
-/**
- * Creates the payment link a recovery is sent as.
- *
- * Exists because development was quietly spending a finite production-shaped
- * resource. Razorpay test mode allows thirty payment links per account, ever —
- * cancelling them does not give the quota back — and every local test run, every
- * replayed scenario and every end-to-end check was creating real ones. The
- * account ran dry mid-development, and the links were needed for the demo.
- *
- * So local runs use a stub: same shape, no network, no quota, instant. Real
- * links are created only when actually demonstrating against Razorpay. The rule
- * this encodes is that a development loop should never consume a resource the
- * demo depends on.
- */
+// Razorpay test mode allows 30 payment links per account, ever — cancelling
+// doesn't give the quota back. Every local run and replay was creating real
+// ones and the account ran dry mid-development, with the demo still to record.
+// Local runs use the stub now.
 
 export interface PaymentLink {
   id: string;
@@ -31,11 +21,7 @@ export interface CreateLinkInput {
   email?: string | undefined;
   contact?: string | undefined;
   notes: Record<string, string>;
-  /**
-   * The payment method to steer away from, when the failure was a property of
-   * the instrument rather than of the moment. Ignored if it is not a method the
-   * checkout can hide.
-   */
+  /** Method to hide. Ignored if the checkout can't hide it. */
   excludeMethod?: string | undefined;
 }
 
@@ -43,16 +29,9 @@ export interface CreateLinkInput {
 const TOGGLEABLE = ["card", "netbanking", "upi", "wallet"] as const;
 type Toggleable = (typeof TOGGLEABLE)[number];
 
-/**
- * Builds the checkout method configuration for a link.
- *
- * Returns undefined when nothing should be restricted, so the common case sends
- * no `options` at all and the customer sees everything the account supports.
- *
- * A recovery link that excludes every method cannot be paid, which would turn a
- * recovery attempt into a dead end — worse than not steering at all. Only one
- * method is ever hidden, and only if it is one the checkout recognises.
- */
+// Undefined when nothing is restricted, so the common case sends no options at
+// all. Only ever hides one method — a link excluding everything can't be paid,
+// which is worse than not steering.
 export function checkoutMethods(excludeMethod?: string): Record<string, boolean> | undefined {
   if (!excludeMethod) return undefined;
 
@@ -96,13 +75,8 @@ export interface LinkProvider {
   create(input: CreateLinkInput): Promise<PaymentLink>;
 }
 
-/**
- * Produces links shaped like the real thing but never leaves the process.
- *
- * The URL is deliberately not resolvable. A stub that looked real enough to open
- * would eventually be mistaken for one, and the dashboard labels the provider
- * so a stubbed run cannot be presented as a live one.
- */
+// The URL deliberately doesn't resolve. A stub real enough to open would
+// eventually be mistaken for one; the dashboard also labels the provider.
 const stubProvider: LinkProvider = {
   name: "stub",
   async create(input) {

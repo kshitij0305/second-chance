@@ -2,29 +2,16 @@ import { db } from "../db.ts";
 import type { FailureClass } from "./classifier.ts";
 import { variantsFor, defaultVariant, type Strategy } from "./variants.ts";
 
-/**
- * Chooses between the candidate plans for a failure class, and learns from what
- * happened.
- *
- * Thompson sampling over a Beta posterior per arm. Each arm holds a count of
- * recoveries that succeeded and recoveries that did not; selection draws a
- * plausible success rate from each arm's posterior and takes the best draw.
- *
- * Thompson sampling rather than epsilon-greedy for a reason that matters here.
- * Recovery volume is low and outcomes are slow — a recovery scheduled for
- * eighteen hours away resolves a day later — so the number of observations per
- * arm stays small for a long time. Epsilon-greedy explores at a fixed rate
- * regardless of how uncertain it is, wasting traffic on arms already known to be
- * poor while under-exploring ones it has barely tried. Thompson sampling
- * explores in proportion to actual uncertainty, which is the right behaviour
- * when data is scarce and every observation is expensive.
- *
- * An honest note on scale. This mechanism needs volume to converge and the real
- * traffic here is seven captured failures. It is exercised against a simulator
- * with known ground truth, which demonstrates that the learning works; it does
- * not demonstrate that any particular arm is best in the real world. Those are
- * different claims and only the first one is being made.
- */
+// Thompson sampling over a Beta posterior per arm.
+//
+// Not epsilon-greedy, because volume is low and outcomes are slow — a recovery
+// scheduled 18 hours out resolves a day later, so observations per arm stay
+// scarce for a long time. Epsilon-greedy explores at a fixed rate no matter how
+// certain it already is; Thompson explores in proportion to actual uncertainty.
+//
+// On scale: this needs volume to converge and the real traffic here is seven
+// captured failures. The simulator has known ground truth, so it shows the
+// learning works. It does not show any particular arm is best in the real world.
 
 export interface ArmStats {
   failureClass: FailureClass;
@@ -80,12 +67,8 @@ export interface Selection {
   reason: string;
 }
 
-/**
- * Picks a plan for this failure class.
- *
- * Falls back to the default variant when learning is disabled, so the system
- * behaves identically to the pre-bandit version with one setting.
- */
+// Falls back to the default variant when learning is off, so one setting gets
+// you the pre-bandit behaviour exactly.
 export function selectVariant(failureClass: FailureClass, enabled: boolean): Selection {
   if (!enabled) {
     return {

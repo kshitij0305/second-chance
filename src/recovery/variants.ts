@@ -1,21 +1,14 @@
 import type { FailureClass } from "./classifier.ts";
 
-/**
- * The candidate plans for each failure class.
- *
- * The hand-authored strategy for each class is a hypothesis, not a fact. Twenty
- * minutes for a provider outage is a guess; so is eighteen hours for an empty
- * account. Each class therefore offers several defensible plans and the outcome
- * data decides between them.
- *
- * Every variant has to be one a merchant would accept on its own terms. The
- * point is to learn which reasonable plan works best, not to search a space of
- * arbitrary numbers — an arm nobody could justify is not worth the traffic it
- * would cost to evaluate.
- *
- * The first variant in each list is the default: what gets used before there is
- * any evidence, and what the system falls back to if learning is disabled.
- */
+// Each hand-authored strategy is a hypothesis, not a fact — twenty minutes for
+// an outage is a guess, so is eighteen hours for an empty account. So each class
+// offers several plans and the outcome data picks.
+//
+// Every variant has to be one a merchant would accept on its own terms. An arm
+// nobody could justify isn't worth the traffic to evaluate.
+//
+// First in each list is the default: used before there's evidence, and the
+// fallback when learning is off.
 
 export interface Strategy {
   name: string;

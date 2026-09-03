@@ -2,21 +2,14 @@ import { Router } from "express";
 import { getRazorpay } from "../razorpay/client.ts";
 import { config } from "../config.ts";
 
-/**
- * A test harness for finding out what the provider actually sends.
- *
- * Every failure captured so far arrived through payment links, and every card
- * failure came back with the same generic `payment_failed` regardless of which
- * documented error card was used. The published error-scenario table describes
- * the direct Checkout integration — an order created via the API and Checkout.js
- * opened against it, with no payment-link wrapper and no mock bank page in
- * front. Whether those cards produce their documented errors there is untested,
- * and it is the difference between five of seven real failures being
- * undiagnosable and most of them being diagnosable.
- *
- * This is not product surface. It exists to answer a question about the
- * provider, and it is gated so it cannot be mounted by accident.
- */
+// Harness for finding out what the provider actually sends. Every failure
+// captured so far came through payment links, and every card failure came back
+// generic regardless of which documented error card was used. The published
+// error table describes the direct Checkout integration instead, so this tries
+// that — the difference between five of seven failures being undiagnosable and
+// most of them being diagnosable.
+//
+// Not product surface. Gated so it can't be mounted by accident.
 
 export const labRouter: Router = Router();
 

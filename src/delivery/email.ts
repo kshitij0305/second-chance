@@ -1,28 +1,14 @@
 import { AMOUNT_TOKEN, LINK_TOKEN } from "../recovery/composer.ts";
 import { config } from "../config.ts";
 
-/**
- * Renders the composed message as an email.
- *
- * The message the composer writes is an SMS: under 300 characters, link inline,
- * no structure. Sending those exact bytes as an email produced something that
- * looked like a phishing attempt, because it has the same shape as one — an
- * unfamiliar address, "your payment failed", a bare shortened URL, and nothing
- * else. A spam filter reads that the same way a person does.
- *
- * The fix is not to rewrite the message. It is to stop treating two different
- * media as one. The composer already writes `{{amount}}` and `{{link}}` as
- * placeholders and lets code substitute the real values, precisely so a model
- * never handles a fact — and the same seam lets each medium decide how a fact
- * should look. SMS substitutes a URL because that is all SMS has. Email
- * substitutes an anchor, and puts the ask on a button underneath.
- *
- * Everything added here is something a real transactional email has and a
- * phishing one does not: a named sender, the amount stated by the system rather
- * than by the prose, a reference that ties back to a payment the recipient
- * actually attempted, and a footer that says why this arrived and what to do if
- * it should not have.
- */
+// The composer writes an SMS: under 300 chars, link inline, no structure. Sent
+// as email verbatim it read as phishing — unfamiliar address, "your payment
+// failed", a bare shortened URL, nothing else.
+//
+// The fix wasn't rewriting the words, it was not treating two media as one. The
+// composer already leaves {{amount}} and {{link}} for code to substitute, so
+// each medium can decide what a fact looks like: SMS has only a URL to offer,
+// email has a button.
 
 export interface EmailContent {
   /** The composed body with `{{amount}}` and `{{link}}` still unsubstituted. */
@@ -42,11 +28,8 @@ export function renderEmail(content: EmailContent): RenderedEmail {
   return { text: renderText(content), html: renderHtml(content) };
 }
 
-/**
- * The plain-text alternative. Not a formality: a message with an HTML part and
- * no text part is itself a spam signal, and some clients will only ever show
- * this one.
- */
+// Not a formality — HTML with no text part is a spam signal, and some clients
+// show only this one.
 function renderText(content: EmailContent): string {
   const body = substitute(content.template, content.amount, content.link);
   return [
@@ -61,9 +44,8 @@ function renderText(content: EmailContent): string {
 }
 
 function renderHtml(content: EmailContent): string {
-  // The prose is model-written, so it is escaped before any markup goes near it.
-  // The placeholders survive escaping — braces are not escaped — which is what
-  // lets them be replaced with real HTML afterwards.
+  // Model-written prose, escaped before any markup goes near it. Placeholders
+  // survive escaping since braces aren't escaped.
   const prose = substitute(
     escapeHtml(content.template),
     `<strong style="color:#18181b;">${escapeHtml(content.amount)}</strong>`,
@@ -135,17 +117,10 @@ function renderHtml(content: EmailContent): string {
 </html>`;
 }
 
-/**
- * States plainly why this email exists and what happens if it is unexpected.
- *
- * A recovery email is unsolicited by definition — nobody asked to be reminded.
- * Saying that no money has been taken removes the reason a confused recipient
- * would otherwise report it, and a reported message is worse than an ignored one.
- */
+// A recovery email is unsolicited by definition. Saying no money was taken
+// removes the reason a confused recipient would report it.
 function whyThisArrived(): string {
-  // No amount here. It is already stated twice above, and a figure repeated at
-  // every level of a message stops reading as information and starts reading as
-  // a template padding itself out.
+  // No amount — it's already stated twice above.
   return `You're receiving this because a payment to ${config.merchantName} didn't complete. ` +
     "If that wasn't you, no payment has been taken and you can ignore this.";
 }

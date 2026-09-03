@@ -1,24 +1,13 @@
 /**
- * Measures whether a bigger model, or few-shot examples, is worth it for message
- * composition.
+ * Is a bigger model, or more examples, worth it for message composition?
  *
- * The README claims a small model is the right size for this job. That was a
- * judgement, not a measurement. This turns it into a number: same prompt, same
- * validator, same failure classes, varying only the model and whether examples
- * are supplied.
+ * Metric is the validator rejection rate — a rejected message is one the system
+ * refused to send, so the template went out instead.
  *
- * It measures the prompt production actually sends, which it did not always do.
- * The steering instruction was missing here while every real send included it,
- * so the reported rate was for a prompt one line shorter than the live one — and
- * that line turned out to be the one carrying most of the rejections. A benchmark
- * measuring something adjacent to the system is worse than no benchmark, because
- * the number it prints gets believed.
- *
- * The metric is the validator rejection rate. A rejected message is not a
- * stylistic complaint — it is one the system refused to send because it
- * fabricated a figure, dropped a placeholder or ran long, and the template went
- * out instead. A model that produces fewer of those is doing the job better, and
- * that is measurable without anyone reading prose and forming an impression.
+ * This did not always measure the prompt production sends. The steering
+ * instruction was missing here while every real send included it, so every
+ * number it ever printed was for a prompt one line shorter than the live one —
+ * and that line is where most of the rejections are.
  *
  *   npm run bench:composer
  *   npm run bench:composer -- 12      generations per class per variant
@@ -53,11 +42,8 @@ const PRICING: Record<string, { in: number; out: number }> = {
   "openai/gpt-oss-120b": { in: 0.15, out: 0.60 },
 };
 
-/**
- * Examples aimed squarely at the observed failure: the model omits the amount
- * placeholder. Showing rather than telling is the cheapest thing to try before
- * paying for a larger model.
- */
+// Aimed at the observed failure: the model omits the amount placeholder.
+// Showing beats telling, and it's cheaper than a bigger model.
 const FEW_SHOT = `
 Two examples of correctly formatted output:
 
@@ -91,17 +77,10 @@ interface Result {
   errors: number;
 }
 
-/**
- * Rate limiting is not a benchmark result.
- *
- * The free tier allows 8000 tokens a minute and this loop, run flat out, asks
- * for several times that. Every refusal was landing in the catch below and
- * being counted as a generation that errored, which reads on the summary as
- * the model failing. It is the opposite: those calls never reached a model.
- *
- * So a 429 is waited out and retried rather than recorded, and every call is
- * paced. Slower, and the number at the end means something.
- */
+// Rate limiting is not a benchmark result. The free tier allows 8000 tokens a
+// minute and this loop asks for several times that; every 429 was landing in the
+// catch below and counting as a failed generation, which reads on the summary as
+// the model failing. Those calls never reached a model.
 const RATE_LIMITED = 429;
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -147,12 +126,11 @@ async function runVariant(variant: Variant): Promise<Result> {
               content:
                 `Payment method that failed: card\n` +
                 `What happened, and how to handle it: ${INTENT[failureClass]}\n` +
-                // Steering alternates because production sends both branches. The name
-                // does not, because production has none: engine.ts passes name: null on
-                // every dispatch and nothing anywhere sets it. Alternating it here spent
-                // half the run measuring a branch that never executes — and, while it
-                // shared a period with steering, hid the one combination already observed
-                // to fail. Restore the alternation the day a real name is plumbed through.
+                // Steering alternates; the name doesn't, because production has
+                // none — engine.ts passes name: null and nothing sets it.
+                // Alternating it spent half the run on a dead branch, and while
+                // it shared a period with steering it hid the one combination
+                // already known to fail. Restore it if a real name appears.
                 `${steeringInstruction(i % 2 === 0)}\n` +
                 "The customer's name is unknown; do not invent one.\n" +
                 `\nWrite the message.`,
@@ -176,8 +154,7 @@ async function runVariant(variant: Variant): Promise<Result> {
         result.errors++;
         result.total++;
       }
-      // Roughly 16 calls a minute, which is what 8000 tokens a minute buys at
-      // this prompt size. Keeps the retry path rare rather than routine.
+      // ~16 calls a minute, which is what the limit buys at this prompt size.
       await sleep(3800);
     }
   }

@@ -2,20 +2,15 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { DatabaseSync } from "node:sqlite";
 
-/**
- * Regression test for a double-send observed in a live run.
- *
- * The dispatcher polls faster than a provider round trip completes. It selected
- * rows with status 'scheduled', then awaited the API before writing the result
- * back, so a second poll landing inside that await selected the same row again
- * and created a second live payment link for one recovery. Two links means the
- * customer can pay twice, which is the precise outcome this product exists to
- * avoid — and it left no trace, because the second send overwrote the first
- * link's URL and the row count stayed correct.
- *
- * The fix is an atomic claim. This asserts the property that makes it work:
- * a conditional UPDATE can only succeed for one of two concurrent readers.
- */
+// Regression test for a double-send seen in a live run. The dispatcher polls
+// faster than a provider round trip: it selected 'scheduled' rows, then awaited
+// the API before writing back, so a second poll landing inside that await picked
+// the same row and made a second live payment link. The customer could pay
+// twice, and it left no trace — the second send overwrote the first link's URL
+// and the row count stayed right.
+//
+// Asserts the property the fix relies on: a conditional UPDATE can only succeed
+// for one of two concurrent readers.
 
 function seed(): DatabaseSync {
   const db = new DatabaseSync(":memory:");

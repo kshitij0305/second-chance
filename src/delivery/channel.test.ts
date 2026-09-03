@@ -3,16 +3,10 @@ import assert from "node:assert/strict";
 import { resolveRecipient, subjectFor } from "./channel.ts";
 import { config } from "../config.ts";
 
-/**
- * Recipient resolution is the only part of delivery worth unit testing, and it
- * is the part that can do real harm.
- *
- * Captured real failures carry the email address of whoever was standing at that
- * checkout. This repository replays those payloads routinely — during
- * development, in the demo runner, and whenever a handler fix is applied to
- * traffic that already arrived. Every one of those replays reaches this code
- * with a real person's address on it.
- */
+// Recipient resolution is the part of delivery that can do real harm. Captured
+// failures carry the address of whoever was at that checkout, and this repo
+// replays those payloads constantly — every replay reaches this code with a real
+// person's address on it.
 
 const withRedirect = (to: string, fn: () => void) => {
   const original = config.deliveryRedirectTo;

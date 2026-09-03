@@ -1,19 +1,8 @@
 import type { FailureClass } from "./classifier.ts";
 
-/**
- * Deterministic message bodies, one per failure class.
- *
- * These are not a placeholder for the model — they are the floor the model
- * writes above. A recovery must never fail to go out because an LLM was slow,
- * rate-limited, misconfigured or unavailable, so every send has a correct
- * message available without any network call at all.
- *
- * They are also the reference the model is judged against: if a generated
- * message fails validation, this is what ships instead.
- *
- * Deliberately free of amounts, dates and offers. Those are facts, and facts are
- * assembled by code — see `composer.ts`.
- */
+// Not a placeholder for the model — the floor it writes above. Every send has a
+// correct message available with no network call, and this is what ships when a
+// generated one fails validation.
 
 export interface MessageContext {
   /** Customer's first name, if we have one worth using. */
@@ -26,10 +15,7 @@ export interface MessageContext {
   link: string;
 }
 
-/**
- * What each message must convey, given what went wrong. Also handed to the model
- * as the brief, so the generated and fallback versions say the same thing.
- */
+// Also the model's brief, so generated and fallback versions say the same thing.
 export const INTENT: Record<FailureClass, string> = {
   transient_provider:
     "The failure was on the payment provider's side and temporary. Reassure them nothing is wrong with their card or account, and invite them to try the same way again.",
@@ -45,36 +31,17 @@ export const INTENT: Record<FailureClass, string> = {
     "The cause could not be determined. Do not speculate about why it failed. Keep it short and simply offer a way to complete the payment.",
 };
 
-/**
- * Tells the model what the strategy actually decided about the payment method.
- *
- * Without this the message drifts from the decision. An `unknown` failure was
- * observed producing "please try a different payment method" while the chosen
- * plan had explicitly not steered anywhere and hidden nothing on the checkout —
- * not false, since every method was still available, but the message described
- * an action the system never took.
- *
- * The same shape of mistake as `avoidFailedMethod` describing itself in an
- * explanation string without doing anything. Both times the fix is the same:
- * words about a decision have to be generated from the decision.
- */
+// Without this the message drifts from the decision — an unknown failure once
+// said "try a different payment method" while the plan had hidden nothing.
 export function steeringInstruction(steerToAnotherMethod: boolean): string {
-  // Both branches say what the message should tell the customer. Neither states
-  // what the system did, and that distinction is not stylistic.
+  // Both branches say what to tell the customer, never what the system did.
+  // This used to open with "The failed payment method has been hidden on the
+  // checkout", which the model treated as copy and put in a customer's inbox:
+  // "The card is hidden from checkout." Removing it fixed that, 0 of 20.
   //
-  // The steering branch used to open with "The failed payment method has been
-  // hidden on the checkout." The model treated it as copy rather than context
-  // and put it in a customer's inbox — "The card is hidden from checkout" — which
-  // is an internal detail nobody paying a bill needs. Removing the sentence
-  // removed the leak: 0 of 20 generations mentioned it afterwards, against a
-  // reproducible occurrence before.
-  //
-  // It did not change how often the validator rejects a message. That was the
-  // hypothesis — an irrelevant fact competing for a small model's attention,
-  // costing it the amount placeholder — and the measurement did not support it:
-  // 2 of 20 before, 4 of 20 after, which at this sample size is one number, not
-  // two. Why this branch drops the placeholder more than the others is still
-  // open, and `npm run bench:composer` is where to settle it.
+  // It did not change the rejection rate, which was the other hypothesis:
+  // 2 of 20 before, 4 of 20 after — one number at that sample, not two. Why
+  // this branch drops the amount placeholder more than the others is still open.
   return steerToAnotherMethod
     ? "Tell them to pay by a different method."
     : "Tell them the same payment method should work, and do not suggest switching.";

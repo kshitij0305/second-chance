@@ -6,25 +6,18 @@ import { defaultVariant, findVariant, variantsFor, type Strategy } from "./varia
 
 export type { Strategy };
 
-/**
- * Chooses how to ask again, given why the payment failed.
- *
- * This is where the product's claim lives: a card declined for insufficient
- * funds and a bank that fell over for ninety seconds are not the same event and
- * should not get the same response. Retrying a declined instrument immediately
- * is noise. Waiting eighteen hours for a transient gateway blip wastes a
- * customer who would have paid on the second tap.
- *
- * Like the classifier, deliberately a table rather than a model. Six classes in,
- * six plans out, every one of which needs to be defensible to a merchant and
- * assertable in a test. There is nothing here a model would do better.
- *
- * The one rule that applies to every class: nothing sends immediately. A
- * customer who has just failed a payment is frequently still at the checkout,
- * retrying. A recovery link arriving mid-retry risks them paying twice, and a
- * double charge costs far more trust than a recovery gains. Even the case where
- * intent is hottest waits a couple of minutes.
- */
+// A card declined for insufficient funds and a gateway that fell over for
+// ninety seconds are not the same event. Retrying a declined instrument
+// immediately is noise; waiting eighteen hours for a blip loses a customer who
+// would have paid on the second tap.
+//
+// A table, not a model: six classes in, six plans out, each one defensible to a
+// merchant and assertable in a test.
+//
+// One rule holds for every class — nothing sends immediately. A customer who
+// just failed is often still at the checkout retrying, and a link arriving
+// mid-retry risks a double charge. Even the hottest case waits a couple of
+// minutes.
 
 export interface Decision {
   strategy: Strategy;
