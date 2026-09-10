@@ -15,3 +15,7 @@ node_modules/
 simulation.db
 demo.db
 VIDEO-SCRIPT.md
+
+# Regenerated on every run — snapshot deliberately if you want a record.
+eval_results.json
+judge_results.json
