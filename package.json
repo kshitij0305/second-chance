@@ -20,7 +20,8 @@
     "bench:composer": "tsx scripts/bench-composer.ts",
     "email-test": "tsx scripts/email-test.ts",
     "eval": "tsx scripts/eval.ts",
-    "judge": "tsx scripts/judge.ts"
+    "judge": "tsx scripts/judge.ts",
+    "judge:planted": "tsx scripts/judge-planted.ts"
   },
   "dependencies": {
     "dotenv": "^17.2.3",
