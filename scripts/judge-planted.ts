@@ -12,6 +12,7 @@
 import "dotenv/config";
 import { writeFileSync } from "node:fs";
 import { PLANTED } from "../src/eval/planted.ts";
+import { inputClaims } from "../src/eval/cases.ts";
 import { ask, claimsFor, describeInput, passes, type ClaimKind } from "../src/eval/judge.ts";
 
 if (!process.env.GROQ_API_KEY) {
@@ -19,10 +20,17 @@ if (!process.env.GROQ_API_KEY) {
   process.exit(1);
 }
 
+// Planted cases get the same claim set a real case would: universal, class,
+// and whatever follows from the input.
+function claimsOf(p: (typeof PLANTED)[number]) {
+  const extra = inputClaims(p.context, p.options);
+  return claimsFor(p.failureClass, extra.must, extra.mustNot);
+}
+
 // A typo in `breaks` would make every case look like a miss, so check before
 // spending any calls.
 for (const p of PLANTED) {
-  if (!claimsFor(p.failureClass).some((c) => c.claim === p.breaks)) {
+  if (!claimsOf(p).some((c) => c.claim === p.breaks)) {
     console.error(`${p.id}: breaks "${p.breaks}" is not a claim for ${p.failureClass}`);
     process.exit(1);
   }
@@ -50,7 +58,7 @@ for (const p of PLANTED) {
   const input = describeInput(p.context.method, p.context.name);
   const verdicts: Verdict[] = [];
 
-  for (const { claim, kind } of claimsFor(p.failureClass)) {
+  for (const { claim, kind } of claimsOf(p)) {
     const { answer, reason } = await ask(p.template, input, claim);
     verdicts.push({ claim, kind, answer, pass: passes(kind, answer), reason });
   }
