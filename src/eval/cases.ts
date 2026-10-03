@@ -24,19 +24,16 @@ export const UNIVERSAL: MatchRule = {
     "offers a way to complete the payment",
   ],
   mustNot: [
-    "blames the customer or comments on their finances",
-    // Was a must phrased "uses the name if one is given, and never invents one
-    // if not". Two branches in one claim, and the judge only ever answered the
-    // first — every no-name case failed on a rule it satisfied.
+    "criticises the customer",
     "invents a customer name that was not provided",
   ]
 };
 
 export const CLASS_RULES: Record<FailureClass, MatchRule> = {
   "transient_provider": {
-    // The failure was on the payment provider's side and temporary. Reassure them nothing is wrong with their card or account, and invite them to try the same way again.
+    // The failure was on the payment provider's side and temporary. Reassure them nothing is wrong with the payment method they used, and invite them to try the same way again.
     must: [
-        "reassures the customer that nothing is wrong with their card or account",
+        "reassures the customer that nothing is wrong with the payment method they used",
         "invites them to try the same payment method again",
         "attributes the failure to the payment provider",
         "says the problem is temporary"
@@ -53,25 +50,45 @@ export const CLASS_RULES: Record<FailureClass, MatchRule> = {
     ]
   },
   "instrument_rejected": {
-    must: [],
+    // Their bank refused this payment method and will keep refusing it. Tell them plainly that the payment method they used will not go through, and steer them to a different payment method.
+    must: [
+        "states that the bank refused this payment method",
+        "states that the payment method they used will not go through",
+        "says this payment method will keep being refused"
+    ],
     mustNot: []
   },
   "authentication_abandoned": {
-    must: [],
+    //They were partway through paying and the verification step did not complete. Be brief and low-friction — they were seconds from done.
+    must: [ 
+        "states that the verification step did not complete",
+    ],
     mustNot: []
   },
   "customer_cancelled": {
-    must: [],
-    mustNot: []
+    //They chose to cancel. Be light and unpushy, make clear there is no obligation, and leave the option open.
+    // No claim that the message says who cancelled: the INTENT asks for light and
+    // unpushy, and naming them cuts against that. 6 of 8 failed it before it went.
+    must: [
+       "makes clear there is no obligation to pay",
+       "leaves the option open to pay later"
+    ],
+    mustNot: [
+       "pressures the customer to complete the payment"
+    ]
   },
   "unknown": {
+    //The cause could not be determined. Do not speculate about why it failed. Keep it short and simply offer a way to complete the payment.
+    // Nothing to require here. The INTENT says don't speculate and keep it
+    // short, so a message announcing that the cause is unknown would be working
+    // against it — 11 of 16 failed that claim before it went.
     must: [],
-    mustNot: []
+    mustNot: [
+       "speculates about why the payment failed"
+    ]
   }
 };
 
-// Only what reaches the model varies. Amount and link are substituted by code
-// after generation, so changing them tests nothing.
 const METHODS = ["card", "netbanking", "wallet", "upi"];
 const NAMES: (string | undefined)[] = [undefined, "kshitij"];
 const AMOUNT = "₹850";
@@ -86,8 +103,6 @@ const SHORT: Record<FailureClass, string> = {
   unknown: "unknown",
 };
 
-// Read from the strategies, not assumed per class. unknown has an arm that
-// steers away from the failed method and arms that don't, so it gets both.
 function steerOptions(failureClass: FailureClass): boolean[] {
   return [...new Set(VARIANTS[failureClass].map((v) => v.avoidFailedMethod))];
 }

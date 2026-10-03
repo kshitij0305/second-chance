@@ -48,13 +48,16 @@ Rules, all of them absolute:
 - Never blame the customer and never speculate about their finances.
 - Indian English.
 
+Always write about the method that actually failed, which you are told. Both
+examples below happen to differ; neither is a default.
+
 Two examples of correctly formatted output:
 
 The bank declined the card and will keep declining it:
 Hi Asha, your bank turned down the ${AMOUNT_TOKEN} payment on that card, and it is likely to be declined again. You can pay by another method here: ${LINK_TOKEN}
 
-A temporary problem at the payment provider:
-Hi, the ${AMOUNT_TOKEN} payment did not go through because of a temporary issue on the provider side. Nothing is wrong with your card. You can try again here: ${LINK_TOKEN}
+A temporary problem at the payment provider, paid by netbanking:
+Hi, the ${AMOUNT_TOKEN} payment did not go through because of a temporary issue on the provider side. Nothing is wrong with your netbanking. You can try again here: ${LINK_TOKEN}
 
 Note that both contain ${AMOUNT_TOKEN} and ${LINK_TOKEN} exactly as written.`;
 

@@ -923,3 +923,73 @@ dashboard has no authentication and is exposed to anyone holding the tunnel URL
 while one is running. And webhook signatures prove authenticity but not
 freshness, so a captured payload stays valid forever — duplicate deliveries are
 handled now, but a deliberate replay is not defended against.
+
+## The eval harness — 10 to 30 Sep
+
+The validator is a string check. It counts characters, looks for two
+placeholders, and rejects invented digits, URLs and discounts. Nothing in it can
+tell whether a message means the right thing, so a message saying "your account
+didn't have enough balance" passes every check and breaks the one rule that class
+has. The harness exists for that gap and nothing else.
+
+Cases are generated rather than written. Only four things reach the model — the
+method, the class INTENT, the steering line, and a name or a note that there
+isn't one — so the amount and the link, which code substitutes afterwards, vary
+nothing at all. Six classes crossed with four methods crossed with name or no
+name is forty-eight cells, and a loop cannot skip one.
+
+Forty-eight turned out to be wrong. Steering was assumed to be a property of the
+failure class, and it is for five of them; `unknown` has three strategy arms and
+one steers while two do not. Reading the flag off the variants instead of
+assuming it gives fifty-six cells, and the steering bug already recorded in
+`templates.ts` sits in precisely the eight that the assumption would have
+skipped. Worth remembering that the bug was documented months earlier and the
+first instinct still produced a case set that could not have caught it.
+
+The judge is never told whether a claim is required or forbidden. It answers one
+question — is this property present — and the code decides pass or fail from
+that. Tell a model a rule is a prohibition and it will tell you what you want to
+hear. It also reads the pre-substitution template, since the claims are about
+placeholders, and it runs on 120b where the composer runs on 20b.
+
+A green run proves nothing on its own, so six messages were written to be wrong
+in one specific way each and fed through as a control. The one that mattered says
+"once you've topped up" — no banned word anywhere — and was still caught, which
+is the whole argument for a judge over a regex. Six of six. The script exits
+non-zero, so it can gate CI.
+
+The first full run found four bugs in the rules and none in the composer. A claim
+phrased "uses the name if one is given, and never invents one if not" has two
+branches and the judge only ever answered the first, so every no-name case failed
+a rule it satisfied. `customer_cancelled` had a pair no message could satisfy at
+once: say the customer cancelled and it trips the universal rule against blaming
+them, stay vague and it trips the class rule requiring it. Both were written by
+hand, both looked fine in isolation, and neither survives contact with output.
+
+The second run found a bug in the product. Four transient messages reassured the
+customer that nothing was wrong with their card — on netbanking, wallet and UPI
+payments. The phrase "card or account" was sitting in two INTENT strings and in
+both few-shot examples, so the model copied it regardless of method. `bench:composer`
+never saw this because it only ever tested `method: card`. Fixing the prompt and
+making one example a netbanking failure took the transient claims to zero
+failures, and the run total from thirty-two to twenty-one.
+
+Two of the remaining claims were then deleted rather than fixed. Both asked for
+something no INTENT requested — that an `unknown` message announce the cause
+could not be determined, and that a `cancelled` message name who cancelled — so
+the model never complied and the claim was measuring an intention nobody had
+stated. Deleting them takes the failures to two. The judgement that matters here
+is direction: the card wording was the product's fault and the prompt changed,
+these two were the eval's fault and the eval changed. An eval that always blames
+the thing under test is as useless as one that never does.
+
+Costs are real. A full run is about 180,000 tokens against a 200,000 per day free
+tier, so there is one complete run a day and no more. One run hit the limit at
+around 110 judgements and lost everything, because results are written after the
+loop rather than as they arrive. Batching the claims for a message into one call
+instead of one call per claim would cut roughly 450 calls to 56 — not done yet.
+
+Still open: no agreement number. Kappa needs the judge and a human to disagree,
+and across two runs they have barely disagreed at all, which says more about the
+model being consistent than about the judge being right. That measurement waits
+for a smaller model to start failing.
