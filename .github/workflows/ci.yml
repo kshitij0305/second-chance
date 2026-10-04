@@ -14,11 +14,13 @@ on:
 
 jobs:
   check:
-    runs-on: ubuntu-latest
+    # Pinned rather than ubuntu-latest: latest moves under you, and this file
+    # is the one place arguing that a gate should give the same answer twice.
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           # Pinned, because --experimental-strip-types is what lets us run .ts
           # directly with no build step. Matches the local version.
