@@ -1,5 +1,7 @@
 # Second Chance
 
+[![CI](https://github.com/kshitij0305/second-chance/actions/workflows/ci.yml/badge.svg)](https://github.com/kshitij0305/second-chance/actions/workflows/ci.yml)
+
 Recovers failed payments on Razorpay by working out *why* a payment failed and
 choosing how to ask again.
 
@@ -329,7 +331,36 @@ phrase.
 
 All six were caught. The one that matters is the last: *once you've topped up,
 you can try again here* contains no banned word, and a regex would wave it
-through. `npm run judge:planted` exits non-zero on any miss, so it can gate CI.
+through. `npm run judge:planted` exits non-zero on any miss.
+
+### What runs automatically, and what deliberately does not
+
+Two workflows, split by whether a failure means anything.
+
+`ci.yml` gates every push and pull request: `npm run typecheck` and 98 unit
+tests, on a pinned runner, installed with `npm ci` from the lockfile. No API key,
+no network, same answer every time. That is the entry fee for blocking a merge —
+a check that can fail on a coin flip teaches you to re-run it instead of reading
+it, which is worse than having no check.
+
+Wiring it up immediately found a bug it was built to find. The test script's glob
+was unquoted, so on Linux `sh` expanded `src/**/*.test.ts` itself, collapsed it to
+one directory level, and dropped `src/auth.test.ts` — the eight tests covering
+the gate in front of the dashboard, which serves customer addresses and every
+composed message. The suite would have reported 90 of 98 green and nobody would
+have looked. Quoting it hands the glob to node, which matches both depths on
+every platform.
+
+`eval.yml` runs `judge:planted` weekly and on demand, and never blocks anything.
+It wants a secret, so it cannot run on a fork's pull request; it costs tokens
+against a daily free tier that a busy afternoon of pushes would exhaust; and
+temperature zero narrows the variance without removing it. It is a drift
+detector, not a gate — the model behind the judge can change under you, and a
+weekly control run is how you find out. The results file is gitignored, so the
+run uploads it as an artifact, on failure especially.
+
+The full `npm run judge` stays manual. 492 judgements is most of a day's tokens,
+and it is a measurement, not a pass/fail.
 
 ### What it found, and what it cannot tell you
 
