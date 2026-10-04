@@ -8,7 +8,7 @@
     "dev": "tsx watch src/index.ts",
     "start": "node --experimental-strip-types src/index.ts",
     "typecheck": "tsc --noEmit",
-    "test": "node --test --experimental-strip-types src/**/*.test.ts",
+    "test": "node --test --experimental-strip-types \"src/**/*.test.ts\"",
     "replay": "tsx scripts/replay.ts",
     "setup:secret": "node scripts/set-webhook-secret.mjs",
     "redeliver": "tsx scripts/redeliver.ts",

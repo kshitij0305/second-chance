@@ -1,0 +1,53 @@
+# The judge, on a schedule and on demand — deliberately not on every push.
+#
+# Three reasons it is not a gate:
+#   - It costs tokens. The free tier is 200,000/day and `npm run judge` spends
+#     roughly 450 calls; a busy afternoon of pushes would exhaust it and then
+#     fail on a 429 that says nothing about the code.
+#   - It is not deterministic. temperature 0 lowers the variance, it does not
+#     remove it. A gate that flakes is a gate people learn to re-run.
+#   - It needs a secret, so it cannot run on a pull request from a fork.
+#
+# What it is instead: a drift detector. judge:planted feeds the judge six
+# messages that each break exactly one claim on purpose and exits 1 if the judge
+# lets any of them pass. That is the check on the checker — without it a green
+# `npm run judge` is indistinguishable from a judge that answers yes to
+# everything.
+
+name: Eval
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 02:00 UTC Monday. The model behind the judge can change without warning;
+    # weekly is often enough to notice, cheap enough to ignore.
+    - cron: '0 2 * * 1'
+
+jobs:
+  planted:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run judge:planted
+        env:
+          # Repo Settings > Secrets and variables > Actions > New repository
+          # secret. GitHub masks it in logs; it is still readable by anything
+          # this workflow runs, so it stays off pull_request.
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+
+      # The results file is gitignored, so without this the run leaves no trace
+      # of which claim the judge missed. always(), because a failed run is
+      # precisely the one worth reading.
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: judge-planted-results
+          path: judge_planted_results.json

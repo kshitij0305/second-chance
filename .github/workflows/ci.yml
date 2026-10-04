@@ -1,0 +1,38 @@
+# The gate. Everything here is deterministic and free: same commit in, same
+# answer out, no API key, no network beyond the install. That is the entry fee
+# for blocking a merge — a check that can fail on a coin flip trains you to
+# ignore red, which is worse than having no check at all.
+#
+# The non-deterministic half of the eval lives in eval.yml and never blocks.
+
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # Pinned, because --experimental-strip-types is what lets us run .ts
+          # directly with no build step. Matches the local version.
+          node-version: '24'
+          cache: npm
+
+      # ci, not install: installs exactly package-lock.json and fails if the
+      # lockfile and package.json disagree. `npm install` would quietly resolve
+      # a newer dependency and test something other than what ships.
+      - run: npm ci
+
+      - run: npm run typecheck
+
+      # 98 tests. The glob is quoted in package.json so node expands it rather
+      # than the shell — sh has no **, and left unquoted it drops
+      # src/auth.test.ts here while passing on Windows.
+      - run: npm test
