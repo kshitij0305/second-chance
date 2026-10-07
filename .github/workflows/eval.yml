@@ -1,12 +1,15 @@
 # The judge, on a schedule and on demand — deliberately not on every push.
 #
-# Three reasons it is not a gate:
-#   - It costs tokens. The free tier is 200,000/day and `npm run judge` spends
-#     roughly 450 calls; a busy afternoon of pushes would exhaust it and then
-#     fail on a 429 that says nothing about the code.
+# Why it is not a gate:
 #   - It is not deterministic. temperature 0 lowers the variance, it does not
 #     remove it. A gate that flakes is a gate people learn to re-run.
 #   - It needs a secret, so it cannot run on a pull request from a fork.
+#
+# Cost is NOT one of the reasons, and conflating the two scripts is how this
+# file first ended up on a weekly cron. `npm run judge` is ~450 calls against a
+# 200,000/day tier and would not survive a busy afternoon of pushes. This runs
+# judge:planted, which is ~54 calls. Those are different budgets and they do not
+# imply the same schedule.
 #
 # What it is instead: a drift detector. judge:planted feeds the judge six
 # messages that each break exactly one claim on purpose and exits 1 if the judge
@@ -19,9 +22,13 @@ name: Eval
 on:
   workflow_dispatch:
   schedule:
-    # 02:00 UTC Monday. The model behind the judge can change without warning;
-    # weekly is often enough to notice, cheap enough to ignore.
-    - cron: '0 2 * * 1'
+    # 02:00 UTC daily. judge:planted is ~54 calls, roughly 19,000 tokens — about
+    # a tenth of the daily free tier, so there is no reason to space it out. Daily
+    # also survives GitHub silently dropping a scheduled run, which it does on
+    # free repos under load; a weekly job that gets skipped goes blind for two
+    # weeks. Cron here is best-effort, not punctual — this has fired six hours
+    # late. Never build anything that assumes otherwise.
+    - cron: '0 2 * * *'
 
 jobs:
   planted:

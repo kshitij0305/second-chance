@@ -351,16 +351,24 @@ composed message. The suite would have reported 90 of 98 green and nobody would
 have looked. Quoting it hands the glob to node, which matches both depths on
 every platform.
 
-`eval.yml` runs `judge:planted` weekly and on demand, and never blocks anything.
-It wants a secret, so it cannot run on a fork's pull request; it costs tokens
-against a daily free tier that a busy afternoon of pushes would exhaust; and
-temperature zero narrows the variance without removing it. It is a drift
+`eval.yml` runs `judge:planted` daily at 02:00 UTC and on demand, and never
+blocks anything. It wants a secret, so it cannot run on a fork's pull request,
+and temperature zero narrows the variance without removing it. It is a drift
 detector, not a gate — the model behind the judge can change under you, and a
-weekly control run is how you find out. The results file is gitignored, so the
+daily control run is how you find out. The results file is gitignored, so the
 run uploads it as an artifact, on failure especially.
 
-The full `npm run judge` stays manual. 492 judgements is most of a day's tokens,
-and it is a measurement, not a pass/fail.
+It started on a weekly cron for a bad reason worth recording: the token
+arithmetic came from the wrong script. `npm run judge` is 492 judgements, most
+of a day's free tier. `judge:planted` is six messages at nine claims — about 54
+calls, a tenth of the tier. Those are different budgets and only one of them
+argues for spacing runs out. Daily also survives GitHub dropping a scheduled run,
+which it does silently on free repos under load; a weekly job that gets skipped
+goes blind for two weeks. Scheduled runs are best-effort either way — the first
+one here fired almost six hours late.
+
+The full `npm run judge` stays manual, because that budget is real and because
+it is a measurement rather than a pass/fail.
 
 ### What it found, and what it cannot tell you
 
