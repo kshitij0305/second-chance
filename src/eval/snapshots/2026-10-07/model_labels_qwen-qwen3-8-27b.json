@@ -1,0 +1,58 @@
+[
+  {
+    "id": "cancelled-card-noname",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'There is no obligation to pay.'"
+  },
+  {
+    "id": "cancelled-card-named",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'There is no obligation to pay now.'"
+  },
+  {
+    "id": "cancelled-netbanking-noname",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'There is no obligation to pay now.'"
+  },
+  {
+    "id": "cancelled-netbanking-named",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'No obligation on your part,' which clearly communicates there is no obligation to pay."
+  },
+  {
+    "id": "cancelled-wallet-noname",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "no",
+    "reason": "The message encourages the customer to retry the payment, implying there is still an expectation to pay rather than stating there is no obligation."
+  },
+  {
+    "id": "cancelled-wallet-named",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "no",
+    "reason": "The message suggests the customer should try paying again, which implies an obligation to pay rather than stating there is none."
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'There is no obligation to pay now.'"
+  },
+  {
+    "id": "cancelled-upi-named",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "no",
+    "reason": "The message provides a link to retry the payment, implying there is still an outstanding obligation, and does not state that there is no obligation to pay."
+  }
+]

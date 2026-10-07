@@ -107,5 +107,8 @@ export function describeKappa(k: number): string {
   if (k <= 0.4) return "fair";
   if (k <= 0.6) return "moderate";
   if (k <= 0.8) return "substantial";
+  // Landis & Koch's top band is "almost perfect", which is odd wording for the
+  // case where the two raters did not differ once.
+  if (k === 1) return "perfect — the raters never differed";
   return "almost perfect";
 }

@@ -62,6 +62,8 @@ test("two raters who always say yes have no measurable agreement", () => {
   close(r.pe, 1);
   assert.ok(Number.isNaN(r.kappa));
   assert.match(describeKappa(r.kappa), /undefined/);
+  assert.match(describeKappa(1), /perfect/);
+  assert.match(describeKappa(0), /exactly chance/);
 });
 
 test("high agreement can still produce a low kappa", () => {

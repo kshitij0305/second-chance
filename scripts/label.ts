@@ -32,7 +32,15 @@ import * as readline from "node:readline/promises";
 import { CASES, inputClaims } from "../src/eval/cases.ts";
 import { claimsFor, describeInput, SYSTEM_PROMPT, type ClaimKind } from "../src/eval/judge.ts";
 
-const SNAPSHOT = "src/eval/snapshots/2026-10-03";
+function arg(flag: string): string | undefined {
+  const i = process.argv.indexOf(`--${flag}`);
+  return i === -1 ? undefined : process.argv[i + 1];
+}
+const has = (flag: string) => process.argv.includes(`--${flag}`);
+
+// Which frozen run to label. A second snapshot exists because a claim had to be
+// re-tested on text the rater had not seen; see that snapshot's README.
+const SNAPSHOT = arg("snapshot") ?? "src/eval/snapshots/2026-10-03";
 const OUT = `${SNAPSHOT}/human_labels.json`;
 
 // Decidable by substring or regex, so no judgement happens and agreement on
@@ -53,12 +61,6 @@ interface Label {
   answer: "yes" | "no";
   at: string;
 }
-
-function arg(flag: string): string | undefined {
-  const i = process.argv.indexOf(`--${flag}`);
-  return i === -1 ? undefined : process.argv[i + 1];
-}
-const has = (flag: string) => process.argv.includes(`--${flag}`);
 
 const n = Number(arg("n") ?? 100);
 const seed = Number(arg("seed") ?? 1);

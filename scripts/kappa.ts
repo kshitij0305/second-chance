@@ -18,7 +18,10 @@ import { readFileSync, readdirSync } from "node:fs";
 import { cohensKappa, describeKappa, type Answer, type Agreement } from "../src/eval/kappa.ts";
 import { passes, type ClaimKind } from "../src/eval/judge.ts";
 
-const SNAPSHOT = "src/eval/snapshots/2026-10-03";
+const SNAPSHOT =
+  process.argv.indexOf("--snapshot") === -1
+    ? "src/eval/snapshots/2026-10-03"
+    : process.argv[process.argv.indexOf("--snapshot") + 1]!;
 
 interface Label { id: string; claim: string; kind: ClaimKind; answer: Answer }
 interface Judged { id: string; claim: string; kind: ClaimKind; answer: string }

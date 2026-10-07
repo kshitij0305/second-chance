@@ -28,31 +28,33 @@ import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { CASES, inputClaims } from "../src/eval/cases.ts";
 import { ask, claimsFor, describeInput, JUDGE_MODEL, type ClaimKind } from "../src/eval/judge.ts";
 
-const SNAPSHOT = "src/eval/snapshots/2026-10-03";
-
 function arg(flag: string): string | undefined {
   const i = process.argv.indexOf(`--${flag}`);
   return i === -1 ? undefined : process.argv[i + 1];
 }
 
+const SNAPSHOT = arg("snapshot") ?? "src/eval/snapshots/2026-10-03";
 const model = arg("model") ?? "qwen/qwen3.8-27b";
 const slug = model.replace(/[^a-z0-9]+/gi, "-");
-const OUT = `${SNAPSHOT}/model_labels_${slug}.json`;
+const onlyClaim = arg("claim");
+// --out exists so the judge's own verdicts can be collected for a snapshot
+// without paying for all 492. They belong in judge_results.json, not in a
+// model_labels_* file, which everything downstream reads as a third rater.
+const OUT = `${SNAPSHOT}/${arg("out") ?? `model_labels_${slug}.json`}`;
 
 if (!process.env.GROQ_API_KEY) {
   console.error("GROQ_API_KEY is not set.");
   process.exit(1);
 }
-if (model === JUDGE_MODEL) {
-  console.error(`${model} is the judge. A rater has to be a different model to tell you anything.`);
+if (model === JUDGE_MODEL && !arg("out")) {
+  console.error(
+    `${model} is the judge. As a rater it would be scoring itself and tells you nothing.\n` +
+      `To collect its verdicts for a snapshot instead, pass --out judge_results.json.`,
+  );
   process.exit(1);
 }
 
 interface Label { id: string; claim: string; kind: ClaimKind; answer: string; reason: string }
-
-const human = JSON.parse(readFileSync(`${SNAPSHOT}/human_labels.json`, "utf8")) as {
-  id: string; claim: string; kind: ClaimKind;
-}[];
 
 // The messages, and the input each composer call was given.
 const messages = new Map<string, { template: string; method: string; name?: string | null }>();
@@ -69,11 +71,40 @@ for (const c of CASES) {
     valid.add(`${c.id}\u0000${claim}`);
   }
 }
+// Which items to rate. When the human has already labelled this snapshot, rate
+// exactly what they rated, so every pairing is over the same sample. When they
+// have not — a fresh snapshot being set up for them — derive the items from the
+// claim filter instead.
+const HUMAN = `${SNAPSHOT}/human_labels.json`;
+let human: { id: string; claim: string; kind: ClaimKind }[];
+if (existsSync(HUMAN)) {
+  human = JSON.parse(readFileSync(HUMAN, "utf8"));
+  if (onlyClaim) human = human.filter((h) => h.claim.toLowerCase().includes(onlyClaim.toLowerCase()));
+} else {
+  if (!onlyClaim) {
+    console.error(`${HUMAN} does not exist, so there is no sample to match.`);
+    console.error(`Pass --claim <substring> to say which claim to rate, or the whole run is ${valid.size} calls.`);
+    process.exit(1);
+  }
+  human = [];
+  for (const c of CASES) {
+    if (!messages.has(c.id)) continue;
+    const extra = inputClaims(c.context, c.options);
+    for (const { claim, kind } of claimsFor(c.failureClass, extra.must, extra.mustNot)) {
+      if (claim.toLowerCase().includes(onlyClaim.toLowerCase())) human.push({ id: c.id, claim, kind });
+    }
+  }
+}
+
 for (const h of human) {
   if (!valid.has(`${h.id}\u0000${h.claim}`)) {
     console.error(`${h.id}: "${h.claim}" is not a claim for that case. The claim set has moved.`);
     process.exit(1);
   }
+}
+if (!human.length) {
+  console.error(`Nothing matched. Check --claim against the claims in cases.ts.`);
+  process.exit(1);
 }
 
 const labels: Label[] = existsSync(OUT) ? JSON.parse(readFileSync(OUT, "utf8")) : [];

@@ -1,0 +1,58 @@
+[
+  {
+    "id": "cancelled-netbanking-noname",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T14:49:26.340Z"
+  },
+  {
+    "id": "cancelled-card-named",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T14:49:34.599Z"
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T14:49:37.337Z"
+  },
+  {
+    "id": "cancelled-upi-named",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "no",
+    "at": "2026-10-07T14:49:42.441Z"
+  },
+  {
+    "id": "cancelled-wallet-noname",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "no",
+    "at": "2026-10-07T14:49:47.397Z"
+  },
+  {
+    "id": "cancelled-netbanking-named",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T14:49:51.078Z"
+  },
+  {
+    "id": "cancelled-card-noname",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T14:49:54.123Z"
+  },
+  {
+    "id": "cancelled-wallet-named",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "no",
+    "at": "2026-10-07T14:49:57.002Z"
+  }
+]

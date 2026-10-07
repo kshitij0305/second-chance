@@ -1,0 +1,58 @@
+[
+  {
+    "id": "cancelled-card-noname",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states there is no obligation to pay."
+  },
+  {
+    "id": "cancelled-card-named",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The text explicitly states there is no obligation to pay"
+  },
+  {
+    "id": "cancelled-netbanking-noname",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states there is no obligation to pay"
+  },
+  {
+    "id": "cancelled-netbanking-named",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The phrase 'No obligation on your part' explicitly states there is no obligation to pay"
+  },
+  {
+    "id": "cancelled-wallet-noname",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "no",
+    "reason": "The text does not explicitly state that there is no obligation to pay"
+  },
+  {
+    "id": "cancelled-wallet-named",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "no",
+    "reason": "The text does not explicitly state there is no obligation to pay"
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states there is no obligation to pay"
+  },
+  {
+    "id": "cancelled-upi-named",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "no",
+    "reason": "The text does not explicitly state there is no obligation to pay"
+  }
+]
