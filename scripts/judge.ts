@@ -51,12 +51,16 @@ for (const result of results) {
     const { answer, reason } = await ask(result.template, input, claim);
     const pass = passes(kind, answer);
     verdicts.push({ id: result.id, claim, kind, answer, pass, reason });
+    // Written as they arrive, not after the loop. A run of this once died on a
+    // rate limit at 110 of 492 judgements and lost every one of them, because
+    // the only write was at the end. 492 calls is most of a day's free tier, so
+    // the cost of losing them is the rest of the day.
+    writeFileSync("judge_results.json", JSON.stringify(verdicts, null, 2));
     process.stdout.write(pass ? "." : "F");
   }
 }
 
 console.log();
-writeFileSync("judge_results.json", JSON.stringify(verdicts, null, 2));
 
 const failed = verdicts.filter((v) => !v.pass);
 console.log(`${verdicts.length} judgements, ${failed.length} failed`);

@@ -60,8 +60,14 @@ export const CLASS_RULES: Record<FailureClass, MatchRule> = {
   },
   "authentication_abandoned": {
     //They were partway through paying and the verification step did not complete. Be brief and low-friction — they were seconds from done.
-    must: [ 
-        "states that the verification step did not complete",
+    must: [
+        // Was "states that the verification step did not complete". Two raters
+        // split on it twice, both times over wording rather than meaning: one
+        // read "the verification step failed" as not satisfying "did not
+        // complete", and "did not complete due to a verification step" left
+        // ambiguous which of the two things failed to complete. This asks where
+        // the payment stopped, which is what the INTENT actually wants said.
+        "says the payment stopped at a verification or authentication step",
     ],
     mustNot: []
   },
@@ -70,7 +76,15 @@ export const CLASS_RULES: Record<FailureClass, MatchRule> = {
     // No claim that the message says who cancelled: the INTENT asks for light and
     // unpushy, and naming them cuts against that. 6 of 8 failed it before it went.
     must: [
-       "makes clear there is no obligation to pay",
+       // Was "makes clear there is no obligation to pay". "Makes clear" is a
+       // claim about what a reader concludes, and the judge is told to answer
+       // only what is true of the message as written — so the claim asked for
+       // the one inference the prompt forbids. In practice it was answerable
+       // only when the composer happened to say the words: on "there is no
+       // obligation to pay" all three raters agreed, on "if you wish to
+       // proceed" they split three ways. That measured the generator's
+       // explicitness, not the message.
+       "says that paying is optional or that no action is required",
        "leaves the option open to pay later"
     ],
     mustNot: [

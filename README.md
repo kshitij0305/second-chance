@@ -392,19 +392,44 @@ Two claims were then deleted rather than satisfied. Both asked for something no
 determined, that a `cancelled` message name who cancelled — so the model never
 complied and the claim was measuring an intention nobody had stated.
 
-That leaves five failures in 492 judgements, down from 32. Three are one claim:
-three of eight `customer_cancelled` messages never say in so many words that
-there is no obligation to pay, which the `INTENT` asks for and the model supplies
-the other five times. The remaining two are the judge being wrong — it read "this
-method will likely keep failing", which `instrument_rejected` explicitly requires,
-as criticism of the customer, and it split hairs over whether a message saying a
-payment stopped at verification states that verification did not complete. Both
-are defensible readings and both are wrong, and they are the first genuine
-disagreements between the judge and a human across three runs.
+That left five failures in 492, down from 32. Three were one claim — three of
+eight `customer_cancelled` messages never said in so many words that there is no
+obligation to pay. The other two were the judge being wrong: it read "this method
+will likely keep failing", which `instrument_rejected` explicitly requires, as
+criticism of the customer, and it split hairs over whether a message saying a
+payment stopped at verification states that verification did not complete.
+
+Those two claims were then reworded, and the agreement work below is what
+diagnosed them. `states that the verification step did not complete` turned on a
+synonym — raters divided over whether "the verification step failed" satisfies
+"did not complete" — and on which of two things had failed to complete, since
+"did not complete due to a verification step" is about the payment. It now reads
+`says the payment stopped at a verification or authentication step`.
+
+`makes clear there is no obligation to pay` was worse. "Makes clear" describes
+what a reader concludes, and the judge is told to answer only what is true of the
+message as written, so the claim asked for the one inference the prompt forbids.
+In practice it was answerable only when the composer happened to use the words:
+on "there is no obligation to pay" three independent raters agreed, on "if you
+wish to proceed" they split three ways. It measured the generator's explicitness
+rather than the message, and now reads `says that paying is optional or that no
+action is required`.
+
+**Two failures in 492 after that, and the accounting is not "rewording fixed
+three".** The verification claim went to zero over eight cases and that one is
+genuinely fixed. `criticises the customer` also went to zero — but every
+`instrument_rejected` message in the run still says "will keep declining", the
+exact phrasing that tripped it before, so that is the intermittent tension
+failing to fire rather than a fix. The two remaining failures are the obligation
+claim, and they are real: six of eight `cancelled` messages say paying is
+optional and two say only "No issue on your side" or nothing at all. The same
+2-to-3-of-8 gap appeared under the old wording, which is what makes it the
+product rather than the rubric.
 
 The direction is the point. The card wording was the product's fault and the
-prompt changed; those two were the eval's fault and the eval changed. An eval
-that always blames the thing under test is as useless as one that never does.
+prompt changed; the two claims above were the eval's fault and the eval changed.
+An eval that always blames the thing under test is as useless as one that never
+does.
 
 What it cannot tell you yet:
 
@@ -412,6 +437,10 @@ What it cannot tell you yet:
   number below rests on 100 labels from a single person who could not un-know
   what each rule was for. A second independent rater is the missing control, and
   the two disagreements suggest exactly why.
+- **The control covers one failure class of six.** All six planted failures are
+  `insufficient_funds`, so a green `judge:planted` says the judge catches
+  violations of that class's claims and nothing about the other five. Neither
+  reworded claim can be validated by it at all.
 - **The judge is not independent.** Same model family as the composer, one size
   up. Better than self-grading, short of a real second opinion.
 - **One run a day.** About 180,000 tokens against a 200,000 daily free tier. One
