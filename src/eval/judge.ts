@@ -62,9 +62,21 @@ export function claimsFor(
   ];
 }
 
-export async function ask(message: string, input: string, claim: string): Promise<Judgement> {
+/**
+ * `model` exists so a second model can be asked the identical question as an
+ * independent rater. It defaults to the judge, so every existing caller is
+ * unchanged. Anything scored with a non-default model is model-to-model
+ * agreement and has to be reported as that — it is not a human opinion and
+ * does not substitute for one.
+ */
+export async function ask(
+  message: string,
+  input: string,
+  claim: string,
+  model: string = JUDGE_MODEL,
+): Promise<Judgement> {
   const completion = await groq().chat.completions.create({
-    model: JUDGE_MODEL,
+    model,
     temperature: 0,
     reasoning_effort: "low",
     max_completion_tokens: 512,

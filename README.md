@@ -488,6 +488,34 @@ only the long tail             n= 33  po=97.0%  pe=59.0%  kappa=0.926
 Strip out every claim where the answer was a foregone conclusion and 42 items
 remain at 0.889. Lower, as it should be, and still high.
 
+A third rater was then run as an experiment — `npm run label:model`, which asks a
+model from a different family the same 100 questions. Qwen3.8-27b against the
+judge's gpt-oss-120b:
+
+```
+human vs judge (gpt-oss-120b)        po= 98.0%  kappa=0.959
+human vs qwen3.8-27b                 po= 98.0%  kappa=0.959
+judge vs qwen3.8-27b  [model-model]  po=100.0%  kappa=1.000
+```
+
+The two models agreed on all 100 items, and both disagreed with the human on
+exactly the same two — the two described above. So those two are corroborated by
+independent raters rather than by one person's second look, and no claim in the
+sample was read two ways by two unrelated families, which is a real check on the
+rubric's wording.
+
+It changes the single-rater caveat less than it appears to. A kappa of 1.000
+between two models is equally the signature of correlated error: models trained
+on overlapping text can share a reading no human would reach, and perfect
+agreement is the absence of detectable disagreement rather than evidence of
+correctness. The only rater who disagreed with anything is still the one human,
+and he wrote the claims.
+
+The more actionable result is that a 27b model matched a 120b exactly. A run is
+492 judgements and most of a day's free tier, so if that holds over the full set
+the judge is over-specced — which is a cost question worth testing properly
+rather than inferring from a hundred items.
+
 It is also worth saying what number would have been suspicious. The published
 LLM-as-judge agreement figures in the 0.6 to 0.8 range come from open-ended
 preference ranking over free-form answers. This asks a binary presence question

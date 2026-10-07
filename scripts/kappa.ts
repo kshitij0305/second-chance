@@ -14,7 +14,7 @@
  * mustNot claims are correctly answered "no" — a side effect of hiding polarity
  * from the judge that happens to make this statistic work.
  */
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { cohensKappa, describeKappa, type Answer, type Agreement } from "../src/eval/kappa.ts";
 import { passes, type ClaimKind } from "../src/eval/judge.ts";
 
@@ -147,4 +147,49 @@ for (const { label, judge } of disagreements) {
   console.log(`  ${label.id}`);
   console.log(`    the message ${label.claim}`);
   console.log(`    human ${label.answer}   judge ${judge.answer}\n`);
+}
+
+// A third rater, if one has been run. Any model_labels_*.json in the snapshot
+// is picked up; npm run label:model writes them.
+const extra = readdirSync(SNAPSHOT).filter((f) => f.startsWith("model_labels_"));
+for (const file of extra) {
+  const rows: { id: string; claim: string; answer: string }[] =
+    JSON.parse(readFileSync(`${SNAPSHOT}/${file}`, "utf8"));
+  const name = file.replace(/^model_labels_|\.json$/g, "");
+
+  // Only items all three rated, and only where the third rater's answer parsed.
+  const third = new Map(rows.filter((r) => r.answer === "yes" || r.answer === "no").map((r) => [`${r.id}\u0000${r.claim}`, r.answer as Answer]));
+  const three = pairs.filter((p) => third.has(`${p.label.id}\u0000${p.label.claim}`));
+  if (three.length < 2) continue;
+
+  const t = three.map((p) => third.get(`${p.label.id}\u0000${p.label.claim}`)!);
+  const h = three.map((p) => p.label.answer);
+  const j = three.map((p) => p.judge.answer as Answer);
+
+  console.log(`\n\nA third rater: ${name}`);
+  console.log("─".repeat(72));
+  console.log(
+    `${three.length} of ${pairs.length} items, scored three ways. This is an experiment in\n` +
+      `claim ambiguity, not a second human opinion — where two unrelated model\n` +
+      `families read a claim differently, the claim is the thing at fault.\n`,
+  );
+  const line = (what: string, a: Answer[], b: Answer[]) => {
+    const r = cohensKappa(a, b);
+    const k = Number.isNaN(r.kappa) ? "undefined" : r.kappa.toFixed(3);
+    console.log(`   ${what.padEnd(34)} po=${(100 * r.po).toFixed(1)}%  kappa=${k}`);
+  };
+  line("human vs judge (gpt-oss-120b)", h, j);
+  line(`human vs ${name}`, h, t);
+  line(`judge vs ${name}  [model-model]`, j, t);
+
+  const split = three.filter((_, i) => j[i] !== t[i]);
+  if (split.length) {
+    console.log(`\n   ${split.length} claims the two models read differently:\n`);
+    for (const [i, p] of three.entries()) {
+      if (j[i] === t[i]) continue;
+      console.log(`     ${p.label.id}`);
+      console.log(`       the message ${p.label.claim}`);
+      console.log(`       human ${h[i]}   judge ${j[i]}   ${name} ${t[i]}\n`);
+    }
+  }
 }

@@ -23,7 +23,8 @@
     "judge": "tsx scripts/judge.ts",
     "judge:planted": "tsx scripts/judge-planted.ts",
     "label": "tsx scripts/label.ts",
-    "kappa": "tsx scripts/kappa.ts"
+    "kappa": "tsx scripts/kappa.ts",
+    "label:model": "tsx scripts/label-model.ts"
   },
   "dependencies": {
     "dotenv": "^17.2.3",
