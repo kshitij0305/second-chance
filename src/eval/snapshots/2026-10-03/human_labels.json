@@ -698,5 +698,117 @@
     "kind": "must",
     "answer": "yes",
     "at": "2026-10-07T13:50:46.459Z"
+  },
+  {
+    "id": "cancelled-netbanking-noname",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T14:26:26.780Z"
+  },
+  {
+    "id": "cancelled-card-named",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T14:26:37.800Z"
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T14:26:48.356Z"
+  },
+  {
+    "id": "cancelled-upi-named",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T14:26:52.622Z"
+  },
+  {
+    "id": "cancelled-wallet-noname",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T14:26:59.752Z"
+  },
+  {
+    "id": "cancelled-netbanking-named",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T14:27:08.560Z"
+  },
+  {
+    "id": "cancelled-card-noname",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "no",
+    "at": "2026-10-07T14:27:18.451Z"
+  },
+  {
+    "id": "cancelled-wallet-named",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T14:27:24.107Z"
+  },
+  {
+    "id": "auth-netbanking-noname",
+    "claim": "states that the verification step did not complete",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T14:27:49.662Z"
+  },
+  {
+    "id": "auth-card-named",
+    "claim": "states that the verification step did not complete",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T14:27:53.761Z"
+  },
+  {
+    "id": "auth-upi-noname",
+    "claim": "states that the verification step did not complete",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T14:27:59.927Z"
+  },
+  {
+    "id": "auth-upi-named",
+    "claim": "states that the verification step did not complete",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T14:28:04.777Z"
+  },
+  {
+    "id": "auth-wallet-noname",
+    "claim": "states that the verification step did not complete",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T14:28:08.271Z"
+  },
+  {
+    "id": "auth-netbanking-named",
+    "claim": "states that the verification step did not complete",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T14:28:12.450Z"
+  },
+  {
+    "id": "auth-card-noname",
+    "claim": "states that the verification step did not complete",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T14:28:16.078Z"
+  },
+  {
+    "id": "auth-wallet-named",
+    "claim": "states that the verification step did not complete",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T14:28:18.796Z"
   }
 ]

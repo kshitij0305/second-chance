@@ -698,5 +698,117 @@
     "kind": "must",
     "answer": "yes",
     "reason": "The message states 'The same method should work' and provides a link to try again, which invites them to retry the same payment method."
+  },
+  {
+    "id": "cancelled-netbanking-noname",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'No obligation to pay now.'"
+  },
+  {
+    "id": "cancelled-card-named",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The phrase 'if you wish to proceed' presents retrying as optional, making clear there is no obligation to pay."
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "no",
+    "reason": "The message encourages a retry of the payment and does not state or imply that there is no obligation to pay."
+  },
+  {
+    "id": "cancelled-upi-named",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'There is no obligation to pay now.'"
+  },
+  {
+    "id": "cancelled-wallet-noname",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'You are under no obligation to pay.'"
+  },
+  {
+    "id": "cancelled-netbanking-named",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "no",
+    "reason": "The message states 'No action is required on your part' but does not explicitly state there is no obligation to pay; it even offers a link to retry the payment."
+  },
+  {
+    "id": "cancelled-card-noname",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "no",
+    "reason": "The message encourages the user to complete the payment and does not state that there is no obligation to pay."
+  },
+  {
+    "id": "cancelled-wallet-named",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'You're not obliged to pay.'"
+  },
+  {
+    "id": "auth-netbanking-noname",
+    "claim": "states that the verification step did not complete",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message states the payment was 'interrupted during netbanking verification,' which means the verification step did not complete."
+  },
+  {
+    "id": "auth-card-named",
+    "claim": "states that the verification step did not complete",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message says the payment was 'stopped during card verification,' which indicates the verification step did not complete."
+  },
+  {
+    "id": "auth-upi-noname",
+    "claim": "states that the verification step did not complete",
+    "kind": "must",
+    "answer": "no",
+    "reason": "The message states the verification step 'failed,' not that it 'did not complete.'"
+  },
+  {
+    "id": "auth-upi-named",
+    "claim": "states that the verification step did not complete",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states the payment 'did not complete during the verification step,' which means the verification step did not complete."
+  },
+  {
+    "id": "auth-wallet-noname",
+    "claim": "states that the verification step did not complete",
+    "kind": "must",
+    "answer": "no",
+    "reason": "The message states that the payment did not complete due to a verification step, not that the verification step itself did not complete."
+  },
+  {
+    "id": "auth-netbanking-named",
+    "claim": "states that the verification step did not complete",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message states the payment was 'interrupted during verification,' which means the verification step did not complete."
+  },
+  {
+    "id": "auth-card-noname",
+    "claim": "states that the verification step did not complete",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message states the payment 'was interrupted during the verification step and did not complete,' which directly indicates the verification step did not complete."
+  },
+  {
+    "id": "auth-wallet-named",
+    "claim": "states that the verification step did not complete",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message states the payment was 'interrupted during verification,' which means the verification step did not complete."
   }
 ]
