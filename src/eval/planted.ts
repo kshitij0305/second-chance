@@ -83,5 +83,89 @@ export const PLANTED: PlantedCase[] = [
     options: { steerToAnotherMethod: false },
     template: "you transaction of {{amount}} couldnt be completed, once you've topped up, you can try again here {{link}} ",
     breaks: "states or implies the payment failed for lack of money"
+    },
+    // One per failure class from here down. The six above are all
+    // insufficient_funds, so a green run said the judge catches violations of
+    // that class's claims and nothing at all about the other five.
+    //
+    // Each starts from a message that passed in a real eval run and changes one
+    // phrase, which is the only method that reliably breaks exactly one claim.
+    {
+    id: "not-temporary-case",
+    failureClass: "transient_provider",
+    context: {
+        link: "https://rzp.io",
+        method: "card",
+        amount: "₹1,200"
+    },
+    options: { steerToAnotherMethod: false },
+    // "a temporary issue on the provider side" with the word temporary removed.
+    // Attribution to the provider rides on "on the provider side" and survives;
+    // only the temporariness goes.
+    template: "Hi, the {{amount}} payment did not go through due to an issue on the provider side. Nothing is wrong with your card. You can try the same card again here: {{link}}",
+    breaks: "says the problem is temporary"
+    },
+    {
+    id: "no-bank-named-case",
+    failureClass: "instrument_rejected",
+    context: {
+        link: "https://rzp.io",
+        method: "card",
+        amount: "₹2,400"
+    },
+    options: { steerToAnotherMethod: true },
+    // Drops the bank as the actor and keeps the permanence. Doing it the other
+    // way round — removing "will keep being refused" — breaks two claims, since
+    // "will not go through" and "will keep being refused" are both carried by
+    // that one phrase. That coupling is why this class gets this break and not
+    // the more obvious one.
+    template: "Hi, the {{amount}} payment on your card was refused and will keep being refused. Please use a different payment method here: {{link}}",
+    breaks: "states that the bank refused this payment method"
+    },
+    {
+    id: "no-verification-mentioned-case",
+    failureClass: "authentication_abandoned",
+    context: {
+        link: "https://rzp.io",
+        method: "card",
+        amount: "₹640"
+    },
+    options: { steerToAnotherMethod: false },
+    // "stopped during verification" becomes "did not finish". The class has a
+    // single claim, so there is nothing else to collide with.
+    template: "Hi, the {{amount}} payment on your card did not finish. The same card should work now. You can retry here: {{link}}",
+    breaks: "says the payment stopped at a verification or authentication step"
+    },
+    {
+    id: "pressure-case",
+    failureClass: "customer_cancelled",
+    context: {
+        link: "https://rzp.io",
+        method: "card",
+        amount: "₹999"
+    },
+    options: { steerToAnotherMethod: false },
+    // Keeps "no obligation" so the optionality claim still holds, and adds
+    // urgency rather than a deadline, so the option to pay later survives too.
+    // The prose contradicts itself; that is what planting a single break costs
+    // here, and a judge reading the contradiction as cancelling the optionality
+    // would show up as collateral rather than as a miss.
+    template: "Hi, the {{amount}} payment was cancelled on your card. There is no obligation to complete it, but please complete it at the earliest. You can do so here: {{link}}",
+    breaks: "pressures the customer to complete the payment"
+    },
+    {
+    id: "speculation-case",
+    failureClass: "unknown",
+    context: {
+        link: "https://rzp.io",
+        method: "card",
+        amount: "₹1,750"
+    },
+    options: { steerToAnotherMethod: false },
+    // "The issue could not be determined" replaced with a guess. It blames the
+    // bank rather than the customer, so it should not also trip the universal
+    // rule against criticising them.
+    template: "Hi, the {{amount}} payment did not go through with your card, most likely because your bank flagged it as unusual. You can try the same card again here: {{link}}",
+    breaks: "speculates about why the payment failed"
     }
 ];

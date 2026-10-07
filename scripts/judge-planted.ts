@@ -71,11 +71,13 @@ for (const p of PLANTED) {
     collateral: verdicts.filter((v) => !v.pass && v.claim !== p.breaks).map((v) => v.claim),
     verdicts,
   });
+  // Written per case, not after the loop. Eleven cases is 91 calls and a rate
+  // limit partway through used to lose all of them.
+  writeFileSync("judge_planted_results.json", JSON.stringify(outcomes, null, 2));
   process.stdout.write(target.pass ? "M" : ".");
 }
 
 console.log("\n");
-writeFileSync("judge_planted_results.json", JSON.stringify(outcomes, null, 2));
 
 for (const o of outcomes) {
   console.log(`${o.caught ? "caught" : "MISSED"}  ${o.id}`);
