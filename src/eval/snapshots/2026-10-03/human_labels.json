@@ -1,0 +1,702 @@
+[
+  {
+    "id": "transient-upi-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T10:57:08.196Z"
+  },
+  {
+    "id": "rejected-card-noname",
+    "claim": "states that the payment method they used will not go through",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T10:57:41.267Z"
+  },
+  {
+    "id": "rejected-upi-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "yes",
+    "at": "2026-10-07T10:59:58.930Z"
+  },
+  {
+    "id": "cancelled-netbanking-named",
+    "claim": "leaves the option open to pay later",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T11:00:21.611Z"
+  },
+  {
+    "id": "cancelled-netbanking-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T11:00:43.500Z"
+  },
+  {
+    "id": "cancelled-card-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T11:01:03.736Z"
+  },
+  {
+    "id": "insuf-card-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T11:01:21.140Z"
+  },
+  {
+    "id": "unknown-upi-noname-nosteer",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T11:01:34.966Z"
+  },
+  {
+    "id": "unknown-card-named-steer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T11:01:53.036Z"
+  },
+  {
+    "id": "unknown-card-named-nosteer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T11:02:11.472Z"
+  },
+  {
+    "id": "auth-wallet-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T11:02:28.795Z"
+  },
+  {
+    "id": "auth-upi-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T11:02:45.377Z"
+  },
+  {
+    "id": "cancelled-card-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T11:03:02.864Z"
+  },
+  {
+    "id": "unknown-card-named-steer",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T11:03:16.054Z"
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T11:03:32.819Z"
+  },
+  {
+    "id": "unknown-wallet-noname-nosteer",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T11:03:43.617Z"
+  },
+  {
+    "id": "insuf-upi-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T11:03:56.644Z"
+  },
+  {
+    "id": "rejected-netbanking-named",
+    "claim": "states that the bank refused this payment method",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T11:04:14.833Z"
+  },
+  {
+    "id": "rejected-netbanking-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T11:04:30.981Z"
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T11:04:48.110Z"
+  },
+  {
+    "id": "auth-card-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T11:04:59.626Z"
+  },
+  {
+    "id": "transient-card-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T11:05:06.640Z"
+  },
+  {
+    "id": "insuf-upi-noname",
+    "claim": "states or implies the payment failed for lack of money",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T11:05:13.841Z"
+  },
+  {
+    "id": "cancelled-netbanking-noname",
+    "claim": "pressures the customer to complete the payment",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T11:05:29.014Z"
+  },
+  {
+    "id": "unknown-upi-named-steer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:39:42.402Z"
+  },
+  {
+    "id": "transient-card-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:39:56.300Z"
+  },
+  {
+    "id": "unknown-upi-noname-steer",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:40:03.946Z"
+  },
+  {
+    "id": "unknown-card-named-nosteer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:40:20.302Z"
+  },
+  {
+    "id": "cancelled-wallet-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:40:30.905Z"
+  },
+  {
+    "id": "rejected-netbanking-noname",
+    "claim": "states that the bank refused this payment method",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:40:40.039Z"
+  },
+  {
+    "id": "unknown-card-named-steer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:40:45.925Z"
+  },
+  {
+    "id": "rejected-upi-named",
+    "claim": "states that the bank refused this payment method",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:40:52.391Z"
+  },
+  {
+    "id": "unknown-wallet-noname-nosteer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:41:04.100Z"
+  },
+  {
+    "id": "rejected-card-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:41:10.718Z"
+  },
+  {
+    "id": "unknown-upi-named-nosteer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:41:20.378Z"
+  },
+  {
+    "id": "cancelled-upi-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:41:28.376Z"
+  },
+  {
+    "id": "unknown-wallet-named-steer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:41:32.160Z"
+  },
+  {
+    "id": "unknown-netbanking-noname-steer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:41:38.120Z"
+  },
+  {
+    "id": "auth-wallet-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:41:43.726Z"
+  },
+  {
+    "id": "rejected-wallet-named",
+    "claim": "states that the bank refused this payment method",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:41:52.289Z"
+  },
+  {
+    "id": "transient-upi-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:42:10.489Z"
+  },
+  {
+    "id": "insuf-upi-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:42:21.862Z"
+  },
+  {
+    "id": "unknown-upi-named-steer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:42:32.024Z"
+  },
+  {
+    "id": "transient-netbanking-named",
+    "claim": "reassures the customer that nothing is wrong with the payment method they used",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:42:37.574Z"
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "claim": "pressures the customer to complete the payment",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:42:46.047Z"
+  },
+  {
+    "id": "unknown-upi-noname-nosteer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:42:52.984Z"
+  },
+  {
+    "id": "cancelled-upi-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:43:00.403Z"
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:43:06.821Z"
+  },
+  {
+    "id": "cancelled-wallet-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:43:15.679Z"
+  },
+  {
+    "id": "insuf-card-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:43:21.079Z"
+  },
+  {
+    "id": "rejected-card-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:43:24.929Z"
+  },
+  {
+    "id": "transient-wallet-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:43:47.480Z"
+  },
+  {
+    "id": "transient-upi-named",
+    "claim": "attributes the failure to the payment provider",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:43:51.938Z"
+  },
+  {
+    "id": "rejected-netbanking-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:43:57.036Z"
+  },
+  {
+    "id": "cancelled-card-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:44:03.170Z"
+  },
+  {
+    "id": "auth-wallet-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:44:08.568Z"
+  },
+  {
+    "id": "rejected-card-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:44:17.961Z"
+  },
+  {
+    "id": "unknown-netbanking-noname-steer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:44:23.323Z"
+  },
+  {
+    "id": "transient-wallet-noname",
+    "claim": "states or implies the payment failed due to problem from user side",
+    "kind": "mustNot",
+    "answer": "yes",
+    "at": "2026-10-07T13:44:31.701Z"
+  },
+  {
+    "id": "auth-netbanking-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:44:44.473Z"
+  },
+  {
+    "id": "unknown-card-noname-nosteer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:45:04.571Z"
+  },
+  {
+    "id": "unknown-card-noname-steer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:45:12.584Z"
+  },
+  {
+    "id": "auth-netbanking-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:45:19.217Z"
+  },
+  {
+    "id": "unknown-upi-named-nosteer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:45:25.526Z"
+  },
+  {
+    "id": "transient-netbanking-named",
+    "claim": "says the problem is temporary",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:45:37.730Z"
+  },
+  {
+    "id": "unknown-upi-named-steer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:45:42.558Z"
+  },
+  {
+    "id": "rejected-netbanking-named",
+    "claim": "says this payment method will keep being refused",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:45:50.845Z"
+  },
+  {
+    "id": "unknown-wallet-named-nosteer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:45:56.987Z"
+  },
+  {
+    "id": "cancelled-netbanking-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:46:03.849Z"
+  },
+  {
+    "id": "transient-card-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:46:23.121Z"
+  },
+  {
+    "id": "unknown-card-noname-steer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:46:32.701Z"
+  },
+  {
+    "id": "cancelled-card-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:46:43.602Z"
+  },
+  {
+    "id": "transient-netbanking-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:46:56.352Z"
+  },
+  {
+    "id": "cancelled-netbanking-noname",
+    "claim": "leaves the option open to pay later",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:47:01.613Z"
+  },
+  {
+    "id": "rejected-wallet-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:47:07.047Z"
+  },
+  {
+    "id": "transient-wallet-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:47:14.241Z"
+  },
+  {
+    "id": "insuf-card-noname",
+    "claim": "states or implies the payment failed for lack of money",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:47:22.341Z"
+  },
+  {
+    "id": "auth-card-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:47:31.035Z"
+  },
+  {
+    "id": "rejected-upi-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:47:36.840Z"
+  },
+  {
+    "id": "unknown-wallet-named-nosteer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:47:52.558Z"
+  },
+  {
+    "id": "unknown-upi-noname-nosteer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:48:10.516Z"
+  },
+  {
+    "id": "transient-wallet-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:48:13.259Z"
+  },
+  {
+    "id": "rejected-upi-noname",
+    "claim": "says this payment method will keep being refused",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:48:17.861Z"
+  },
+  {
+    "id": "unknown-wallet-named-nosteer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:48:25.405Z"
+  },
+  {
+    "id": "auth-wallet-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:48:37.671Z"
+  },
+  {
+    "id": "rejected-wallet-noname",
+    "claim": "states that the payment method they used will not go through",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:48:43.951Z"
+  },
+  {
+    "id": "unknown-netbanking-noname-steer",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:48:47.979Z"
+  },
+  {
+    "id": "cancelled-wallet-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:48:51.926Z"
+  },
+  {
+    "id": "transient-wallet-noname",
+    "claim": "says the problem is temporary",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:48:56.102Z"
+  },
+  {
+    "id": "unknown-wallet-noname-nosteer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:49:04.548Z"
+  },
+  {
+    "id": "rejected-upi-noname",
+    "claim": "states that the payment method they used will not go through",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:49:20.691Z"
+  },
+  {
+    "id": "transient-netbanking-named",
+    "claim": "invites them to try the same payment method again",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:49:26.710Z"
+  },
+  {
+    "id": "insuf-wallet-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:49:31.444Z"
+  },
+  {
+    "id": "rejected-card-named",
+    "claim": "says this payment method will keep being refused",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:49:41.167Z"
+  },
+  {
+    "id": "transient-netbanking-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:49:44.653Z"
+  },
+  {
+    "id": "insuf-upi-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:50:00.615Z"
+  },
+  {
+    "id": "rejected-card-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "at": "2026-10-07T13:50:11.332Z"
+  },
+  {
+    "id": "unknown-upi-named-steer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:50:32.528Z"
+  },
+  {
+    "id": "transient-upi-noname",
+    "claim": "reassures the customer that nothing is wrong with the payment method they used",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:50:42.278Z"
+  },
+  {
+    "id": "transient-upi-noname",
+    "claim": "invites them to try the same payment method again",
+    "kind": "must",
+    "answer": "yes",
+    "at": "2026-10-07T13:50:46.459Z"
+  }
+]

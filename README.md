@@ -408,10 +408,10 @@ that always blames the thing under test is as useless as one that never does.
 
 What it cannot tell you yet:
 
-- **No agreement number.** Cohen's kappa needs enough disagreement to be worth
-  computing, and three runs have produced two. Two is a sign the judge is roughly
-  calibrated, not a measurement. Enough disagreement to count arrives when a
-  smaller model starts failing in ways worth arguing about.
+- **One human rater, and he is the one who wrote the claims.** The agreement
+  number below rests on 100 labels from a single person who could not un-know
+  what each rule was for. A second independent rater is the missing control, and
+  the two disagreements suggest exactly why.
 - **The judge is not independent.** Same model family as the composer, one size
   up. Better than self-grading, short of a real second opinion.
 - **One run a day.** About 180,000 tokens against a 200,000 daily free tier. One
@@ -422,6 +422,54 @@ What it cannot tell you yet:
   criticising the customer. The judge treated the first as a breach of the second
   once in eight cases. It is the `customer_cancelled` contradiction again, firing
   intermittently rather than always, and it has not been resolved.
+
+### How well the judge agrees with a human
+
+A run of the eval was frozen — 56 messages and the 492 judgements over them — and
+100 of those judgements were labelled by hand, blind. `npm run label` derives its
+claim list from `cases.ts` and never opens the judge's output, so there is no
+path by which a verdict reaches the screen. It also withholds whether a claim is
+required or forbidden, because the judge is not told either, and it shows the
+rater the judge's own system prompt. Two raters answering differently worded
+questions disagree about the question, not the message.
+
+`npm run kappa` scores the result on both of the scales available, and they do
+not agree with each other:
+
+```
+Rating the raw answer                Rating pass/fail
+  observed agreement   98.0%           observed agreement   98.0%
+  expected by chance   50.7%           expected by chance   98.0%
+  kappa                0.959           kappa                0.000
+  prevalence index     0.120           prevalence index     0.980
+```
+
+Same 100 items, same two raters, same 98% agreement. One scale says almost
+perfect and the other says indistinguishable from guessing.
+
+Both are arithmetically correct. On the pass/fail scale 98 of 100 items land in
+one category, so two raters who rubber-stamped everything would agree 98% of the
+time by construction; there is no headroom above chance and kappa divides by
+nothing. That is the paradox Feinstein and Cicchetti described in 1990, and it is
+the reason percent agreement is not worth quoting on its own.
+
+The raw answer avoids it for a reason that was not designed in. Because the judge
+is asked "is this property present" and never told the polarity, `mustNot` claims
+are correctly answered *no* — so the answers split 45/55 even though the outcomes
+split 98/2. Hiding polarity was meant to stop the model telling us what we wanted
+to hear. It also happens to be what makes this measurable.
+
+**The two disagreements are the more useful result, and the judge won both.** One
+message contained no name at all and was marked as inventing one; another said
+"nothing is wrong with your wallet" and was marked as blaming the user. Both are
+`mustNot` claims, both errors run the same direction, and both are the human
+answering "is this rule satisfied" instead of "is this property present". The
+polarity hiding that protects the model does not protect the person who wrote the
+rules and cannot un-know what they are for.
+
+So 0.959 is a floor rather than a ceiling, and it is one rater's floor. The honest
+reading is that the judge is at least as careful as the person who specified it,
+on a sample where that person made two mistakes and it made none.
 
 ## What this can and cannot demonstrate
 
