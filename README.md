@@ -471,6 +471,31 @@ So 0.959 is a floor rather than a ceiling, and it is one rater's floor. The hone
 reading is that the judge is at least as careful as the person who specified it,
 on a sample where that person made two mistakes and it made none.
 
+A kappa that high invites the question of whether it is resting on items where
+one answer was never in doubt, and it partly is. Seven claims got the same human
+answer every time, covering 58 of the 100 labels — every message offers a way to
+pay, none criticises the customer, because the prompt forbids it and the model
+complies. Those are agreement without discrimination. `npm run kappa` finds them
+from the data rather than from a list, and recomputes without them:
+
+```
+everything                     n=100  po=98.0%  pe=50.7%  kappa=0.959
+without the invariant claims   n= 42  po=95.2%  pe=57.1%  kappa=0.889
+only the four biggest claims   n= 67  po=98.5%  pe=57.5%  kappa=0.965
+only the long tail             n= 33  po=97.0%  pe=59.0%  kappa=0.926
+```
+
+Strip out every claim where the answer was a foregone conclusion and 42 items
+remain at 0.889. Lower, as it should be, and still high.
+
+It is also worth saying what number would have been suspicious. The published
+LLM-as-judge agreement figures in the 0.6 to 0.8 range come from open-ended
+preference ranking over free-form answers. This asks a binary presence question
+about a 300-character message produced under a prompt that forbids most of the
+ways it could go wrong. Narrow task, formulaic text, little room to read two
+ways. A middling kappa here would be evidence the claims were ambiguous, not
+evidence of rigour.
+
 ## What this can and cannot demonstrate
 
 Worth stating plainly, because it shapes what the code does.

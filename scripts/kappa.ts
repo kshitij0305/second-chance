@@ -94,6 +94,51 @@ report(
   ),
 );
 
+// A kappa this high invites the question of whether it rests on items where one
+// answer was never in doubt. Rather than assert it does not, recompute without
+// them. Invariant claims are found from the data, not listed, so this stays
+// correct as more labels arrive.
+const perClaim = new Map<string, Set<Answer>>();
+for (const p of pairs) {
+  const seen = perClaim.get(p.label.claim) ?? new Set<Answer>();
+  seen.add(p.label.answer);
+  perClaim.set(p.label.claim, seen);
+}
+const counts = new Map<string, number>();
+for (const p of pairs) counts.set(p.label.claim, (counts.get(p.label.claim) ?? 0) + 1);
+// Constant *and* sampled enough times for the constancy to be an observation.
+// A claim with one label is trivially constant, and dropping those would be
+// throwing away the thinnest claims for a property of the sample size.
+const MIN_TO_CALL_INVARIANT = 3;
+const invariant = [...perClaim]
+  .filter(([c, s]) => s.size === 1 && (counts.get(c) ?? 0) >= MIN_TO_CALL_INVARIANT)
+  .map(([c]) => c);
+const biggest = new Set([...counts].sort((a, b) => b[1] - a[1]).slice(0, 4).map(([c]) => c));
+
+function subset(title: string, keep: (claim: string) => boolean) {
+  const p = pairs.filter((x) => keep(x.label.claim));
+  if (p.length < 2) return console.log(`   ${title.padEnd(38)} n=${p.length}  too few to score`);
+  const r = cohensKappa(p.map((x) => x.label.answer), p.map((x) => x.judge.answer as Answer));
+  const k = Number.isNaN(r.kappa) ? "undefined" : r.kappa.toFixed(3);
+  console.log(
+    `   ${title.padEnd(38)} n=${String(r.n).padStart(3)}` +
+      `  po=${(100 * r.po).toFixed(1)}%  pe=${(100 * r.pe).toFixed(1)}%  kappa=${k}`,
+  );
+}
+
+console.log(`\n\nIs it resting on the easy items?`);
+console.log("─".repeat(72));
+console.log(
+  `${invariant.length} claims got the same human answer every time across at least ` +
+    `${MIN_TO_CALL_INVARIANT} labels,\ncovering ` +
+    `${pairs.filter((p) => invariant.includes(p.label.claim)).length} of ${pairs.length}. ` +
+    `They are agreement without discrimination, so the\nnumber should survive losing them.\n`,
+);
+subset("everything", () => true);
+subset("without the invariant claims", (c) => !invariant.includes(c));
+subset("only the four biggest claims", (c) => biggest.has(c));
+subset("only the long tail", (c) => !biggest.has(c));
+
 const disagreements = pairs.filter((p) => p.label.answer !== p.judge.answer);
 console.log(`\n\nThe ${disagreements.length} disagreements`);
 console.log("─".repeat(72));
