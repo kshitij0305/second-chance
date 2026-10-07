@@ -17,6 +17,9 @@ demo.db
 VIDEO-SCRIPT.md
 
 # Regenerated on every run — snapshot deliberately if you want a record.
-eval_results.json
-judge_results.json
-judge_planted_results.json
+# Anchored with a leading slash so only the working copies at the repo root are
+# ignored. Without it these match at every depth and silently swallow anything
+# under src/eval/snapshots/, which is the one place a record is meant to live.
+/eval_results.json
+/judge_results.json
+/judge_planted_results.json

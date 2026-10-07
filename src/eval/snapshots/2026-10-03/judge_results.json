@@ -1,0 +1,3938 @@
+[
+  {
+    "id": "transient-card-noname",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{amount}} placeholder."
+  },
+  {
+    "id": "transient-card-noname",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{link}} placeholder."
+  },
+  {
+    "id": "transient-card-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to retry the payment"
+  },
+  {
+    "id": "transient-card-noname",
+    "claim": "reassures the customer that nothing is wrong with the payment method they used",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly says nothing is wrong with the card"
+  },
+  {
+    "id": "transient-card-noname",
+    "claim": "invites them to try the same payment method again",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text explicitly invites trying the same way again"
+  },
+  {
+    "id": "transient-card-noname",
+    "claim": "attributes the failure to the payment provider",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly cites a temporary issue on the provider side as the cause"
+  },
+  {
+    "id": "transient-card-noname",
+    "claim": "says the problem is temporary",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly calls the issue temporary"
+  },
+  {
+    "id": "transient-card-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "transient-card-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name"
+  },
+  {
+    "id": "transient-card-noname",
+    "claim": "states or implies the payment failed due to problem from user side",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message attributes the failure to a provider issue, not the user"
+  },
+  {
+    "id": "transient-card-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message advises retrying the same method, not switching payment methods"
+  },
+  {
+    "id": "transient-card-named",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{amount}} placeholder."
+  },
+  {
+    "id": "transient-card-named",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{link}} placeholder."
+  },
+  {
+    "id": "transient-card-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to retry the payment"
+  },
+  {
+    "id": "transient-card-named",
+    "claim": "reassures the customer that nothing is wrong with the payment method they used",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly says nothing is wrong with the card, reassuring the customer about the payment method."
+  },
+  {
+    "id": "transient-card-named",
+    "claim": "invites them to try the same payment method again",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text explicitly invites trying the same method again"
+  },
+  {
+    "id": "transient-card-named",
+    "claim": "attributes the failure to the payment provider",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly cites a temporary issue on the provider side as the cause"
+  },
+  {
+    "id": "transient-card-named",
+    "claim": "says the problem is temporary",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly describes the issue as temporary"
+  },
+  {
+    "id": "transient-card-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer with \"Hi kshitij,\" matching the provided name"
+  },
+  {
+    "id": "transient-card-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "transient-card-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message uses the provided name kshitij, not an invented one"
+  },
+  {
+    "id": "transient-card-named",
+    "claim": "states or implies the payment failed due to problem from user side",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message attributes the failure to a provider issue, not the user"
+  },
+  {
+    "id": "transient-card-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message advises retrying the same method, not switching."
+  },
+  {
+    "id": "transient-netbanking-noname",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{amount}} placeholder."
+  },
+  {
+    "id": "transient-netbanking-noname",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{link}} placeholder."
+  },
+  {
+    "id": "transient-netbanking-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to retry the payment"
+  },
+  {
+    "id": "transient-netbanking-noname",
+    "claim": "reassures the customer that nothing is wrong with the payment method they used",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly says nothing is wrong with the payment method."
+  },
+  {
+    "id": "transient-netbanking-noname",
+    "claim": "invites them to try the same payment method again",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text explicitly invites trying the same method again"
+  },
+  {
+    "id": "transient-netbanking-noname",
+    "claim": "attributes the failure to the payment provider",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message says the failure was due to a temporary issue on the provider side"
+  },
+  {
+    "id": "transient-netbanking-noname",
+    "claim": "says the problem is temporary",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly calls the issue temporary"
+  },
+  {
+    "id": "transient-netbanking-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "transient-netbanking-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name"
+  },
+  {
+    "id": "transient-netbanking-noname",
+    "claim": "states or implies the payment failed due to problem from user side",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message attributes the failure to a provider issue, not the user"
+  },
+  {
+    "id": "transient-netbanking-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message advises retrying the same netbanking method, not switching."
+  },
+  {
+    "id": "transient-netbanking-named",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{amount}} placeholder"
+  },
+  {
+    "id": "transient-netbanking-named",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{link}} placeholder"
+  },
+  {
+    "id": "transient-netbanking-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message provides a link to retry the payment"
+  },
+  {
+    "id": "transient-netbanking-named",
+    "claim": "reassures the customer that nothing is wrong with the payment method they used",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly says nothing is wrong with the netbanking method"
+  },
+  {
+    "id": "transient-netbanking-named",
+    "claim": "invites them to try the same payment method again",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes an invitation to try the same method again"
+  },
+  {
+    "id": "transient-netbanking-named",
+    "claim": "attributes the failure to the payment provider",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly cites a temporary issue on the payment provider’s side as the cause"
+  },
+  {
+    "id": "transient-netbanking-named",
+    "claim": "says the problem is temporary",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly calls the issue temporary"
+  },
+  {
+    "id": "transient-netbanking-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer with \"Hi Kshitij,\" matching the provided name"
+  },
+  {
+    "id": "transient-netbanking-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "transient-netbanking-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message uses the provided name Kshitij, not an invented one"
+  },
+  {
+    "id": "transient-netbanking-named",
+    "claim": "states or implies the payment failed due to problem from user side",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message attributes the failure to the provider, not the user"
+  },
+  {
+    "id": "transient-netbanking-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message advises retrying the same netbanking method, not switching."
+  },
+  {
+    "id": "transient-wallet-noname",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "transient-wallet-noname",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message"
+  },
+  {
+    "id": "transient-wallet-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message provides a link to retry the payment"
+  },
+  {
+    "id": "transient-wallet-noname",
+    "claim": "reassures the customer that nothing is wrong with the payment method they used",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly says nothing is wrong with the wallet, reassuring the customer about the payment method."
+  },
+  {
+    "id": "transient-wallet-noname",
+    "claim": "invites them to try the same payment method again",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text explicitly invites trying the same method again"
+  },
+  {
+    "id": "transient-wallet-noname",
+    "claim": "attributes the failure to the payment provider",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly cites a temporary issue on the provider side as the cause"
+  },
+  {
+    "id": "transient-wallet-noname",
+    "claim": "says the problem is temporary",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly calls the issue temporary"
+  },
+  {
+    "id": "transient-wallet-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "transient-wallet-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name"
+  },
+  {
+    "id": "transient-wallet-noname",
+    "claim": "states or implies the payment failed due to problem from user side",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message attributes the failure to a provider issue, not the user"
+  },
+  {
+    "id": "transient-wallet-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message advises retrying the same method, not switching"
+  },
+  {
+    "id": "transient-wallet-named",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{amount}} placeholder."
+  },
+  {
+    "id": "transient-wallet-named",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{link}} placeholder."
+  },
+  {
+    "id": "transient-wallet-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to retry the payment"
+  },
+  {
+    "id": "transient-wallet-named",
+    "claim": "reassures the customer that nothing is wrong with the payment method they used",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly says nothing is wrong with the wallet, reassuring the customer about the payment method."
+  },
+  {
+    "id": "transient-wallet-named",
+    "claim": "invites them to try the same payment method again",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text explicitly invites trying the same method again"
+  },
+  {
+    "id": "transient-wallet-named",
+    "claim": "attributes the failure to the payment provider",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly cites a temporary issue on the provider side as the cause"
+  },
+  {
+    "id": "transient-wallet-named",
+    "claim": "says the problem is temporary",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly calls the issue temporary"
+  },
+  {
+    "id": "transient-wallet-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer as 'Hi Kshitij,' matching the provided name"
+  },
+  {
+    "id": "transient-wallet-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "transient-wallet-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message uses the provided name Kshitij, not an invented one"
+  },
+  {
+    "id": "transient-wallet-named",
+    "claim": "states or implies the payment failed due to problem from user side",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message attributes the failure to a provider issue, not the user"
+  },
+  {
+    "id": "transient-wallet-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message advises retrying the same method, not switching."
+  },
+  {
+    "id": "transient-upi-noname",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{amount}} placeholder."
+  },
+  {
+    "id": "transient-upi-noname",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{link}} placeholder"
+  },
+  {
+    "id": "transient-upi-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to retry the payment"
+  },
+  {
+    "id": "transient-upi-noname",
+    "claim": "reassures the customer that nothing is wrong with the payment method they used",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly says nothing is wrong with the UPI, reassuring the customer."
+  },
+  {
+    "id": "transient-upi-noname",
+    "claim": "invites them to try the same payment method again",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly invites the user to try the same payment method again"
+  },
+  {
+    "id": "transient-upi-noname",
+    "claim": "attributes the failure to the payment provider",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly cites a temporary issue on the provider side as the cause"
+  },
+  {
+    "id": "transient-upi-noname",
+    "claim": "says the problem is temporary",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly calls the issue a temporary one"
+  },
+  {
+    "id": "transient-upi-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "transient-upi-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name at all"
+  },
+  {
+    "id": "transient-upi-noname",
+    "claim": "states or implies the payment failed due to problem from user side",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message attributes the failure to a provider issue, not the user"
+  },
+  {
+    "id": "transient-upi-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message advises retrying the same UPI method, not switching."
+  },
+  {
+    "id": "transient-upi-named",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{amount}} placeholder"
+  },
+  {
+    "id": "transient-upi-named",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{link}} placeholder."
+  },
+  {
+    "id": "transient-upi-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It provides a link to retry the payment"
+  },
+  {
+    "id": "transient-upi-named",
+    "claim": "reassures the customer that nothing is wrong with the payment method they used",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly says nothing is wrong with the UPI, reassuring the customer."
+  },
+  {
+    "id": "transient-upi-named",
+    "claim": "invites them to try the same payment method again",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It tells the user to try the same method again"
+  },
+  {
+    "id": "transient-upi-named",
+    "claim": "attributes the failure to the payment provider",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text says the failure was due to a temporary issue on the provider side"
+  },
+  {
+    "id": "transient-upi-named",
+    "claim": "says the problem is temporary",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly describes the issue as a temporary one"
+  },
+  {
+    "id": "transient-upi-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer with \"Hi Kshitij,\" matching the provided name"
+  },
+  {
+    "id": "transient-upi-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "transient-upi-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message uses the provided name Kshitij, not an invented one"
+  },
+  {
+    "id": "transient-upi-named",
+    "claim": "states or implies the payment failed due to problem from user side",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message attributes the failure to the provider, not the user"
+  },
+  {
+    "id": "transient-upi-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message advises retrying the same UPI method, not switching."
+  },
+  {
+    "id": "insuf-card-noname",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "insuf-card-noname",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{link}} placeholder."
+  },
+  {
+    "id": "insuf-card-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message provides a link to complete the payment again"
+  },
+  {
+    "id": "insuf-card-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only informs about a failed payment and offers a link, without criticizing the customer."
+  },
+  {
+    "id": "insuf-card-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name."
+  },
+  {
+    "id": "insuf-card-noname",
+    "claim": "states or implies the payment failed for lack of money",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message gives no reason for the failure, so it does not state or imply insufficient funds"
+  },
+  {
+    "id": "insuf-card-noname",
+    "claim": "uses the words balance, funds, or insufficient",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains none of the words balance, funds, or insufficient."
+  },
+  {
+    "id": "insuf-card-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only mentions using the same card, not switching methods"
+  },
+  {
+    "id": "insuf-card-named",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{amount}} placeholder."
+  },
+  {
+    "id": "insuf-card-named",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{link}} placeholder."
+  },
+  {
+    "id": "insuf-card-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes a link to complete the payment"
+  },
+  {
+    "id": "insuf-card-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer with 'Hi Kshitij', matching the provided name"
+  },
+  {
+    "id": "insuf-card-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not criticize the customer, it only states a fact about the card processing."
+  },
+  {
+    "id": "insuf-card-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message uses the provided name Kshitij, not an invented one"
+  },
+  {
+    "id": "insuf-card-named",
+    "claim": "states or implies the payment failed for lack of money",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message gives no reason such as insufficient funds for the failure"
+  },
+  {
+    "id": "insuf-card-named",
+    "claim": "uses the words balance, funds, or insufficient",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains none of the words balance, funds, or insufficient."
+  },
+  {
+    "id": "insuf-card-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only advises retrying with the same card, not switching methods"
+  },
+  {
+    "id": "insuf-netbanking-noname",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "insuf-netbanking-noname",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message."
+  },
+  {
+    "id": "insuf-netbanking-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes a link to retry the payment"
+  },
+  {
+    "id": "insuf-netbanking-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "insuf-netbanking-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name at all"
+  },
+  {
+    "id": "insuf-netbanking-noname",
+    "claim": "states or implies the payment failed for lack of money",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not mention lack of money as the reason for failure"
+  },
+  {
+    "id": "insuf-netbanking-noname",
+    "claim": "uses the words balance, funds, or insufficient",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not contain any of the words balance, funds, or insufficient."
+  },
+  {
+    "id": "insuf-netbanking-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only advises retrying the same method, not switching."
+  },
+  {
+    "id": "insuf-netbanking-named",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message"
+  },
+  {
+    "id": "insuf-netbanking-named",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message."
+  },
+  {
+    "id": "insuf-netbanking-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to retry the payment"
+  },
+  {
+    "id": "insuf-netbanking-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer with \"Hi Kshitij,\" matching the provided name"
+  },
+  {
+    "id": "insuf-netbanking-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message merely informs of a failed payment and asks to retry, not criticizing the customer"
+  },
+  {
+    "id": "insuf-netbanking-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The name Kshitij appears in the input, so it is not invented"
+  },
+  {
+    "id": "insuf-netbanking-named",
+    "claim": "states or implies the payment failed for lack of money",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message gives no reason such as insufficient funds for the failure"
+  },
+  {
+    "id": "insuf-netbanking-named",
+    "claim": "uses the words balance, funds, or insufficient",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains none of the words balance, funds, or insufficient."
+  },
+  {
+    "id": "insuf-netbanking-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message advises retrying with the same method, not switching."
+  },
+  {
+    "id": "insuf-wallet-noname",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{amount}} placeholder."
+  },
+  {
+    "id": "insuf-wallet-noname",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{link}} placeholder."
+  },
+  {
+    "id": "insuf-wallet-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes a link to complete the payment"
+  },
+  {
+    "id": "insuf-wallet-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only informs about the failed payment, it does not criticize the customer"
+  },
+  {
+    "id": "insuf-wallet-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name at all"
+  },
+  {
+    "id": "insuf-wallet-noname",
+    "claim": "states or implies the payment failed for lack of money",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message mentions the payment didn't go through but gives no reason related to insufficient funds"
+  },
+  {
+    "id": "insuf-wallet-noname",
+    "claim": "uses the words balance, funds, or insufficient",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains none of the words balance, funds, or insufficient."
+  },
+  {
+    "id": "insuf-wallet-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only mentions using the same wallet, not a different method"
+  },
+  {
+    "id": "insuf-wallet-named",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message"
+  },
+  {
+    "id": "insuf-wallet-named",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{link}} placeholder."
+  },
+  {
+    "id": "insuf-wallet-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message provides a link to complete the payment"
+  },
+  {
+    "id": "insuf-wallet-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer with 'Hi Kshitij', matching the provided name."
+  },
+  {
+    "id": "insuf-wallet-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not contain any criticism of the customer."
+  },
+  {
+    "id": "insuf-wallet-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message uses the provided name Kshitij, not an invented one"
+  },
+  {
+    "id": "insuf-wallet-named",
+    "claim": "states or implies the payment failed for lack of money",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message gives no reason, so it does not state or imply lack of money"
+  },
+  {
+    "id": "insuf-wallet-named",
+    "claim": "uses the words balance, funds, or insufficient",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains none of the words balance, funds, or insufficient."
+  },
+  {
+    "id": "insuf-wallet-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only mentions using the same wallet, not a different method"
+  },
+  {
+    "id": "insuf-upi-noname",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{amount}} placeholder."
+  },
+  {
+    "id": "insuf-upi-noname",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message"
+  },
+  {
+    "id": "insuf-upi-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to finish the payment"
+  },
+  {
+    "id": "insuf-upi-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The text does not contain any criticism of the customer"
+  },
+  {
+    "id": "insuf-upi-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not include any customer name"
+  },
+  {
+    "id": "insuf-upi-noname",
+    "claim": "states or implies the payment failed for lack of money",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not mention insufficient funds as a cause"
+  },
+  {
+    "id": "insuf-upi-noname",
+    "claim": "uses the words balance, funds, or insufficient",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains none of the words balance, funds, or insufficient."
+  },
+  {
+    "id": "insuf-upi-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message advises using the same UPI method, not switching."
+  },
+  {
+    "id": "insuf-upi-named",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "insuf-upi-named",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message."
+  },
+  {
+    "id": "insuf-upi-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to retry the payment"
+  },
+  {
+    "id": "insuf-upi-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer with 'Hi Kshitij', matching the provided name."
+  },
+  {
+    "id": "insuf-upi-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message merely informs about a failed payment and suggests retrying, without criticizing the customer"
+  },
+  {
+    "id": "insuf-upi-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message uses the provided name Kshitij, not an invented one"
+  },
+  {
+    "id": "insuf-upi-named",
+    "claim": "states or implies the payment failed for lack of money",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only says the payment did not complete, without mentioning insufficient funds"
+  },
+  {
+    "id": "insuf-upi-named",
+    "claim": "uses the words balance, funds, or insufficient",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains none of the words balance, funds, or insufficient."
+  },
+  {
+    "id": "insuf-upi-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message advises retrying the same UPI method, not switching."
+  },
+  {
+    "id": "rejected-card-noname",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{amount}} placeholder."
+  },
+  {
+    "id": "rejected-card-noname",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message."
+  },
+  {
+    "id": "rejected-card-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to use a different payment method"
+  },
+  {
+    "id": "rejected-card-noname",
+    "claim": "states that the bank refused this payment method",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message says the payment was declined by your bank"
+  },
+  {
+    "id": "rejected-card-noname",
+    "claim": "states that the payment method they used will not go through",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message says the payment was declined and will likely keep declining, indicating the used method won't work"
+  },
+  {
+    "id": "rejected-card-noname",
+    "claim": "says this payment method will keep being refused",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message states it will likely keep declining"
+  },
+  {
+    "id": "rejected-card-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text explicitly asks to use a different payment method"
+  },
+  {
+    "id": "rejected-card-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The text only reports a decline and suggests a new method, without criticizing the customer"
+  },
+  {
+    "id": "rejected-card-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name."
+  },
+  {
+    "id": "rejected-card-named",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{amount}} placeholder."
+  },
+  {
+    "id": "rejected-card-named",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{link}} placeholder."
+  },
+  {
+    "id": "rejected-card-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to pay by a different method"
+  },
+  {
+    "id": "rejected-card-named",
+    "claim": "states that the bank refused this payment method",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly says the bank declined the payment using the card"
+  },
+  {
+    "id": "rejected-card-named",
+    "claim": "states that the payment method they used will not go through",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message says the card payment was declined and will keep declining"
+  },
+  {
+    "id": "rejected-card-named",
+    "claim": "says this payment method will keep being refused",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly says the payment will keep declining"
+  },
+  {
+    "id": "rejected-card-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer with 'Hi Kshitij', matching the provided name."
+  },
+  {
+    "id": "rejected-card-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text explicitly asks to pay by a different method"
+  },
+  {
+    "id": "rejected-card-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The text attributes the problem to the bank, not to the customer"
+  },
+  {
+    "id": "rejected-card-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message uses the provided name Kshitij, not an invented one"
+  },
+  {
+    "id": "rejected-netbanking-noname",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "rejected-netbanking-noname",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message."
+  },
+  {
+    "id": "rejected-netbanking-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to choose another payment method"
+  },
+  {
+    "id": "rejected-netbanking-noname",
+    "claim": "states that the bank refused this payment method",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message says the payment was declined by your bank"
+  },
+  {
+    "id": "rejected-netbanking-noname",
+    "claim": "states that the payment method they used will not go through",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message says the netbanking payment was declined and likely will keep failing"
+  },
+  {
+    "id": "rejected-netbanking-noname",
+    "claim": "says this payment method will keep being refused",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message states the payment will likely keep failing"
+  },
+  {
+    "id": "rejected-netbanking-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly asks to choose another payment method"
+  },
+  {
+    "id": "rejected-netbanking-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "yes",
+    "pass": false,
+    "reason": "It says the payment will likely keep failing, which criticises the customer"
+  },
+  {
+    "id": "rejected-netbanking-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name at all"
+  },
+  {
+    "id": "rejected-netbanking-named",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{amount}} placeholder."
+  },
+  {
+    "id": "rejected-netbanking-named",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message"
+  },
+  {
+    "id": "rejected-netbanking-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link suggesting an alternative payment method"
+  },
+  {
+    "id": "rejected-netbanking-named",
+    "claim": "states that the bank refused this payment method",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text explicitly says the bank refused the payment via netbanking"
+  },
+  {
+    "id": "rejected-netbanking-named",
+    "claim": "states that the payment method they used will not go through",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message says the netbanking payment will be declined"
+  },
+  {
+    "id": "rejected-netbanking-named",
+    "claim": "says this payment method will keep being refused",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly says the payment will keep being declined"
+  },
+  {
+    "id": "rejected-netbanking-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer with \"Hi Kshitij,\" matching the provided name."
+  },
+  {
+    "id": "rejected-netbanking-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly asks to use a different method"
+  },
+  {
+    "id": "rejected-netbanking-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message states a payment issue but does not criticize the customer"
+  },
+  {
+    "id": "rejected-netbanking-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message uses the provided name Kshitij, not an invented one"
+  },
+  {
+    "id": "rejected-wallet-noname",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{amount}} placeholder."
+  },
+  {
+    "id": "rejected-wallet-noname",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message"
+  },
+  {
+    "id": "rejected-wallet-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to use a different payment method"
+  },
+  {
+    "id": "rejected-wallet-noname",
+    "claim": "states that the bank refused this payment method",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message says the payment was declined by your bank"
+  },
+  {
+    "id": "rejected-wallet-noname",
+    "claim": "states that the payment method they used will not go through",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text says the wallet payment was declined and will keep failing"
+  },
+  {
+    "id": "rejected-wallet-noname",
+    "claim": "says this payment method will keep being refused",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message states the payment will keep failing, implying it will keep being refused."
+  },
+  {
+    "id": "rejected-wallet-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text explicitly asks to use a different payment method"
+  },
+  {
+    "id": "rejected-wallet-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The text only reports a declined payment and suggests a new method, not criticizing the customer"
+  },
+  {
+    "id": "rejected-wallet-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name."
+  },
+  {
+    "id": "rejected-wallet-named",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "rejected-wallet-named",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message"
+  },
+  {
+    "id": "rejected-wallet-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link suggesting an alternative payment method"
+  },
+  {
+    "id": "rejected-wallet-named",
+    "claim": "states that the bank refused this payment method",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly says the payment was declined by the bank"
+  },
+  {
+    "id": "rejected-wallet-named",
+    "claim": "states that the payment method they used will not go through",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message says the wallet payment was declined and will likely keep failing"
+  },
+  {
+    "id": "rejected-wallet-named",
+    "claim": "says this payment method will keep being refused",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message states the payment will likely keep failing"
+  },
+  {
+    "id": "rejected-wallet-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer with \"Hi Kshitij,\" matching the provided name"
+  },
+  {
+    "id": "rejected-wallet-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly asks the user to use another payment method"
+  },
+  {
+    "id": "rejected-wallet-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The text does not criticize the customer, it notes the bank declined the payment"
+  },
+  {
+    "id": "rejected-wallet-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The name Kshitij matches the provided customer name"
+  },
+  {
+    "id": "rejected-upi-noname",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message"
+  },
+  {
+    "id": "rejected-upi-noname",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message."
+  },
+  {
+    "id": "rejected-upi-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to use a different payment method"
+  },
+  {
+    "id": "rejected-upi-noname",
+    "claim": "states that the bank refused this payment method",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message says the payment was declined by your bank"
+  },
+  {
+    "id": "rejected-upi-noname",
+    "claim": "states that the payment method they used will not go through",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message says the UPI payment was declined and will keep being declined"
+  },
+  {
+    "id": "rejected-upi-noname",
+    "claim": "says this payment method will keep being refused",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message states the payment will keep being declined"
+  },
+  {
+    "id": "rejected-upi-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly asks to use a different payment method"
+  },
+  {
+    "id": "rejected-upi-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The text only reports a decline and suggests a new method, without criticizing the customer"
+  },
+  {
+    "id": "rejected-upi-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name at all"
+  },
+  {
+    "id": "rejected-upi-named",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "rejected-upi-named",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{link}} placeholder."
+  },
+  {
+    "id": "rejected-upi-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to use a different payment method"
+  },
+  {
+    "id": "rejected-upi-named",
+    "claim": "states that the bank refused this payment method",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly says the bank refused the UPI payment"
+  },
+  {
+    "id": "rejected-upi-named",
+    "claim": "states that the payment method they used will not go through",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message says the UPI payment was refused and will likely be refused again"
+  },
+  {
+    "id": "rejected-upi-named",
+    "claim": "says this payment method will keep being refused",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message states the payment will likely be refused again"
+  },
+  {
+    "id": "rejected-upi-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer with \"Hi Kshitij,\" matching the provided name."
+  },
+  {
+    "id": "rejected-upi-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly asks the user to use a different payment method"
+  },
+  {
+    "id": "rejected-upi-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only informs about a payment issue and suggests an alternative, not criticizing the customer"
+  },
+  {
+    "id": "rejected-upi-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message uses the provided name Kshitij, not an invented one"
+  },
+  {
+    "id": "auth-card-noname",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message"
+  },
+  {
+    "id": "auth-card-noname",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message"
+  },
+  {
+    "id": "auth-card-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to complete the payment"
+  },
+  {
+    "id": "auth-card-noname",
+    "claim": "states that the verification step did not complete",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly says the verification step did not complete"
+  },
+  {
+    "id": "auth-card-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "auth-card-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name at all"
+  },
+  {
+    "id": "auth-card-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message advises retrying with the same card, not switching methods"
+  },
+  {
+    "id": "auth-card-named",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "auth-card-named",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{link}} placeholder."
+  },
+  {
+    "id": "auth-card-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes a link to complete the payment"
+  },
+  {
+    "id": "auth-card-named",
+    "claim": "states that the verification step did not complete",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text says the payment was stopped during card verification, indicating the verification did not complete."
+  },
+  {
+    "id": "auth-card-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer with 'Hi Kshitij', matching the provided name."
+  },
+  {
+    "id": "auth-card-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not contain any criticism of the customer"
+  },
+  {
+    "id": "auth-card-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The name Kshitij appears in the provided input, so it is not invented."
+  },
+  {
+    "id": "auth-card-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not suggest using a different payment method"
+  },
+  {
+    "id": "auth-netbanking-noname",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "auth-netbanking-noname",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message."
+  },
+  {
+    "id": "auth-netbanking-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to retry the payment"
+  },
+  {
+    "id": "auth-netbanking-noname",
+    "claim": "states that the verification step did not complete",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text says the payment was interrupted during verification, indicating it did not complete"
+  },
+  {
+    "id": "auth-netbanking-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "auth-netbanking-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name at all"
+  },
+  {
+    "id": "auth-netbanking-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message advises retrying with the same netbanking method, not switching."
+  },
+  {
+    "id": "auth-netbanking-named",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message"
+  },
+  {
+    "id": "auth-netbanking-named",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{link}} placeholder."
+  },
+  {
+    "id": "auth-netbanking-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text includes a link to complete the payment again"
+  },
+  {
+    "id": "auth-netbanking-named",
+    "claim": "states that the verification step did not complete",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message says the payment was interrupted during verification, indicating it did not complete."
+  },
+  {
+    "id": "auth-netbanking-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer with \"Hi kshitij,\" matching the provided name"
+  },
+  {
+    "id": "auth-netbanking-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not contain any criticism of the customer."
+  },
+  {
+    "id": "auth-netbanking-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message uses the provided name kshitij, not an invented one"
+  },
+  {
+    "id": "auth-netbanking-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message advises using the same netbanking method, not a different one"
+  },
+  {
+    "id": "auth-wallet-noname",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "auth-wallet-noname",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message."
+  },
+  {
+    "id": "auth-wallet-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes a link to retry the payment"
+  },
+  {
+    "id": "auth-wallet-noname",
+    "claim": "states that the verification step did not complete",
+    "kind": "must",
+    "answer": "no",
+    "pass": false,
+    "reason": "The message says the payment didn't complete because of a verification step, not that the verification step failed"
+  },
+  {
+    "id": "auth-wallet-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "auth-wallet-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name at all"
+  },
+  {
+    "id": "auth-wallet-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only advises retrying the same method, not switching."
+  },
+  {
+    "id": "auth-wallet-named",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "auth-wallet-named",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{link}} placeholder."
+  },
+  {
+    "id": "auth-wallet-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to retry the payment"
+  },
+  {
+    "id": "auth-wallet-named",
+    "claim": "states that the verification step did not complete",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message says the payment was interrupted during verification, indicating the verification step did not complete."
+  },
+  {
+    "id": "auth-wallet-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer with 'Hi Kshitij', matching the provided name"
+  },
+  {
+    "id": "auth-wallet-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not contain any criticism of the customer"
+  },
+  {
+    "id": "auth-wallet-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The name Kshitij matches the provided customer name"
+  },
+  {
+    "id": "auth-wallet-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message advises retrying the same method, not switching"
+  },
+  {
+    "id": "auth-upi-noname",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "auth-upi-noname",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message."
+  },
+  {
+    "id": "auth-upi-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes a link to retry the UPI payment"
+  },
+  {
+    "id": "auth-upi-noname",
+    "claim": "states that the verification step did not complete",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message says the verification step failed, indicating it did not complete"
+  },
+  {
+    "id": "auth-upi-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not criticize the customer, it only explains the failure and offers a retry link."
+  },
+  {
+    "id": "auth-upi-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name."
+  },
+  {
+    "id": "auth-upi-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only asks to retry the same UPI payment, not to switch methods"
+  },
+  {
+    "id": "auth-upi-named",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "auth-upi-named",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message"
+  },
+  {
+    "id": "auth-upi-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to retry the payment"
+  },
+  {
+    "id": "auth-upi-named",
+    "claim": "states that the verification step did not complete",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly says the payment did not complete during the verification step."
+  },
+  {
+    "id": "auth-upi-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer with \"Hi Kshitij,\" matching the provided name"
+  },
+  {
+    "id": "auth-upi-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not contain any criticism of the customer"
+  },
+  {
+    "id": "auth-upi-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message uses the provided name Kshitij, not an invented one"
+  },
+  {
+    "id": "auth-upi-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message advises using the same UPI method, not switching."
+  },
+  {
+    "id": "cancelled-card-noname",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{amount}} placeholder."
+  },
+  {
+    "id": "cancelled-card-noname",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{link}} placeholder."
+  },
+  {
+    "id": "cancelled-card-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to complete the payment"
+  },
+  {
+    "id": "cancelled-card-noname",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "no",
+    "pass": false,
+    "reason": "The message does not explicitly state that there is no obligation to pay"
+  },
+  {
+    "id": "cancelled-card-noname",
+    "claim": "leaves the option open to pay later",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It suggests retrying the payment via a link, allowing payment at a later time"
+  },
+  {
+    "id": "cancelled-card-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "cancelled-card-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name at all"
+  },
+  {
+    "id": "cancelled-card-noname",
+    "claim": "pressures the customer to complete the payment",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The wording is a simple suggestion, not pressure"
+  },
+  {
+    "id": "cancelled-card-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message advises retrying with the same card, not switching methods"
+  },
+  {
+    "id": "cancelled-card-named",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{amount}} placeholder."
+  },
+  {
+    "id": "cancelled-card-named",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message"
+  },
+  {
+    "id": "cancelled-card-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a retry link to complete the payment"
+  },
+  {
+    "id": "cancelled-card-named",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "no",
+    "pass": false,
+    "reason": "The text does not explicitly state there is no obligation to pay"
+  },
+  {
+    "id": "cancelled-card-named",
+    "claim": "leaves the option open to pay later",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text says you can retry later, leaving the option to pay later."
+  },
+  {
+    "id": "cancelled-card-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer with 'Hi Kshitij', matching the provided name"
+  },
+  {
+    "id": "cancelled-card-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not contain any criticism of the customer"
+  },
+  {
+    "id": "cancelled-card-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The name Kshitij matches the provided customer name"
+  },
+  {
+    "id": "cancelled-card-named",
+    "claim": "pressures the customer to complete the payment",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The text merely informs and offers a retry link without applying pressure"
+  },
+  {
+    "id": "cancelled-card-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only mentions retrying with the same card, not switching methods"
+  },
+  {
+    "id": "cancelled-netbanking-noname",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "cancelled-netbanking-noname",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message."
+  },
+  {
+    "id": "cancelled-netbanking-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to retry the payment"
+  },
+  {
+    "id": "cancelled-netbanking-noname",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text explicitly states \"No obligation to pay now\""
+  },
+  {
+    "id": "cancelled-netbanking-noname",
+    "claim": "leaves the option open to pay later",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text explicitly says there is no obligation to pay now and invites trying again later"
+  },
+  {
+    "id": "cancelled-netbanking-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The text does not contain any criticism of the customer"
+  },
+  {
+    "id": "cancelled-netbanking-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name at all"
+  },
+  {
+    "id": "cancelled-netbanking-noname",
+    "claim": "pressures the customer to complete the payment",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The text explicitly says there is no obligation to pay now, so it does not pressure the customer."
+  },
+  {
+    "id": "cancelled-netbanking-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message advises trying the same method, not a different one"
+  },
+  {
+    "id": "cancelled-netbanking-named",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "cancelled-netbanking-named",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message"
+  },
+  {
+    "id": "cancelled-netbanking-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to retry the payment"
+  },
+  {
+    "id": "cancelled-netbanking-named",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It states 'No action is required on your part', indicating no payment obligation."
+  },
+  {
+    "id": "cancelled-netbanking-named",
+    "claim": "leaves the option open to pay later",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It offers a retry link, allowing payment at a later time"
+  },
+  {
+    "id": "cancelled-netbanking-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer with \"Hi Kshitij,\" matching the provided name"
+  },
+  {
+    "id": "cancelled-netbanking-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no criticism of the customer"
+  },
+  {
+    "id": "cancelled-netbanking-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The name Kshitij matches the provided customer name"
+  },
+  {
+    "id": "cancelled-netbanking-named",
+    "claim": "pressures the customer to complete the payment",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not pressure the customer, it states no action is required and offers a retry link."
+  },
+  {
+    "id": "cancelled-netbanking-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only advises retrying the same method, not switching."
+  },
+  {
+    "id": "cancelled-wallet-noname",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "cancelled-wallet-noname",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message"
+  },
+  {
+    "id": "cancelled-wallet-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to try the payment again"
+  },
+  {
+    "id": "cancelled-wallet-noname",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly states there is no obligation to pay"
+  },
+  {
+    "id": "cancelled-wallet-noname",
+    "claim": "leaves the option open to pay later",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text says you can try again later using the same wallet method."
+  },
+  {
+    "id": "cancelled-wallet-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "cancelled-wallet-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name, so it does not invent one"
+  },
+  {
+    "id": "cancelled-wallet-noname",
+    "claim": "pressures the customer to complete the payment",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message states no obligation to pay and offers a retry, not pressure"
+  },
+  {
+    "id": "cancelled-wallet-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not suggest switching to a different payment method"
+  },
+  {
+    "id": "cancelled-wallet-named",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message"
+  },
+  {
+    "id": "cancelled-wallet-named",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message."
+  },
+  {
+    "id": "cancelled-wallet-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to try the wallet again, offering a way to complete the payment"
+  },
+  {
+    "id": "cancelled-wallet-named",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text explicitly states \"You’re not obliged to pay\"."
+  },
+  {
+    "id": "cancelled-wallet-named",
+    "claim": "leaves the option open to pay later",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It states you can try the wallet again, implying future payment is possible"
+  },
+  {
+    "id": "cancelled-wallet-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer with \"Hi Kshitij,\" matching the provided name"
+  },
+  {
+    "id": "cancelled-wallet-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not contain any criticism of the customer"
+  },
+  {
+    "id": "cancelled-wallet-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The name Kshitij matches the provided customer name"
+  },
+  {
+    "id": "cancelled-wallet-named",
+    "claim": "pressures the customer to complete the payment",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not pressure the customer, it states they are not obliged and may try again."
+  },
+  {
+    "id": "cancelled-wallet-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only mentions trying the same wallet again, not a different method"
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{amount}} placeholder."
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{link}} placeholder."
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a retry link for completing the payment"
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "no",
+    "pass": false,
+    "reason": "The text does not explicitly state that there is no obligation to pay"
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "claim": "leaves the option open to pay later",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It provides a retry link, allowing payment at a later time"
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The text merely states the cancellation, not criticizing the customer"
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name at all"
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "claim": "pressures the customer to complete the payment",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The text merely informs and offers a retry link without pressuring language"
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message advises retrying with the same UPI method, not switching."
+  },
+  {
+    "id": "cancelled-upi-named",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "cancelled-upi-named",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{link}} placeholder"
+  },
+  {
+    "id": "cancelled-upi-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to retry the UPI payment"
+  },
+  {
+    "id": "cancelled-upi-named",
+    "claim": "makes clear there is no obligation to pay",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly states there is no obligation to pay"
+  },
+  {
+    "id": "cancelled-upi-named",
+    "claim": "leaves the option open to pay later",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text says there is no obligation to pay now and offers a link to try again later."
+  },
+  {
+    "id": "cancelled-upi-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer with \"Hi Kshitij,\" matching the provided name"
+  },
+  {
+    "id": "cancelled-upi-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The text does not contain any criticism of the customer"
+  },
+  {
+    "id": "cancelled-upi-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message uses the provided name Kshitij, not an invented one"
+  },
+  {
+    "id": "cancelled-upi-named",
+    "claim": "pressures the customer to complete the payment",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message states there is no obligation to pay, not pressuring the customer"
+  },
+  {
+    "id": "cancelled-upi-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only mentions retrying the same UPI method, not switching."
+  },
+  {
+    "id": "unknown-card-noname-nosteer",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{amount}} placeholder."
+  },
+  {
+    "id": "unknown-card-noname-nosteer",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{link}} placeholder."
+  },
+  {
+    "id": "unknown-card-noname-nosteer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to retry the payment"
+  },
+  {
+    "id": "unknown-card-noname-nosteer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "unknown-card-noname-nosteer",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name at all"
+  },
+  {
+    "id": "unknown-card-noname-nosteer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message states the payment failed but does not speculate on the cause"
+  },
+  {
+    "id": "unknown-card-noname-nosteer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message says to use the same card, not a different method"
+  },
+  {
+    "id": "unknown-card-named-nosteer",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "unknown-card-named-nosteer",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message."
+  },
+  {
+    "id": "unknown-card-named-nosteer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message provides a link to retry the payment"
+  },
+  {
+    "id": "unknown-card-named-nosteer",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer as 'Hi Kshitij', matching the provided name"
+  },
+  {
+    "id": "unknown-card-named-nosteer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "unknown-card-named-nosteer",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message uses the provided name Kshitij, not an invented one"
+  },
+  {
+    "id": "unknown-card-named-nosteer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message states the payment failed but does not speculate on the reason"
+  },
+  {
+    "id": "unknown-card-named-nosteer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only suggests retrying the same card, not switching methods"
+  },
+  {
+    "id": "unknown-netbanking-noname-nosteer",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{amount}} placeholder."
+  },
+  {
+    "id": "unknown-netbanking-noname-nosteer",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{link}} placeholder."
+  },
+  {
+    "id": "unknown-netbanking-noname-nosteer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to retry the payment"
+  },
+  {
+    "id": "unknown-netbanking-noname-nosteer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "unknown-netbanking-noname-nosteer",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name at all"
+  },
+  {
+    "id": "unknown-netbanking-noname-nosteer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message states the failure but does not speculate on its cause"
+  },
+  {
+    "id": "unknown-netbanking-noname-nosteer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message advises retrying the same method, not switching."
+  },
+  {
+    "id": "unknown-netbanking-named-nosteer",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "unknown-netbanking-named-nosteer",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{link}} placeholder."
+  },
+  {
+    "id": "unknown-netbanking-named-nosteer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to retry the payment"
+  },
+  {
+    "id": "unknown-netbanking-named-nosteer",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer with \"Hi Kshitij,\" matching the provided name"
+  },
+  {
+    "id": "unknown-netbanking-named-nosteer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The text only states a payment issue, not criticism"
+  },
+  {
+    "id": "unknown-netbanking-named-nosteer",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message uses the provided name Kshitij, not an invented one"
+  },
+  {
+    "id": "unknown-netbanking-named-nosteer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not speculate about the cause of the failure"
+  },
+  {
+    "id": "unknown-netbanking-named-nosteer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message advises retrying the same netbanking method, not switching."
+  },
+  {
+    "id": "unknown-wallet-noname-nosteer",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{amount}} placeholder."
+  },
+  {
+    "id": "unknown-wallet-noname-nosteer",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message."
+  },
+  {
+    "id": "unknown-wallet-noname-nosteer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to retry the payment"
+  },
+  {
+    "id": "unknown-wallet-noname-nosteer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not contain any criticism of the customer."
+  },
+  {
+    "id": "unknown-wallet-noname-nosteer",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name at all"
+  },
+  {
+    "id": "unknown-wallet-noname-nosteer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "It only says the cause is unclear, not offering speculation"
+  },
+  {
+    "id": "unknown-wallet-noname-nosteer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only advises retrying the same method, not switching."
+  },
+  {
+    "id": "unknown-wallet-named-nosteer",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "unknown-wallet-named-nosteer",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message"
+  },
+  {
+    "id": "unknown-wallet-named-nosteer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to retry the payment"
+  },
+  {
+    "id": "unknown-wallet-named-nosteer",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer with 'Hi Kshitij', matching the provided name"
+  },
+  {
+    "id": "unknown-wallet-named-nosteer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "unknown-wallet-named-nosteer",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message uses the provided name Kshitij, not an invented one"
+  },
+  {
+    "id": "unknown-wallet-named-nosteer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not speculate about the cause of the failure"
+  },
+  {
+    "id": "unknown-wallet-named-nosteer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only asks to retry the same wallet, not to switch methods"
+  },
+  {
+    "id": "unknown-upi-noname-nosteer",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "unknown-upi-noname-nosteer",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message."
+  },
+  {
+    "id": "unknown-upi-noname-nosteer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to retry the UPI payment"
+  },
+  {
+    "id": "unknown-upi-noname-nosteer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not contain any criticism of the customer"
+  },
+  {
+    "id": "unknown-upi-noname-nosteer",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name at all"
+  },
+  {
+    "id": "unknown-upi-noname-nosteer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message says the reason is unclear, not speculating about the cause"
+  },
+  {
+    "id": "unknown-upi-noname-nosteer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only asks to retry the same UPI method, not to switch."
+  },
+  {
+    "id": "unknown-upi-named-nosteer",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "unknown-upi-named-nosteer",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message."
+  },
+  {
+    "id": "unknown-upi-named-nosteer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to retry the payment"
+  },
+  {
+    "id": "unknown-upi-named-nosteer",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer with 'Hi Kshitij', matching the provided name."
+  },
+  {
+    "id": "unknown-upi-named-nosteer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only informs of a failed payment and asks to retry, without criticizing the customer."
+  },
+  {
+    "id": "unknown-upi-named-nosteer",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message uses the provided name Kshitij, not an invented one"
+  },
+  {
+    "id": "unknown-upi-named-nosteer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only states the payment failed, without speculating on the cause"
+  },
+  {
+    "id": "unknown-upi-named-nosteer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only asks to retry the same UPI payment, not to switch methods"
+  },
+  {
+    "id": "unknown-card-noname-steer",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "unknown-card-noname-steer",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message text."
+  },
+  {
+    "id": "unknown-card-noname-steer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes a link to complete the payment with another method"
+  },
+  {
+    "id": "unknown-card-noname-steer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text explicitly invites using another method"
+  },
+  {
+    "id": "unknown-card-noname-steer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "unknown-card-noname-steer",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name."
+  },
+  {
+    "id": "unknown-card-noname-steer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message states the payment failed but does not speculate on the reason"
+  },
+  {
+    "id": "unknown-card-named-steer",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message"
+  },
+  {
+    "id": "unknown-card-named-steer",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message"
+  },
+  {
+    "id": "unknown-card-named-steer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes a link to try a different payment method, offering a way to complete the payment"
+  },
+  {
+    "id": "unknown-card-named-steer",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer as 'Hi Kshitij', matching the provided name."
+  },
+  {
+    "id": "unknown-card-named-steer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text explicitly asks to try a different payment method"
+  },
+  {
+    "id": "unknown-card-named-steer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The text only states a payment issue and suggests a solution, without criticizing the customer"
+  },
+  {
+    "id": "unknown-card-named-steer",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message uses the provided name Kshitij, not an invented one"
+  },
+  {
+    "id": "unknown-card-named-steer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message states a reason rather than speculating"
+  },
+  {
+    "id": "unknown-netbanking-noname-steer",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "unknown-netbanking-noname-steer",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message."
+  },
+  {
+    "id": "unknown-netbanking-noname-steer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to try a different payment method"
+  },
+  {
+    "id": "unknown-netbanking-noname-steer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text explicitly asks to try a different method"
+  },
+  {
+    "id": "unknown-netbanking-noname-steer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "unknown-netbanking-noname-steer",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name at all"
+  },
+  {
+    "id": "unknown-netbanking-noname-steer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message states the failure without speculating on the cause"
+  },
+  {
+    "id": "unknown-netbanking-named-steer",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{amount}} placeholder."
+  },
+  {
+    "id": "unknown-netbanking-named-steer",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message"
+  },
+  {
+    "id": "unknown-netbanking-named-steer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to complete the payment"
+  },
+  {
+    "id": "unknown-netbanking-named-steer",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer as 'Hi Kshitij', matching the provided name."
+  },
+  {
+    "id": "unknown-netbanking-named-steer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text explicitly asks to complete the payment using another method"
+  },
+  {
+    "id": "unknown-netbanking-named-steer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message merely informs of a failed payment, not criticizing the customer"
+  },
+  {
+    "id": "unknown-netbanking-named-steer",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message uses the provided name Kshitij, not an invented one"
+  },
+  {
+    "id": "unknown-netbanking-named-steer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only states the payment failed, without speculating on the cause"
+  },
+  {
+    "id": "unknown-wallet-noname-steer",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "unknown-wallet-noname-steer",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message."
+  },
+  {
+    "id": "unknown-wallet-noname-steer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to pay using a different method"
+  },
+  {
+    "id": "unknown-wallet-noname-steer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message explicitly invites the user to pay using a different method"
+  },
+  {
+    "id": "unknown-wallet-noname-steer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "unknown-wallet-noname-steer",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name at all"
+  },
+  {
+    "id": "unknown-wallet-noname-steer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message says the reason is unclear, not speculating"
+  },
+  {
+    "id": "unknown-wallet-named-steer",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message."
+  },
+  {
+    "id": "unknown-wallet-named-steer",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message."
+  },
+  {
+    "id": "unknown-wallet-named-steer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to try another payment method"
+  },
+  {
+    "id": "unknown-wallet-named-steer",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer with 'Hi Kshitij,' matching the provided name"
+  },
+  {
+    "id": "unknown-wallet-named-steer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text explicitly asks to try another method"
+  },
+  {
+    "id": "unknown-wallet-named-steer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not contain any criticism of the customer"
+  },
+  {
+    "id": "unknown-wallet-named-steer",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message uses the provided name Kshitij, not an invented one"
+  },
+  {
+    "id": "unknown-wallet-named-steer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message states a reason, not speculation"
+  },
+  {
+    "id": "unknown-upi-noname-steer",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{amount}} placeholder."
+  },
+  {
+    "id": "unknown-upi-noname-steer",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message includes the {{link}} placeholder."
+  },
+  {
+    "id": "unknown-upi-noname-steer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to try another method, offering a way to complete the payment"
+  },
+  {
+    "id": "unknown-upi-noname-steer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text asks to try another method, indicating a switch."
+  },
+  {
+    "id": "unknown-upi-noname-steer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message does not contain any criticism of the customer"
+  },
+  {
+    "id": "unknown-upi-noname-steer",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message contains no customer name at all"
+  },
+  {
+    "id": "unknown-upi-noname-steer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only states the payment failed without speculating why"
+  },
+  {
+    "id": "unknown-upi-named-steer",
+    "claim": "contains the {{amount}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{amount}} appears in the message"
+  },
+  {
+    "id": "unknown-upi-named-steer",
+    "claim": "contains the {{link}} placeholder",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The placeholder {{link}} appears in the message."
+  },
+  {
+    "id": "unknown-upi-named-steer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "It includes a link to try another payment method"
+  },
+  {
+    "id": "unknown-upi-named-steer",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The message greets the customer with 'Hi Kshitij', matching the provided name."
+  },
+  {
+    "id": "unknown-upi-named-steer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "must",
+    "answer": "yes",
+    "pass": true,
+    "reason": "The text asks the user to try another method"
+  },
+  {
+    "id": "unknown-upi-named-steer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The text only states a payment issue and suggests an alternative, without criticizing the customer."
+  },
+  {
+    "id": "unknown-upi-named-steer",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message uses the provided name Kshitij, not an invented one"
+  },
+  {
+    "id": "unknown-upi-named-steer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "pass": true,
+    "reason": "The message only states the payment failed, without speculating reasons"
+  }
+]
