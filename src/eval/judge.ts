@@ -6,7 +6,13 @@ import { UNIVERSAL, CLASS_RULES } from "./cases.ts";
 // output higher than a stranger's, and swapping it costs nothing here.
 export const JUDGE_MODEL = "openai/gpt-oss-120b";
 
-const SYSTEM_PROMPT = `You check whether a payment recovery message has a stated property.
+/**
+ * Exported so the human labelling CLI can show a rater the same instructions.
+ * Two raters answering differently-worded questions do not disagree about the
+ * message, they disagree about the question, and an agreement statistic over
+ * that measures nothing.
+ */
+export const SYSTEM_PROMPT = `You check whether a payment recovery message has a stated property.
 
 You get one message and one statement about it. Answer only whether the statement is true of the message as written.
 
