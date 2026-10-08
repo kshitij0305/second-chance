@@ -415,7 +415,7 @@ wish to proceed" they split three ways. It measured the generator's explicitness
 rather than the message, and now reads `says that paying is optional or that no
 action is required`.
 
-**Two failures in 492 after that, and the accounting is not "rewording fixed
+**Two failures in 492 immediately after the rewording, and the accounting is not "rewording fixed
 three".** The verification claim went to zero over eight cases and that one is
 genuinely fixed. `criticises the customer` also went to zero — but every
 `instrument_rejected` message in the run still says "will keep declining", the
@@ -426,9 +426,45 @@ optional and two say only "No issue on your side" or nothing at all. The same
 2-to-3-of-8 gap appeared under the old wording, which is what makes it the
 product rather than the rubric.
 
+### Then the judge was caught inferring
+
+Planting a failure in every class — the six originals were all
+`insufficient_funds`, so a green control said nothing about the other five —
+found a miss within minutes. A `transient_provider` message said "an issue on the
+provider side" with nothing about duration, against the claim `says the problem
+is temporary`. The judge answered yes and gave its reason as "implying it is
+temporary", while its own prompt told it to judge the text in front of it and not
+what it assumed the sender meant. The same miss reproduced identically in CI
+seventeen hours later, so it was a property of the judge, not a flake.
+
+Two sentences were added to the judge's prompt, and the first matters as much as
+the second: a message may satisfy a statement in different words, but it has to
+say it — implication, consistency and what a reader would assume do not count,
+and if the reason would use the word "implying" the answer is no. Without the
+first half the judge overcorrects into literalism and "No obligation to proceed"
+stops satisfying `says that paying is optional`. The control then caught 11 of 11.
+
+Re-judging the same 56 messages with only the prompt changed moved three
+verdicts, all from pass to fail, and both claims they landed on had been relying
+on the judge's leniency:
+
+- `says this payment method will keep being refused` asks for certainty the
+  composer is right to refuse. "Declined by your bank and will likely keep
+  declining" is the more honest sentence, since a bank may approve tomorrow. The
+  claim asks the message to overclaim and the model does not.
+- `leaves the option open to pay later` is a `mustNot` wearing a `must`'s
+  clothes. A message leaves the option open by not imposing a deadline, which is
+  an absence; asking the judge to confirm a stated property that is really the
+  absence of a contrary one is the same category error as `makes clear`.
+
+That puts the run at five failures in 492. Three claims have now been found
+broken by looking at disagreement rather than at the failure count, and in every
+case the symptom was the judge being asked for an inference rather than a
+reading.
+
 The direction is the point. The card wording was the product's fault and the
-prompt changed; the two claims above were the eval's fault and the eval changed.
-An eval that always blames the thing under test is as useless as one that never
+prompt changed; the claims above were the eval's fault and the eval changed. An
+eval that always blames the thing under test is as useless as one that never
 does.
 
 What it cannot tell you yet:
