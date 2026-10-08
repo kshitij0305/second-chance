@@ -1,0 +1,423 @@
+[
+  {
+    "id": "transient-card-noname",
+    "method": "card",
+    "source": "model",
+    "template": "The {{amount}} payment did not go through because of a temporary issue on the payment provider’s side. Nothing is wrong with your card. You can try the same method again here: {{link}}",
+    "text": "The ₹850 payment did not go through because of a temporary issue on the payment provider’s side. Nothing is wrong with your card. You can try the same method again here: https://rzp.io"
+  },
+  {
+    "id": "transient-card-named",
+    "name": "kshitij",
+    "method": "card",
+    "source": "model",
+    "template": "Hi Kshitij, the {{amount}} payment did not go through due to a temporary issue on the payment provider’s side. Nothing is wrong with your card. You can try the same method again here: {{link}}",
+    "text": "Hi Kshitij, the ₹850 payment did not go through due to a temporary issue on the payment provider’s side. Nothing is wrong with your card. You can try the same method again here: https://rzp.io"
+  },
+  {
+    "id": "transient-netbanking-noname",
+    "method": "netbanking",
+    "source": "model",
+    "template": "Hi, the {{amount}} payment did not go through because of a temporary issue on the payment provider’s side. Nothing is wrong with your netbanking. You can try the same method again here: {{link}}",
+    "text": "Hi, the ₹850 payment did not go through because of a temporary issue on the payment provider’s side. Nothing is wrong with your netbanking. You can try the same method again here: https://rzp.io"
+  },
+  {
+    "id": "transient-netbanking-named",
+    "name": "kshitij",
+    "method": "netbanking",
+    "source": "model",
+    "template": "Hi Kshitij, the {{amount}} payment did not go through because of a temporary issue on the provider side. Nothing is wrong with your netbanking. The same method should work. You can try again here: {{link}}",
+    "text": "Hi Kshitij, the ₹850 payment did not go through because of a temporary issue on the provider side. Nothing is wrong with your netbanking. The same method should work. You can try again here: https://rzp.io"
+  },
+  {
+    "id": "transient-wallet-noname",
+    "method": "wallet",
+    "source": "model",
+    "template": "Hi, the {{amount}} payment failed due to a temporary issue on the payment provider’s side. Nothing is wrong with your wallet. Try the same method again here: {{link}}",
+    "text": "Hi, the ₹850 payment failed due to a temporary issue on the payment provider’s side. Nothing is wrong with your wallet. Try the same method again here: https://rzp.io"
+  },
+  {
+    "id": "transient-wallet-named",
+    "name": "kshitij",
+    "method": "wallet",
+    "source": "model",
+    "template": "Hi Kshitij, the {{amount}} payment failed due to a temporary issue on the payment provider’s side. Nothing is wrong with your wallet. Please try the same method again here: {{link}}",
+    "text": "Hi Kshitij, the ₹850 payment failed due to a temporary issue on the payment provider’s side. Nothing is wrong with your wallet. Please try the same method again here: https://rzp.io"
+  },
+  {
+    "id": "transient-upi-noname",
+    "method": "upi",
+    "source": "model",
+    "template": "Hi, the {{amount}} payment did not go through due to a temporary issue on the provider side. Nothing is wrong with your UPI. The same payment method should work. You can try again here: {{link}}",
+    "text": "Hi, the ₹850 payment did not go through due to a temporary issue on the provider side. Nothing is wrong with your UPI. The same payment method should work. You can try again here: https://rzp.io"
+  },
+  {
+    "id": "transient-upi-named",
+    "name": "kshitij",
+    "method": "upi",
+    "source": "model",
+    "template": "Hi Kshitij, the {{amount}} payment via UPI did not go through due to a temporary issue on the provider side. Nothing is wrong with your UPI. You can try the same method again here: {{link}}",
+    "text": "Hi Kshitij, the ₹850 payment via UPI did not go through due to a temporary issue on the provider side. Nothing is wrong with your UPI. You can try the same method again here: https://rzp.io"
+  },
+  {
+    "id": "insuf-card-noname",
+    "method": "card",
+    "source": "model",
+    "template": "Hi, the {{amount}} payment could not be processed with your card. The same card should work if you try again. Please complete the payment at your convenience here: {{link}}",
+    "text": "Hi, the ₹850 payment could not be processed with your card. The same card should work if you try again. Please complete the payment at your convenience here: https://rzp.io"
+  },
+  {
+    "id": "insuf-card-named",
+    "name": "kshitij",
+    "method": "card",
+    "source": "model",
+    "template": "Hi Kshitij, your card could not process the {{amount}} payment. You can complete the payment using the same card here: {{link}}",
+    "text": "Hi Kshitij, your card could not process the ₹850 payment. You can complete the payment using the same card here: https://rzp.io"
+  },
+  {
+    "id": "insuf-netbanking-noname",
+    "method": "netbanking",
+    "source": "model",
+    "template": "Hi, the {{amount}} payment could not be processed via netbanking. You can complete the payment at your convenience using the same method here: {{link}}",
+    "text": "Hi, the ₹850 payment could not be processed via netbanking. You can complete the payment at your convenience using the same method here: https://rzp.io"
+  },
+  {
+    "id": "insuf-netbanking-named",
+    "name": "kshitij",
+    "method": "netbanking",
+    "source": "model",
+    "template": "Hi Kshitij, the {{amount}} payment via netbanking did not go through. Please try completing the payment at your convenience using the same method here: {{link}}",
+    "text": "Hi Kshitij, the ₹850 payment via netbanking did not go through. Please try completing the payment at your convenience using the same method here: https://rzp.io"
+  },
+  {
+    "id": "insuf-wallet-noname",
+    "method": "wallet",
+    "source": "model",
+    "template": "Hi, the {{amount}} payment could not be completed using your wallet. Please try again at your convenience. The same wallet method should work. You can complete the payment here: {{link}}",
+    "text": "Hi, the ₹850 payment could not be completed using your wallet. Please try again at your convenience. The same wallet method should work. You can complete the payment here: https://rzp.io"
+  },
+  {
+    "id": "insuf-wallet-named",
+    "name": "kshitij",
+    "method": "wallet",
+    "source": "model",
+    "template": "Hi kshitij, the {{amount}} payment via your wallet did not complete. You can finish the payment at your convenience using the same wallet method here: {{link}}",
+    "text": "Hi kshitij, the ₹850 payment via your wallet did not complete. You can finish the payment at your convenience using the same wallet method here: https://rzp.io"
+  },
+  {
+    "id": "insuf-upi-noname",
+    "method": "upi",
+    "source": "model",
+    "template": "Hi, the {{amount}} payment via UPI did not go through. You can complete the payment at your convenience using the same UPI method here: {{link}}",
+    "text": "Hi, the ₹850 payment via UPI did not go through. You can complete the payment at your convenience using the same UPI method here: https://rzp.io"
+  },
+  {
+    "id": "insuf-upi-named",
+    "name": "kshitij",
+    "method": "upi",
+    "source": "model",
+    "template": "Hi Kshitij, the {{amount}} payment via UPI could not be processed. Please try completing the payment again at your convenience: {{link}}",
+    "text": "Hi Kshitij, the ₹850 payment via UPI could not be processed. Please try completing the payment again at your convenience: https://rzp.io"
+  },
+  {
+    "id": "rejected-card-noname",
+    "method": "card",
+    "source": "model",
+    "template": "Your bank has refused the card payment for {{amount}} and will keep refusing it. Please use a different payment method here: {{link}}",
+    "text": "Your bank has refused the card payment for ₹850 and will keep refusing it. Please use a different payment method here: https://rzp.io"
+  },
+  {
+    "id": "rejected-card-named",
+    "name": "kshitij",
+    "method": "card",
+    "source": "model",
+    "template": "Hi Kshitij, your bank has declined the {{amount}} payment on this card and will keep refusing it. Please use a different payment method here: {{link}}",
+    "text": "Hi Kshitij, your bank has declined the ₹850 payment on this card and will keep refusing it. Please use a different payment method here: https://rzp.io"
+  },
+  {
+    "id": "rejected-netbanking-noname",
+    "method": "netbanking",
+    "source": "model",
+    "template": "The bank has refused the netbanking payment for {{amount}} and will keep refusing it. Please pay using a different method here: {{link}}",
+    "text": "The bank has refused the netbanking payment for ₹850 and will keep refusing it. Please pay using a different method here: https://rzp.io"
+  },
+  {
+    "id": "rejected-netbanking-named",
+    "name": "kshitij",
+    "method": "netbanking",
+    "source": "model",
+    "template": "Hi Kshitij, your bank has refused the {{amount}} payment via netbanking and will keep refusing it. Please use a different payment method here: {{link}}",
+    "text": "Hi Kshitij, your bank has refused the ₹850 payment via netbanking and will keep refusing it. Please use a different payment method here: https://rzp.io"
+  },
+  {
+    "id": "rejected-wallet-noname",
+    "method": "wallet",
+    "source": "model",
+    "template": "Your wallet payment for {{amount}} was refused by the bank and will keep being refused. Please use a different payment method here: {{link}}",
+    "text": "Your wallet payment for ₹850 was refused by the bank and will keep being refused. Please use a different payment method here: https://rzp.io"
+  },
+  {
+    "id": "rejected-wallet-named",
+    "name": "kshitij",
+    "method": "wallet",
+    "source": "model",
+    "template": "Hi Kshitij, the wallet payment for {{amount}} was declined by your bank and will keep being refused. Use another payment method here: {{link}}",
+    "text": "Hi Kshitij, the wallet payment for ₹850 was declined by your bank and will keep being refused. Use another payment method here: https://rzp.io"
+  },
+  {
+    "id": "rejected-upi-noname",
+    "method": "upi",
+    "source": "model",
+    "template": "Your UPI payment for {{amount}} was declined by the bank and will keep being refused. Use a different payment method here: {{link}}",
+    "text": "Your UPI payment for ₹850 was declined by the bank and will keep being refused. Use a different payment method here: https://rzp.io"
+  },
+  {
+    "id": "rejected-upi-named",
+    "name": "kshitij",
+    "method": "upi",
+    "source": "model",
+    "template": "Hi Kshitij, your bank has refused the {{amount}} payment via UPI and will keep refusing it. Please use a different method to pay: {{link}}",
+    "text": "Hi Kshitij, your bank has refused the ₹850 payment via UPI and will keep refusing it. Please use a different method to pay: https://rzp.io"
+  },
+  {
+    "id": "auth-card-noname",
+    "method": "card",
+    "source": "model",
+    "template": "Hi, the {{amount}} payment was interrupted during card verification and did not complete. You can try the same card again here: {{link}}",
+    "text": "Hi, the ₹850 payment was interrupted during card verification and did not complete. You can try the same card again here: https://rzp.io"
+  },
+  {
+    "id": "auth-card-named",
+    "name": "kshitij",
+    "method": "card",
+    "source": "model",
+    "template": "Hi Kshitij, the card payment for {{amount}} was interrupted during the verification step. The same card should work again. Please try the payment here: {{link}}",
+    "text": "Hi Kshitij, the card payment for ₹850 was interrupted during the verification step. The same card should work again. Please try the payment here: https://rzp.io"
+  },
+  {
+    "id": "auth-netbanking-noname",
+    "method": "netbanking",
+    "source": "model",
+    "template": "The {{amount}} payment was interrupted during the netbanking verification step. The same netbanking method should work again. Please try to complete the payment here: {{link}}",
+    "text": "The ₹850 payment was interrupted during the netbanking verification step. The same netbanking method should work again. Please try to complete the payment here: https://rzp.io"
+  },
+  {
+    "id": "auth-netbanking-named",
+    "name": "kshitij",
+    "method": "netbanking",
+    "source": "model",
+    "template": "Hi Kshitij, the {{amount}} netbanking payment was interrupted during the verification step. The same netbanking method should work. Please try again here: {{link}}",
+    "text": "Hi Kshitij, the ₹850 netbanking payment was interrupted during the verification step. The same netbanking method should work. Please try again here: https://rzp.io"
+  },
+  {
+    "id": "auth-wallet-noname",
+    "method": "wallet",
+    "source": "model",
+    "template": "Hi, your wallet payment for {{amount}} stopped during the verification step. The same wallet method should work now. Please try again here: {{link}}",
+    "text": "Hi, your wallet payment for ₹850 stopped during the verification step. The same wallet method should work now. Please try again here: https://rzp.io"
+  },
+  {
+    "id": "auth-wallet-named",
+    "name": "kshitij",
+    "method": "wallet",
+    "source": "model",
+    "template": "Hi kshitij, the {{amount}} payment via wallet was interrupted during verification. The same wallet method should work again. You can retry here: {{link}}",
+    "text": "Hi kshitij, the ₹850 payment via wallet was interrupted during verification. The same wallet method should work again. You can retry here: https://rzp.io"
+  },
+  {
+    "id": "auth-upi-noname",
+    "method": "upi",
+    "source": "template_after_rejection",
+    "rejectionReason": "no amount placeholder",
+    "template": "Hi — looks like the {{amount}} payment didn't finish at the verification step. Here's a fresh link, it only takes a moment: {{link}}",
+    "text": "Hi — looks like the ₹850 payment didn't finish at the verification step. Here's a fresh link, it only takes a moment: https://rzp.io"
+  },
+  {
+    "id": "auth-upi-named",
+    "name": "kshitij",
+    "method": "upi",
+    "source": "model",
+    "template": "Hi Kshitij, the {{amount}} payment via UPI stopped at the verification step and did not complete. You can retry the same UPI method here: {{link}}",
+    "text": "Hi Kshitij, the ₹850 payment via UPI stopped at the verification step and did not complete. You can retry the same UPI method here: https://rzp.io"
+  },
+  {
+    "id": "cancelled-card-noname",
+    "method": "card",
+    "source": "model",
+    "template": "Hi, your card payment for {{amount}} was cancelled. You can complete the payment later using the same card. If you wish, simply click here: {{link}}",
+    "text": "Hi, your card payment for ₹850 was cancelled. You can complete the payment later using the same card. If you wish, simply click here: https://rzp.io"
+  },
+  {
+    "id": "cancelled-card-named",
+    "name": "kshitij",
+    "method": "card",
+    "source": "model",
+    "template": "Hi Kshitij, you chose to cancel the {{amount}} payment by card. Paying is optional and you can return to it later. The same card should work if you decide to proceed. You can retry here: {{link}}",
+    "text": "Hi Kshitij, you chose to cancel the ₹850 payment by card. Paying is optional and you can return to it later. The same card should work if you decide to proceed. You can retry here: https://rzp.io"
+  },
+  {
+    "id": "cancelled-netbanking-noname",
+    "method": "netbanking",
+    "source": "model",
+    "template": "Hi, the {{amount}} payment was cancelled via netbanking. Paying is optional and you can return to it later. The same netbanking method should work if you choose to pay again: {{link}}",
+    "text": "Hi, the ₹850 payment was cancelled via netbanking. Paying is optional and you can return to it later. The same netbanking method should work if you choose to pay again: https://rzp.io"
+  },
+  {
+    "id": "cancelled-netbanking-named",
+    "name": "kshitij",
+    "method": "netbanking",
+    "source": "model",
+    "template": "Hi Kshitij, the {{amount}} payment via netbanking was cancelled by you. Paying is optional and you can return to it later. The same netbanking method should work again. If you wish to proceed, click here: {{link}}",
+    "text": "Hi Kshitij, the ₹850 payment via netbanking was cancelled by you. Paying is optional and you can return to it later. The same netbanking method should work again. If you wish to proceed, click here: https://rzp.io"
+  },
+  {
+    "id": "cancelled-wallet-noname",
+    "method": "wallet",
+    "source": "model",
+    "template": "Hi, the {{amount}} payment via wallet was cancelled. You can complete the payment later using the same wallet method here: {{link}}",
+    "text": "Hi, the ₹850 payment via wallet was cancelled. You can complete the payment later using the same wallet method here: https://rzp.io"
+  },
+  {
+    "id": "cancelled-wallet-named",
+    "name": "kshitij",
+    "method": "wallet",
+    "source": "model",
+    "template": "Hi Kshitij, you chose to cancel the {{amount}} payment using the wallet. Paying is optional, and you can return to it later. The same wallet method will work if you decide to pay again: {{link}}",
+    "text": "Hi Kshitij, you chose to cancel the ₹850 payment using the wallet. Paying is optional, and you can return to it later. The same wallet method will work if you decide to pay again: https://rzp.io"
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "method": "upi",
+    "source": "model",
+    "template": "Hi, the {{amount}} payment via UPI was cancelled by you. Paying is optional and you can return to it later. The same UPI method should work again when you’re ready: {{link}}",
+    "text": "Hi, the ₹850 payment via UPI was cancelled by you. Paying is optional and you can return to it later. The same UPI method should work again when you’re ready: https://rzp.io"
+  },
+  {
+    "id": "cancelled-upi-named",
+    "name": "kshitij",
+    "method": "upi",
+    "source": "model",
+    "template": "Hi Kshitij, the {{amount}} payment via UPI was cancelled by you. Paying is optional, you can return to it later. The same UPI method should work if you choose to pay again. You can do so here: {{link}}",
+    "text": "Hi Kshitij, the ₹850 payment via UPI was cancelled by you. Paying is optional, you can return to it later. The same UPI method should work if you choose to pay again. You can do so here: https://rzp.io"
+  },
+  {
+    "id": "unknown-card-noname-nosteer",
+    "method": "card",
+    "source": "model",
+    "template": "Hi, the {{amount}} payment could not be processed. The same card should work if you try again. You can complete the payment here: {{link}}",
+    "text": "Hi, the ₹850 payment could not be processed. The same card should work if you try again. You can complete the payment here: https://rzp.io"
+  },
+  {
+    "id": "unknown-card-named-nosteer",
+    "name": "kshitij",
+    "method": "card",
+    "source": "model",
+    "template": "Hi kshitij, the {{amount}} payment did not go through. The cause could not be determined. You can try again here: {{link}}",
+    "text": "Hi kshitij, the ₹850 payment did not go through. The cause could not be determined. You can try again here: https://rzp.io"
+  },
+  {
+    "id": "unknown-netbanking-noname-nosteer",
+    "method": "netbanking",
+    "source": "model",
+    "template": "Hi, the {{amount}} payment did not go through via netbanking. The cause could not be determined. You can try the same payment method again here: {{link}}",
+    "text": "Hi, the ₹850 payment did not go through via netbanking. The cause could not be determined. You can try the same payment method again here: https://rzp.io"
+  },
+  {
+    "id": "unknown-netbanking-named-nosteer",
+    "name": "kshitij",
+    "method": "netbanking",
+    "source": "model",
+    "template": "Hi Kshitij, the {{amount}} payment via netbanking did not process. The reason is unclear. You can try the same netbanking method again here: {{link}}",
+    "text": "Hi Kshitij, the ₹850 payment via netbanking did not process. The reason is unclear. You can try the same netbanking method again here: https://rzp.io"
+  },
+  {
+    "id": "unknown-wallet-noname-nosteer",
+    "method": "wallet",
+    "source": "model",
+    "template": "Hi, your wallet payment for {{amount}} could not be processed. The same wallet should work. You can complete the payment here: {{link}}",
+    "text": "Hi, your wallet payment for ₹850 could not be processed. The same wallet should work. You can complete the payment here: https://rzp.io"
+  },
+  {
+    "id": "unknown-wallet-named-nosteer",
+    "name": "kshitij",
+    "method": "wallet",
+    "source": "model",
+    "template": "Hi Kshitij, the {{amount}} payment via wallet did not go through. The reason is unclear. The same wallet method should work. Please try again here: {{link}}",
+    "text": "Hi Kshitij, the ₹850 payment via wallet did not go through. The reason is unclear. The same wallet method should work. Please try again here: https://rzp.io"
+  },
+  {
+    "id": "unknown-upi-noname-nosteer",
+    "method": "upi",
+    "source": "model",
+    "template": "Hi, the {{amount}} payment via UPI did not complete and the reason is unclear. The same UPI method should work. Please try again here: {{link}}",
+    "text": "Hi, the ₹850 payment via UPI did not complete and the reason is unclear. The same UPI method should work. Please try again here: https://rzp.io"
+  },
+  {
+    "id": "unknown-upi-named-nosteer",
+    "name": "kshitij",
+    "method": "upi",
+    "source": "model",
+    "template": "Hi Kshitij, the {{amount}} payment via UPI did not complete. The same UPI method should work. Please try again here: {{link}}",
+    "text": "Hi Kshitij, the ₹850 payment via UPI did not complete. The same UPI method should work. Please try again here: https://rzp.io"
+  },
+  {
+    "id": "unknown-card-noname-steer",
+    "method": "card",
+    "source": "model",
+    "template": "Hi, your card payment of {{amount}} could not be processed and the reason is unknown. Please try a different method here: {{link}}",
+    "text": "Hi, your card payment of ₹850 could not be processed and the reason is unknown. Please try a different method here: https://rzp.io"
+  },
+  {
+    "id": "unknown-card-named-steer",
+    "name": "kshitij",
+    "method": "card",
+    "source": "model",
+    "template": "Hi Kshitij, the {{amount}} payment could not be processed using your card. Please try a different payment method here: {{link}}",
+    "text": "Hi Kshitij, the ₹850 payment could not be processed using your card. Please try a different payment method here: https://rzp.io"
+  },
+  {
+    "id": "unknown-netbanking-noname-steer",
+    "method": "netbanking",
+    "source": "model",
+    "template": "Hi, the {{amount}} payment did not go through via netbanking. Please try another payment method here: {{link}}",
+    "text": "Hi, the ₹850 payment did not go through via netbanking. Please try another payment method here: https://rzp.io"
+  },
+  {
+    "id": "unknown-netbanking-named-steer",
+    "name": "kshitij",
+    "method": "netbanking",
+    "source": "model",
+    "template": "Hi Kshitij, the {{amount}} payment could not be processed via netbanking. You can complete the payment using another method here: {{link}}",
+    "text": "Hi Kshitij, the ₹850 payment could not be processed via netbanking. You can complete the payment using another method here: https://rzp.io"
+  },
+  {
+    "id": "unknown-wallet-noname-steer",
+    "method": "wallet",
+    "source": "model",
+    "template": "Hi, the {{amount}} payment could not be processed via wallet. The issue could not be determined. Please try a different method here: {{link}}",
+    "text": "Hi, the ₹850 payment could not be processed via wallet. The issue could not be determined. Please try a different method here: https://rzp.io"
+  },
+  {
+    "id": "unknown-wallet-named-steer",
+    "name": "kshitij",
+    "method": "wallet",
+    "source": "model",
+    "template": "Hi Kshitij, your wallet payment for {{amount}} could not be processed. Please try a different method here: {{link}}",
+    "text": "Hi Kshitij, your wallet payment for ₹850 could not be processed. Please try a different method here: https://rzp.io"
+  },
+  {
+    "id": "unknown-upi-noname-steer",
+    "method": "upi",
+    "source": "model",
+    "template": "Hi, the {{amount}} payment could not be processed via UPI. Please complete the payment using another method here: {{link}}",
+    "text": "Hi, the ₹850 payment could not be processed via UPI. Please complete the payment using another method here: https://rzp.io"
+  },
+  {
+    "id": "unknown-upi-named-steer",
+    "name": "kshitij",
+    "method": "upi",
+    "source": "model",
+    "template": "Hi Kshitij, the {{amount}} payment via UPI could not be processed. Please try a different payment method here: {{link}}",
+    "text": "Hi Kshitij, the ₹850 payment via UPI could not be processed. Please try a different payment method here: https://rzp.io"
+  }
+]

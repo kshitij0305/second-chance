@@ -18,7 +18,11 @@ export const INTENT: Record<FailureClass, string> = {
   authentication_abandoned:
     "They were partway through paying and the verification step did not complete. Be brief and low-friction — they were seconds from done.",
   customer_cancelled:
-    "They chose to cancel. Be light and unpushy, make clear there is no obligation, and leave the option open.",
+    // Was "make clear there is no obligation, and leave the option open", which
+    // the model honoured about three times in four — it would say the payment
+    // was cancelled and offer a retry without ever saying either thing. Both
+    // halves are now instructions to say something rather than to convey it.
+    "They chose to cancel. Be light and unpushy. Say that paying is optional, and say they can come back to it later.",
   unknown:
     "The cause could not be determined. Do not speculate about why it failed. Keep it short and simply offer a way to complete the payment.",
 };

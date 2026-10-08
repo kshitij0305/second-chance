@@ -1,0 +1,170 @@
+[
+  {
+    "id": "cancelled-card-noname",
+    "claim": "says that paying is optional or that no action is required",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly says 'If you wish, simply click here,' which states that completing the payment is optional."
+  },
+  {
+    "id": "cancelled-card-named",
+    "claim": "says that paying is optional or that no action is required",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'Paying is optional and you can return to it later.'"
+  },
+  {
+    "id": "cancelled-netbanking-noname",
+    "claim": "says that paying is optional or that no action is required",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'Paying is optional and you can return to it later.'"
+  },
+  {
+    "id": "cancelled-netbanking-named",
+    "claim": "says that paying is optional or that no action is required",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'Paying is optional and you can return to it later.'"
+  },
+  {
+    "id": "cancelled-wallet-noname",
+    "claim": "says that paying is optional or that no action is required",
+    "kind": "must",
+    "answer": "no",
+    "reason": "The message says the customer can complete the payment later, which still requires action; it does not state that paying is optional or that no action is required."
+  },
+  {
+    "id": "cancelled-wallet-named",
+    "claim": "says that paying is optional or that no action is required",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'Paying is optional, and you can return to it later.'"
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "claim": "says that paying is optional or that no action is required",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'Paying is optional and you can return to it later.'"
+  },
+  {
+    "id": "cancelled-upi-named",
+    "claim": "says that paying is optional or that no action is required",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'Paying is optional, you can return to it later.'"
+  },
+  {
+    "id": "rejected-card-noname",
+    "claim": "says this payment method will keep being refused",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'will keep refusing it,' which directly says the payment method will keep being refused."
+  },
+  {
+    "id": "rejected-card-named",
+    "claim": "says this payment method will keep being refused",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states the bank 'will keep refusing it,' referring to the payment on this card."
+  },
+  {
+    "id": "rejected-netbanking-noname",
+    "claim": "says this payment method will keep being refused",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states the bank 'will keep refusing it,' referring to the netbanking payment."
+  },
+  {
+    "id": "rejected-netbanking-named",
+    "claim": "says this payment method will keep being refused",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'will keep refusing it,' directly saying the payment method will keep being refused."
+  },
+  {
+    "id": "rejected-wallet-noname",
+    "claim": "says this payment method will keep being refused",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states the payment 'will keep being refused.'"
+  },
+  {
+    "id": "rejected-wallet-named",
+    "claim": "says this payment method will keep being refused",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states the wallet payment 'will keep being refused.'"
+  },
+  {
+    "id": "rejected-upi-noname",
+    "claim": "says this payment method will keep being refused",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states the payment 'will keep being refused.'"
+  },
+  {
+    "id": "rejected-upi-named",
+    "claim": "says this payment method will keep being refused",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'will keep refusing it' regarding the UPI payment."
+  },
+  {
+    "id": "cancelled-card-noname",
+    "claim": "leaves the option open to pay later",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'You can complete the payment later using the same card,' which directly leaves the option open to pay later."
+  },
+  {
+    "id": "cancelled-card-named",
+    "claim": "leaves the option open to pay later",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'you can return to it later,' which directly leaves the option open to pay later."
+  },
+  {
+    "id": "cancelled-netbanking-noname",
+    "claim": "leaves the option open to pay later",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'you can return to it later,' which directly leaves the option open to pay later."
+  },
+  {
+    "id": "cancelled-netbanking-named",
+    "claim": "leaves the option open to pay later",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'you can return to it later,' which directly leaves the option open to pay later."
+  },
+  {
+    "id": "cancelled-wallet-noname",
+    "claim": "leaves the option open to pay later",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'You can complete the payment later using the same wallet method here.'"
+  },
+  {
+    "id": "cancelled-wallet-named",
+    "claim": "leaves the option open to pay later",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'you can return to it later,' which directly leaves the option open to pay later."
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "claim": "leaves the option open to pay later",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'you can return to it later,' which directly leaves the option open to pay later."
+  },
+  {
+    "id": "cancelled-upi-named",
+    "claim": "leaves the option open to pay later",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states 'you can return to it later,' which directly leaves the option open to pay later."
+  }
+]

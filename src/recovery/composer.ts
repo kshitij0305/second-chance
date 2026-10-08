@@ -51,10 +51,13 @@ Rules, all of them absolute:
 Always write about the method that actually failed, which you are told. Both
 examples below happen to differ; neither is a default.
 
+Say what you are told to say, in your own words but without softening it. If you
+are told something will keep happening, do not write that it is likely to happen.
+
 Two examples of correctly formatted output:
 
 The bank declined the card and will keep declining it:
-Hi Asha, your bank turned down the ${AMOUNT_TOKEN} payment on that card, and it is likely to be declined again. You can pay by another method here: ${LINK_TOKEN}
+Hi Asha, your bank turned down the ${AMOUNT_TOKEN} payment on that card, and that card will keep being refused. You can pay by another method here: ${LINK_TOKEN}
 
 A temporary problem at the payment provider, paid by netbanking:
 Hi, the ${AMOUNT_TOKEN} payment did not go through because of a temporary issue on the provider side. Nothing is wrong with your netbanking. You can try again here: ${LINK_TOKEN}

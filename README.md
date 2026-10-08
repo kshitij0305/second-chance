@@ -469,6 +469,37 @@ So all three are the product, not the rubric, and the stricter judge is what mad
 them visible. That puts the run at five failures in 492, up from two, which is
 the right direction: the judge had been passing messages it should not have.
 
+### And the hedge was in the examples, again
+
+The composer was then fixed in two places, and the first is the card bug's exact
+shape. The `instrument_rejected` few-shot example was captioned "The bank
+declined the card and will keep declining it" and its body read "it is **likely**
+to be declined again". The caption promised permanence and the example hedged, so
+the model copied the hedge and the `INTENT` never had a chance. It now reads
+"that card will keep being refused", plus a general rule not to soften an
+instruction it was given. `customer_cancelled`'s `INTENT` became two instructions
+to *say* something — "Say that paying is optional, and say they can come back to
+it later" — in place of "make clear there is no obligation, and leave the option
+open", which the model had honoured about three times in four.
+
+Both landed in the generated text: all eight `rejected` messages now say "will
+keep refusing it" with no hedge, and six of eight `cancelled` messages say
+"Paying is optional and you can return to it later" outright.
+
+**The judge run that would confirm this is unfinished.** It reached 143 of 492
+and stopped on the daily cap for `openai/gpt-oss-120b` — 200,000 tokens, 199,715
+spent. Those 143 cover `transient_provider` and most of `insufficient_funds` with
+zero failures, and reach none of the three claims the fix targeted. They survived
+only because the script now writes each verdict as it arrives; the version that
+wrote after the loop would have returned nothing.
+
+A provisional check on those three claims, run on qwen3.8-27b because it has its
+own quota, puts them at one failure where there were five — the hedging and the
+pay-later claims clean at 8 of 8, and one `cancelled` message that says a payment
+can be completed later without saying paying is optional. That is a different
+model's reading, not the judge's, and the numbers above stand until the real run
+finishes.
+
 The direction is the point. The card wording was the product's fault and the
 prompt changed; the claims above were the eval's fault and the eval changed. An
 eval that always blames the thing under test is as useless as one that never
