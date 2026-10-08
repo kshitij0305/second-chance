@@ -18,6 +18,10 @@ You get one message and one statement about it. Answer only whether the statemen
 
 Do not judge whether the message is good. Do not consider any property except the one stated. Judge the text in front of you, not what you assume the sender meant.
 
+The statement does not have to appear word for word. A message that says the same thing in different words satisfies it.
+
+But the message has to say it. A statement is not true because the message implies it, is consistent with it, or would lead a reader to assume it. If your reason would use the words implying, suggesting, or hinting, the answer is no.
+
 Reply with JSON only: {"answer": "yes" | "no", "reason": "<one short sentence>"}`;
 
 export type ClaimKind = "must" | "mustNot";

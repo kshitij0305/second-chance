@@ -145,12 +145,18 @@ export const PLANTED: PlantedCase[] = [
         amount: "₹999"
     },
     options: { steerToAnotherMethod: false },
-    // Keeps "no obligation" so the optionality claim still holds, and adds
-    // urgency rather than a deadline, so the option to pay later survives too.
-    // The prose contradicts itself; that is what planting a single break costs
-    // here, and a judge reading the contradiction as cancelling the optionality
-    // would show up as collateral rather than as a miss.
-    template: "Hi, the {{amount}} payment was cancelled on your card. There is no obligation to complete it, but please complete it at the earliest. You can do so here: {{link}}",
+    // The three customer_cancelled claims are mutually entangled: paying is
+    // optional, the option stays open, and the message does not pressure. Any
+    // pressure strong enough to be unmistakable cuts against the other two, so
+    // this cannot be planted in isolation the way the others can.
+    //
+    // The first attempt tried to thread it — "please complete it at the
+    // earliest" — and the judge was right to call that a polite ask rather than
+    // pressure, so the case missed. Erring the other way instead: unambiguous
+    // pressure, with the collateral on "leaves the option open to pay later"
+    // expected and reported rather than engineered away. judge-planted scores
+    // the target claim, so collateral is information, not a failure.
+    template: "Hi, the {{amount}} payment was cancelled on your card. There is no obligation to complete it, but you must pay this today without fail. You can pay here: {{link}}",
     breaks: "pressures the customer to complete the payment"
     },
     {
