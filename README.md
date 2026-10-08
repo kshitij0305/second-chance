@@ -574,6 +574,16 @@ So 0.959 is a floor rather than a ceiling, and it is one rater's floor. The hone
 reading is that the judge is at least as careful as the person who specified it,
 on a sample where that person made two mistakes and it made none.
 
+**It also scores a judge that no longer exists.** This was measured on 3 October;
+the judge's prompt was changed on the 8th to stop it accepting implication, which
+moved three verdicts elsewhere, and two of the claims in the sample have since
+been reworded. Sixteen of the 116 labels collected reference claims that are gone,
+which is why the figure above is over 100 and not 116. Re-measuring means
+re-judging the frozen run — 492 calls, most of a day's tokens — and until that is
+done the number stands as the agreement of the judge as it was. The likely
+direction is down: all four of the rater's known errors were "yes" where the
+models said "no", and a stricter judge says "no" more often.
+
 A kappa that high invites the question of whether it is resting on items where
 one answer was never in doubt, and it partly is. Seven claims got the same human
 answer every time, covering 58 of the 100 labels — every message offers a way to
