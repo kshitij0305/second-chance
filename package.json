@@ -24,6 +24,7 @@
     "judge:planted": "tsx scripts/judge-planted.ts",
     "label": "tsx scripts/label.ts",
     "kappa": "tsx scripts/kappa.ts",
+    "judge:batched": "tsx scripts/judge-batched.ts",
     "label:model": "tsx scripts/label-model.ts"
   },
   "dependencies": {

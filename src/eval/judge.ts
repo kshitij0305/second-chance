@@ -12,17 +12,56 @@ export const JUDGE_MODEL = "openai/gpt-oss-120b";
  * message, they disagree about the question, and an agreement statistic over
  * that measures nothing.
  */
-export const SYSTEM_PROMPT = `You check whether a payment recovery message has a stated property.
+const HEADER = `You check whether a payment recovery message has a stated property.`;
 
-You get one message and one statement about it. Answer only whether the statement is true of the message as written.
-
-Do not judge whether the message is good. Do not consider any property except the one stated. Judge the text in front of you, not what you assume the sender meant.
+/**
+ * Shared by the one-claim and many-claim prompts, so a rule cannot be edited
+ * into one and not the other. Two judges differing because someone changed one
+ * copy is the kind of divergence that looks like a real finding for a day.
+ */
+const RULES = `Do not judge whether the message is good. Do not consider any property except the one stated. Judge the text in front of you, not what you assume the sender meant.
 
 The statement does not have to appear word for word. A message that says the same thing in different words satisfies it.
 
-But the message has to say it. A statement is not true because the message implies it, is consistent with it, or would lead a reader to assume it. If your reason would use the words implying, suggesting, or hinting, the answer is no.
+But the message has to say it. A statement is not true because the message implies it, is consistent with it, or would lead a reader to assume it. If your reason would use the words implying, suggesting, or hinting, the answer is no.`;
+
+export const SYSTEM_PROMPT = `${HEADER}
+
+You get one message and one statement about it. Answer only whether the statement is true of the message as written.
+
+${RULES}
 
 Reply with JSON only: {"answer": "yes" | "no", "reason": "<one short sentence>"}`;
+
+/**
+ * The same judge asked about every claim on a message at once.
+ *
+ * Why: one claim per call re-sends the system prompt and the message for each
+ * of a case's ~9 claims. 492 calls a run is 143,000 tokens against a 200,000
+ * daily tier; batching is about 40,000.
+ *
+ * What it costs: the single-claim form has no ordering and nothing to compare,
+ * which is why it was chosen. Asking nine questions at once reintroduces
+ * position effects and gives the model room to answer for consistency across
+ * claims rather than reading each one cold — the same failure that made a claim
+ * with two branches unanswerable, where the judge answered the first and
+ * ignored the second.
+ *
+ * So this is a different judge, not a cheaper one, and whether it agrees with
+ * the original is a measurement rather than an assumption. judge-batched.ts
+ * runs both and scores them against each other.
+ */
+export const BATCH_SYSTEM_PROMPT = `${HEADER}
+
+You get one message and several numbered statements about it. For each statement, answer only whether it is true of the message as written.
+
+${RULES}
+
+Answer each statement on its own. Your answer to one statement must not depend on your answer to any other, and you must not try to make your answers agree with each other. Some statements will be true and others false of the same message; that is expected.
+
+Answer every statement you are given, once each, and copy each statement back exactly as it was written.
+
+Reply with JSON only: {"verdicts": [{"statement": "<copied exactly>", "answer": "yes" | "no", "reason": "<one short sentence>"}]}`;
 
 export type ClaimKind = "must" | "mustNot";
 
@@ -98,6 +137,68 @@ export async function ask(
   } catch {
     return { answer: "unparseable", reason: raw.slice(0, 120) };
   }
+}
+
+/** Loose enough to survive reformatting, strict enough to still be the claim. */
+function normalise(statement: string): string {
+  return statement.toLowerCase().replace(/^the message /, "").replace(/[^a-z0-9]+/g, " ").trim();
+}
+
+/**
+ * Asks about every claim on one message in a single call.
+ *
+ * Returns only the claims the model actually answered, matched by the statement
+ * it echoed back rather than by position. Matching on order would silently
+ * misattribute every verdict after a dropped or reordered one, and a run full of
+ * confident wrong answers is worse than a run with holes. The caller decides
+ * what to do about anything missing — judge-batched.ts re-asks it singly.
+ */
+export async function askAll(
+  message: string,
+  input: string,
+  claims: readonly string[],
+  model: string = JUDGE_MODEL,
+): Promise<Map<string, Judgement>> {
+  const numbered = claims.map((c, i) => `${i + 1}. the message ${c}`).join("\n");
+  const completion = await groq().chat.completions.create({
+    model,
+    temperature: 0,
+    reasoning_effort: "low",
+    // Nine verdicts with a sentence each, plus reasoning against the same
+    // budget. Running out mid-JSON loses the whole message rather than one
+    // claim, which is the one way batching can cost more than it saves.
+    max_completion_tokens: 4096,
+    response_format: { type: "json_object" },
+    messages: [
+      { role: "system", content: BATCH_SYSTEM_PROMPT },
+      { role: "user", content: `Input: ${input}\n\nMessage:\n${message}\n\nStatements:\n${numbered}` },
+    ],
+  });
+
+  const raw = (completion.choices[0]?.message?.content ?? "").trim();
+  const out = new Map<string, Judgement>();
+  let verdicts: unknown;
+  try {
+    verdicts = JSON.parse(raw)?.verdicts;
+  } catch {
+    return out;
+  }
+  if (!Array.isArray(verdicts)) return out;
+
+  const byNormalised = new Map(claims.map((c) => [normalise(c), c]));
+  for (const v of verdicts) {
+    const echoed = String((v as { statement?: unknown })?.statement ?? "");
+    const claim = byNormalised.get(normalise(echoed));
+    // An unrecognised statement means the model invented or mangled one. Drop
+    // it: the claim it was meant to answer is then simply missing, and gets
+    // re-asked singly, which is the safe direction to fail in.
+    if (!claim || out.has(claim)) continue;
+    out.set(claim, {
+      answer: String((v as { answer?: unknown }).answer ?? "").toLowerCase(),
+      reason: String((v as { reason?: unknown }).reason ?? ""),
+    });
+  }
+  return out;
 }
 
 /**
