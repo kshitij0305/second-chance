@@ -445,22 +445,29 @@ first half the judge overcorrects into literalism and "No obligation to proceed"
 stops satisfying `says that paying is optional`. The control then caught 11 of 11.
 
 Re-judging the same 56 messages with only the prompt changed moved three
-verdicts, all from pass to fail, and both claims they landed on had been relying
-on the judge's leniency:
+verdicts, all from pass to fail. The first read of those was that the claims were
+overreaching, and checking the `INTENT` they come from killed that idea:
 
-- `says this payment method will keep being refused` asks for certainty the
-  composer is right to refuse. "Declined by your bank and will likely keep
-  declining" is the more honest sentence, since a bank may approve tomorrow. The
-  claim asks the message to overclaim and the model does not.
-- `leaves the option open to pay later` is a `mustNot` wearing a `must`'s
-  clothes. A message leaves the option open by not imposing a deadline, which is
-  an absence; asking the judge to confirm a stated property that is really the
-  absence of a contrary one is the same category error as `makes clear`.
+> Their bank refused this payment method **and will keep refusing it**. Tell them
+> **plainly** that the payment method they used will not go through, and steer
+> them to a different payment method.
 
-That puts the run at five failures in 492. Three claims have now been found
-broken by looking at disagreement rather than at the failure count, and in every
-case the symptom was the judge being asked for an inference rather than a
-reading.
+Two of the three are `says this payment method will keep being refused` against
+messages reading "will **likely** keep declining" and "will **likely** be declined
+again". The claim encodes the `INTENT` exactly; the `INTENT` asks for plainness
+and names the permanence; the model hedges anyway. Whether a flat assertion about
+a bank's future behaviour is the right thing to promise is a fair question about
+the `INTENT` — but it is a product question, and until it is answered the claim is
+right and the composer is not following it.
+
+The third is `leaves the option open to pay later` against "No issue on your side.
+You can retry the same method here". `customer_cancelled`'s `INTENT` says to leave
+the option open, and a message can say so outright — "no rush", "whenever suits
+you". This one says nothing about later at all.
+
+So all three are the product, not the rubric, and the stricter judge is what made
+them visible. That puts the run at five failures in 492, up from two, which is
+the right direction: the judge had been passing messages it should not have.
 
 The direction is the point. The card wording was the product's fault and the
 prompt changed; the claims above were the eval's fault and the eval changed. An
