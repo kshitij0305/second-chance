@@ -23,3 +23,8 @@ VIDEO-SCRIPT.md
 /eval_results.json
 /judge_results.json
 /judge_planted_results.json
+
+# A separate project that was copied in here by accident, 1.1 GB of it.
+# Ignored so a stray `git add -A` cannot write it into history, where it would
+# be permanent. The real fix is to move it out of this tree.
+src/delivery/vk-staff-system/
