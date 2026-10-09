@@ -211,8 +211,8 @@ reasoning:
   wrong, not the composer. The reasoning for each is below and in the git log.
 - **Agreement with a human: κ = 0.959** on 100 blind labels, 95% CI 0.904 to 1.0.
   The aggregate was hiding two claims that scored 0.33 because they asked the
-  judge to infer rather than read. That number now predates a judge prompt change
-  and is due a re-measurement.
+  judge to infer rather than read. Re-measured after the judge's prompt changed
+  and unmoved, to three decimal places.
 - **The judge is checked by eleven planted failures**, one per failure class,
   each breaking exactly one claim. It has been caught going soft once, by those.
 - **Two product bugs found that the existing benchmark could not see**, both
@@ -636,15 +636,23 @@ So 0.959 is a floor rather than a ceiling, and it is one rater's floor. The hone
 reading is that the judge is at least as careful as the person who specified it,
 on a sample where that person made two mistakes and it made none.
 
-**It also scores a judge that no longer exists.** This was measured on 3 October;
-the judge's prompt was changed on the 8th to stop it accepting implication, which
-moved three verdicts elsewhere, and two of the claims in the sample have since
-been reworded. Sixteen of the 116 labels collected reference claims that are gone,
-which is why the figure above is over 100 and not 116. Re-measuring means
-re-judging the frozen run — 492 calls, most of a day's tokens — and until that is
-done the number stands as the agreement of the judge as it was. The likely
-direction is down: all four of the rater's known errors were "yes" where the
-models said "no", and a stricter judge says "no" more often.
+**It was measured again after the judge's prompt changed, and it did not move.**
+The figure was taken on 3 October; on the 8th the judge was told to stop
+accepting implication, which moved three verdicts on a later run. Re-judging the
+same 100 labelled items under the new prompt changed **none of them** — same
+43/55 split, same two disagreements, κ = 0.959 to three places. The prompt fix
+was surgical: it moved verdicts where implication was being counted as fact and
+nowhere else.
+
+The prediction before running it was that agreement would fall, since all of the
+rater's known errors were "yes" where the models said "no" and a stricter judge
+says "no" more often. That reasoning was wrong, and it is the sort of thing worth
+checking rather than asserting.
+
+Sixteen of the 116 labels reference the two claims that were reworded, which is
+why the figure is over 100 and not 116. Scoring only the 100 whose claims still
+exist is `npm run kappa -- --judge judge_results_rejudged.json --allow-unmatched`;
+both files are kept in the snapshot so the before and after can be compared.
 
 A kappa that high invites the question of whether it is resting on items where
 one answer was never in doubt, and it partly is. Seven claims got the same human

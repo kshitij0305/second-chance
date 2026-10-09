@@ -32,6 +32,7 @@ function arg(flag: string): string | undefined {
   const i = process.argv.indexOf(`--${flag}`);
   return i === -1 ? undefined : process.argv[i + 1];
 }
+const has = (flag: string) => process.argv.includes(`--${flag}`);
 
 const SNAPSHOT = arg("snapshot") ?? "src/eval/snapshots/2026-10-03";
 const model = arg("model") ?? "qwen/qwen3.8-27b";
@@ -96,11 +97,22 @@ if (existsSync(HUMAN)) {
   }
 }
 
-for (const h of human) {
-  if (!valid.has(`${h.id}\u0000${h.claim}`)) {
-    console.error(`${h.id}: "${h.claim}" is not a claim for that case. The claim set has moved.`);
+// Strict by default, because a typo in a claim would otherwise be judged as a
+// real question and quietly scored. --skip-unknown-claims is for re-judging an
+// old snapshot after the rubric has moved on, where some of its claims are
+// genuinely gone and the rest are still worth scoring.
+const unknown = human.filter((h) => !valid.has(`${h.id}\u0000${h.claim}`));
+if (unknown.length) {
+  const names = [...new Set(unknown.map((u) => u.claim))];
+  if (!has("skip-unknown-claims")) {
+    for (const n of names) console.error(`"${n}" is not a claim any more.`);
+    console.error(`${unknown.length} of ${human.length} items reference claims that are gone.`);
+    console.error(`Pass --skip-unknown-claims to score the rest.`);
     process.exit(1);
   }
+  console.log(`skipping ${unknown.length} items on ${names.length} claims that no longer exist:`);
+  for (const n of names) console.log(`   ${n}`);
+  human = human.filter((h) => valid.has(`${h.id}\u0000${h.claim}`));
 }
 if (!human.length) {
   console.error(`Nothing matched. Check --claim against the claims in cases.ts.`);

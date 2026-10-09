@@ -1,0 +1,702 @@
+[
+  {
+    "id": "transient-upi-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "It includes a link to try the payment again"
+  },
+  {
+    "id": "rejected-card-noname",
+    "claim": "states that the payment method they used will not go through",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message says the payment was declined and will likely keep declining, indicating the method will not go through."
+  },
+  {
+    "id": "rejected-upi-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message contains no customer name at all"
+  },
+  {
+    "id": "cancelled-netbanking-named",
+    "claim": "leaves the option open to pay later",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "It provides a link to retry the payment, explicitly allowing later payment"
+  },
+  {
+    "id": "cancelled-netbanking-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "cancelled-card-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message does not mention using a different payment method"
+  },
+  {
+    "id": "insuf-card-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message uses the provided name Kshitij, not an invented one"
+  },
+  {
+    "id": "unknown-upi-noname-nosteer",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message contains no customer name at all"
+  },
+  {
+    "id": "unknown-card-named-steer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message includes a link to try a different payment method, offering a way to complete the payment."
+  },
+  {
+    "id": "unknown-card-named-nosteer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "It includes a link to retry the payment with the same card"
+  },
+  {
+    "id": "auth-wallet-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "It explicitly provides a link to try the payment again"
+  },
+  {
+    "id": "auth-upi-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message advises retrying with the same UPI method, not switching."
+  },
+  {
+    "id": "cancelled-card-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message greets the customer with \"Hi Kshitij,\" matching the provided name"
+  },
+  {
+    "id": "unknown-card-named-steer",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message greets the customer with \"Hi Kshitij,\" matching the provided name."
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "unknown-wallet-noname-nosteer",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message contains no customer name at all"
+  },
+  {
+    "id": "insuf-upi-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message only advises retrying the same UPI method, not switching."
+  },
+  {
+    "id": "rejected-netbanking-named",
+    "claim": "states that the bank refused this payment method",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly says the bank refused the payment via netbanking."
+  },
+  {
+    "id": "rejected-netbanking-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message contains no customer name at all"
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message only advises retrying the same UPI method, not switching."
+  },
+  {
+    "id": "auth-card-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "transient-card-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "insuf-upi-noname",
+    "claim": "states or implies the payment failed for lack of money",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message only says the payment did not complete, without mentioning insufficient funds."
+  },
+  {
+    "id": "cancelled-netbanking-noname",
+    "claim": "pressures the customer to complete the payment",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message does not pressure the customer to complete the payment"
+  },
+  {
+    "id": "unknown-upi-named-steer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The text explicitly says 'Please try another method', which is a suggestion to switch payment methods."
+  },
+  {
+    "id": "transient-card-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "It includes a link to retry the payment"
+  },
+  {
+    "id": "unknown-upi-noname-steer",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message contains no customer name at all"
+  },
+  {
+    "id": "unknown-card-named-nosteer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message only advises retrying the same card, not switching methods"
+  },
+  {
+    "id": "cancelled-wallet-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message greets the customer with \"Hi Kshitij\" matching the provided name"
+  },
+  {
+    "id": "rejected-netbanking-noname",
+    "claim": "states that the bank refused this payment method",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly says the payment was declined by your bank"
+  },
+  {
+    "id": "unknown-card-named-steer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message only states a payment failure and suggests trying another method, without criticizing the customer"
+  },
+  {
+    "id": "rejected-upi-named",
+    "claim": "states that the bank refused this payment method",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly says the bank refused the payment"
+  },
+  {
+    "id": "unknown-wallet-noname-nosteer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message says the cause is unclear, not offering a speculation"
+  },
+  {
+    "id": "rejected-card-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly asks to use a different payment method"
+  },
+  {
+    "id": "unknown-upi-named-nosteer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message only asks to retry the same UPI payment, not to switch methods"
+  },
+  {
+    "id": "cancelled-upi-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "unknown-wallet-named-steer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message only states a payment failure and suggests another method, without criticizing the customer"
+  },
+  {
+    "id": "unknown-netbanking-noname-steer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message only states the payment failed, without speculating reasons"
+  },
+  {
+    "id": "auth-wallet-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "rejected-wallet-named",
+    "claim": "states that the bank refused this payment method",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly says the bank declined the payment"
+  },
+  {
+    "id": "transient-upi-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message uses the provided name Kshitij, not an invented one"
+  },
+  {
+    "id": "insuf-upi-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message only states the payment failed and asks to retry, without criticizing the customer"
+  },
+  {
+    "id": "unknown-upi-named-steer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message only states the payment could not be processed, without speculating why it failed"
+  },
+  {
+    "id": "transient-netbanking-named",
+    "claim": "reassures the customer that nothing is wrong with the payment method they used",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly says nothing is wrong with the netbanking payment method."
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "claim": "pressures the customer to complete the payment",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message simply informs and offers a retry link without urging the customer"
+  },
+  {
+    "id": "unknown-upi-noname-nosteer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message asks to retry the same UPI method, not to switch."
+  },
+  {
+    "id": "cancelled-upi-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message only encourages retrying the same UPI method, not switching."
+  },
+  {
+    "id": "cancelled-upi-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message contains no customer name"
+  },
+  {
+    "id": "cancelled-wallet-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message does not contain any criticism of the customer"
+  },
+  {
+    "id": "insuf-card-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "rejected-card-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message contains no customer name at all."
+  },
+  {
+    "id": "transient-wallet-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "It includes a link to retry the payment"
+  },
+  {
+    "id": "transient-upi-named",
+    "claim": "attributes the failure to the payment provider",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly says the failure was due to a temporary issue on the provider side"
+  },
+  {
+    "id": "rejected-netbanking-named",
+    "claim": "addresses the customer by the name provided",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message greets the customer with 'Hi Kshitij', matching the provided name"
+  },
+  {
+    "id": "cancelled-card-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message uses the provided name Kshitij, not an invented one"
+  },
+  {
+    "id": "auth-wallet-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "rejected-card-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "It includes a link to pay by a different method"
+  },
+  {
+    "id": "unknown-netbanking-noname-steer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message only reports a failed payment and suggests an alternative, without criticizing the customer"
+  },
+  {
+    "id": "transient-wallet-noname",
+    "claim": "states or implies the payment failed due to problem from user side",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message attributes the failure to a provider issue, not the user."
+  },
+  {
+    "id": "auth-netbanking-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message includes a link to complete the payment again"
+  },
+  {
+    "id": "unknown-card-noname-nosteer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "unknown-card-noname-steer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message includes a link to complete the payment using another method"
+  },
+  {
+    "id": "auth-netbanking-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "It includes a link inviting the user to try again"
+  },
+  {
+    "id": "unknown-upi-named-nosteer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message only states the payment failed without speculating why"
+  },
+  {
+    "id": "transient-netbanking-named",
+    "claim": "says the problem is temporary",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states the issue is temporary"
+  },
+  {
+    "id": "unknown-upi-named-steer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message only states a payment failure and suggests trying another method, without criticizing the customer"
+  },
+  {
+    "id": "rejected-netbanking-named",
+    "claim": "says this payment method will keep being refused",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly states the payment will keep being declined"
+  },
+  {
+    "id": "unknown-wallet-named-nosteer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "cancelled-netbanking-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "It includes a link to try the same method again"
+  },
+  {
+    "id": "transient-card-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message uses the provided name kshitij, not an invented one"
+  },
+  {
+    "id": "unknown-card-noname-steer",
+    "claim": "speculates about why the payment failed",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message states the payment failed with the card but does not speculate about the reason"
+  },
+  {
+    "id": "cancelled-card-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "It includes a retry link for completing the payment"
+  },
+  {
+    "id": "transient-netbanking-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "It includes a link to retry the payment"
+  },
+  {
+    "id": "cancelled-netbanking-noname",
+    "claim": "leaves the option open to pay later",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The text explicitly says there is no obligation to pay now and invites trying again later."
+  },
+  {
+    "id": "rejected-wallet-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly says “Please use another method to pay.”"
+  },
+  {
+    "id": "transient-wallet-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "insuf-card-noname",
+    "claim": "states or implies the payment failed for lack of money",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message does not mention or suggest insufficient funds as the reason"
+  },
+  {
+    "id": "auth-card-noname",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "rejected-upi-noname",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "It includes a link to use a different payment method"
+  },
+  {
+    "id": "unknown-wallet-named-nosteer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "It includes a link to retry the payment"
+  },
+  {
+    "id": "unknown-upi-noname-nosteer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "transient-wallet-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "rejected-upi-noname",
+    "claim": "says this payment method will keep being refused",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The text states the payment will keep being declined, which matches 'will keep being refused'."
+  },
+  {
+    "id": "unknown-wallet-named-nosteer",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message only asks to retry the same wallet, not to switch methods"
+  },
+  {
+    "id": "auth-wallet-named",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message only advises retrying the same method, not switching."
+  },
+  {
+    "id": "rejected-wallet-noname",
+    "claim": "states that the payment method they used will not go through",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly says the wallet payment was declined and will keep failing"
+  },
+  {
+    "id": "unknown-netbanking-noname-steer",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message contains no customer name at all"
+  },
+  {
+    "id": "cancelled-wallet-named",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "It includes a link to try the wallet again, offering a way to complete the payment"
+  },
+  {
+    "id": "transient-wallet-noname",
+    "claim": "says the problem is temporary",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly calls the issue a temporary one"
+  },
+  {
+    "id": "unknown-wallet-noname-nosteer",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "rejected-upi-noname",
+    "claim": "states that the payment method they used will not go through",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly says the UPI payment was declined and will keep being declined"
+  },
+  {
+    "id": "transient-netbanking-named",
+    "claim": "invites them to try the same payment method again",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly says you can try the same method again"
+  },
+  {
+    "id": "insuf-wallet-named",
+    "claim": "criticises the customer",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message does not criticize the customer"
+  },
+  {
+    "id": "rejected-card-named",
+    "claim": "says this payment method will keep being refused",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message states the payment will keep declining"
+  },
+  {
+    "id": "transient-netbanking-noname",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message does not mention any customer name"
+  },
+  {
+    "id": "insuf-upi-noname",
+    "claim": "suggests switching to a different payment method",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message advises using the same UPI method, not switching."
+  },
+  {
+    "id": "rejected-card-named",
+    "claim": "invents a customer name that was not provided",
+    "kind": "mustNot",
+    "answer": "no",
+    "reason": "The message uses the provided name Kshitij, not an invented one"
+  },
+  {
+    "id": "unknown-upi-named-steer",
+    "claim": "offers a way to complete the payment",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "It includes a link to try another payment method"
+  },
+  {
+    "id": "transient-upi-noname",
+    "claim": "reassures the customer that nothing is wrong with the payment method they used",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message explicitly says nothing is wrong with your UPI, reassuring the customer."
+  },
+  {
+    "id": "transient-upi-noname",
+    "claim": "invites them to try the same payment method again",
+    "kind": "must",
+    "answer": "yes",
+    "reason": "The message says you can try again using the same UPI method"
+  }
+]

@@ -27,7 +27,15 @@ interface Label { id: string; claim: string; kind: ClaimKind; answer: Answer }
 interface Judged { id: string; claim: string; kind: ClaimKind; answer: string }
 
 const human: Label[] = JSON.parse(readFileSync(`${SNAPSHOT}/human_labels.json`, "utf8"));
-const judged: Judged[] = JSON.parse(readFileSync(`${SNAPSHOT}/judge_results.json`, "utf8"));
+// --judge names a different verdict file in the same snapshot, so the judge can
+// be re-scored after its prompt changes without overwriting the run that the
+// published number was measured against.
+const JUDGE_FILE =
+  process.argv.indexOf("--judge") === -1
+    ? "judge_results.json"
+    : process.argv[process.argv.indexOf("--judge") + 1]!;
+const judged: Judged[] = JSON.parse(readFileSync(`${SNAPSHOT}/${JUDGE_FILE}`, "utf8"));
+if (JUDGE_FILE !== "judge_results.json") console.log(`scoring against ${JUDGE_FILE}`);
 
 const byKey = new Map(judged.map((j) => [`${j.id}\u0000${j.claim}`, j]));
 
@@ -41,10 +49,19 @@ for (const h of human) {
   if (j) pairs.push({ label: h, judge: j });
   else orphans.push(h);
 }
-if (orphans.length) {
+// Strict by default: a label with no matching judgement usually means the claim
+// set moved under the snapshot, which biases the sample silently. It is expected
+// when re-judging only the claims that still exist, so --allow-unmatched says
+// so out loud rather than quietly dropping them.
+if (orphans.length && process.argv.includes("--allow-unmatched")) {
+  const names = [...new Set(orphans.map((o) => o.claim))];
+  console.log(`\nleaving out ${orphans.length} labels on ${names.length} claims with no judgement:`);
+  for (const n of names) console.log(`   ${n}`);
+} else if (orphans.length) {
   console.error(`${orphans.length} human labels have no matching judgement:`);
   for (const o of orphans.slice(0, 5)) console.error(`  ${o.id}  ${o.claim}`);
   console.error(`The claims have changed since the snapshot was frozen. Re-label or re-judge.`);
+  console.error(`Pass --allow-unmatched to score only the pairs that exist.`);
   process.exit(1);
 }
 
