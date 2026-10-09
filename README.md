@@ -202,6 +202,25 @@ the small model ever stops being enough.
 
 ## What the validator cannot see
 
+An LLM-as-judge harness over the message composer. Where it ended up, before the
+reasoning:
+
+- **56 cases, 492 judgements a run.** The composer's input space is four
+  variables, so the set is exhaustive by construction rather than sampled.
+- **Failures went 32 → 21 → 5 → 1.** Four of those rounds were the eval being
+  wrong, not the composer. The reasoning for each is below and in the git log.
+- **Agreement with a human: κ = 0.959** on 100 blind labels, 95% CI 0.904 to 1.0.
+  The aggregate was hiding two claims that scored 0.33 because they asked the
+  judge to infer rather than read. That number now predates a judge prompt change
+  and is due a re-measurement.
+- **The judge is checked by eleven planted failures**, one per failure class,
+  each breaking exactly one claim. It has been caught going soft once, by those.
+- **Two product bugs found that the existing benchmark could not see**, both
+  living in few-shot examples rather than instructions.
+
+The rest of this section is how each of those was arrived at, including the parts
+that were wrong.
+
 The fence is mechanical, and that is the whole of its reach. It counts
 characters, looks for two placeholders, and rejects any digit, URL or discount
 the model invented. Every one of those is a string operation.
