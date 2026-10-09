@@ -486,19 +486,62 @@ Both landed in the generated text: all eight `rejected` messages now say "will
 keep refusing it" with no hedge, and six of eight `cancelled` messages say
 "Paying is optional and you can return to it later" outright.
 
-**The judge run that would confirm this is unfinished.** It reached 143 of 492
-and stopped on the daily cap for `openai/gpt-oss-120b` — 200,000 tokens, 199,715
-spent. Those 143 cover `transient_provider` and most of `insufficient_funds` with
-zero failures, and reach none of the three claims the fix targeted. They survived
-only because the script now writes each verdict as it arrives; the version that
-wrote after the loop would have returned nothing.
+**One failure in 492**, confirmed on a full run. The first attempt at that run
+stopped at 143 judgements on the daily token cap — 200,000 for
+`openai/gpt-oss-120b`, 199,715 spent — and survived only because the script now
+writes each verdict as it arrives rather than after the loop. A provisional check
+on qwen3.8-27b, which has its own quota, had predicted one failure on exactly the
+case the judge later flagged.
 
-A provisional check on those three claims, run on qwen3.8-27b because it has its
-own quota, puts them at one failure where there were five — the hedging and the
-pay-later claims clean at 8 of 8, and one `cancelled` message that says a payment
-can be completed later without saying paying is optional. That is a different
-model's reading, not the judge's, and the numbers above stand until the real run
-finishes.
+That one is `cancelled-wallet-noname`: "the payment via wallet was cancelled. You
+can complete the payment later using the same wallet method here". It says a
+payment can be completed later without saying paying is optional, and the
+`INTENT` asks for both. So the run went 32 to 21 to 5 to 1, and the last one is
+the product, not the rubric.
+
+### Batching the judge, and why it is not the default
+
+One call per claim re-sends the system prompt and the message once for each of a
+case's nine or ten claims: 492 calls and about 143,000 tokens, against a 200,000
+daily tier. One call per message is 56 calls and about 40,000. `npm run
+judge:batched` does that, and because the saving is not obviously free it also
+scores itself against the single-claim run over the same messages.
+
+```
+agreement            99.4%
+kappa                0.987
+failures, batched    4
+failures, single     1
+```
+
+Three verdicts differ out of 492, which sounds like a rounding error until you
+notice the failure count quadrupled. Failures are rare, so agreement across all
+492 says almost nothing about the handful that decide whether the eval is green
+— the same prevalence problem that made the pass/fail kappa meaningless, wearing
+a different hat.
+
+The differences are not noise either. Two are the same claim read the same wrong
+way, at positions 7 of 9 and 8 of 10 in their batches:
+
+> `suggests switching to a different payment method`
+> batched, no: "It **directly requests** a different method, **not merely suggests** it."
+
+That is the position effect the single-claim design was chosen to avoid, showing
+up where it was predicted to. It also found real ambiguity in the claim, since
+"suggests" carries both *proposes* and *merely hints*.
+
+The third goes the other way, and is the more uncomfortable one. The single judge
+answered yes because the message "states you may complete the payment later **if
+you wish**, making action optional" — an inference, which its own prompt forbids,
+and which the batched judge refused. The cheap judge was right and the judge of
+record was wrong.
+
+So batching stays available and is not the default. The single-claim run is the
+number of record; the batched run is a cheap pre-check worth about 3.5x, with a
+known bias late in each batch. Verdicts are matched by the statement the model
+echoes back rather than by position, because matching on order would
+misattribute every verdict after a dropped one — across 492 judgements that
+dropped nothing, so the fallback to asking singly never fired.
 
 The direction is the point. The card wording was the product's fault and the
 prompt changed; the claims above were the eval's fault and the eval changed. An
