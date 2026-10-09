@@ -54,12 +54,54 @@ interface Outcome {
 
 const outcomes: Outcome[] = [];
 
-for (const p of PLANTED) {
+/**
+ * A per-minute limit is worth waiting out; a per-day one is not, and the two
+ * have to be told apart because the response for them is opposite.
+ */
+function rateLimit(error: unknown): "minute" | "day" | null {
+  const e = error as { status?: number; error?: { error?: { message?: string } } };
+  if (e?.status !== 429) return null;
+  return /per day|TPD/i.test(e.error?.error?.message ?? "") ? "day" : "minute";
+}
+
+/**
+ * Set when the daily token limit stops the run. Running out of tokens is not
+ * the control failing, and a red tick meaning "no quota" teaches you to ignore
+ * red — the one thing this check cannot afford, since its whole value is being
+ * believed when it does go red. Green would be a lie and red would be a
+ * different lie, so it exits 0 and says what happened.
+ */
+let ranOutOfQuotaAfter: number | null = null;
+
+outer: for (const [i, p] of PLANTED.entries()) {
   const input = describeInput(p.context.method, p.context.name);
   const verdicts: Verdict[] = [];
 
   for (const { claim, kind } of claimsOf(p)) {
-    const { answer, reason } = await ask(p.template, input, claim);
+    let judged;
+    for (let attempt = 1; ; attempt++) {
+      try {
+        judged = await ask(p.template, input, claim);
+        break;
+      } catch (error) {
+        const limit = rateLimit(error);
+        if (limit === "day") {
+          // Breaking out rather than exiting here: process.exit() while the
+          // SDK still holds a handle trips a libuv assertion that reads like a
+          // crash in a CI log.
+          ranOutOfQuotaAfter = i;
+          break outer;
+        }
+        if (limit !== "minute" || attempt > 6) throw error;
+        const hint = /try again in ([\d.]+)s/.exec(
+          (error as { error?: { error?: { message?: string } } }).error?.error?.message ?? "",
+        )?.[1];
+        const waitMs = hint ? Math.ceil(Number(hint) * 1000) + 500 : Math.min(2000 * 2 ** attempt, 60_000);
+        process.stdout.write(`[waiting ${(waitMs / 1000).toFixed(0)}s]`);
+        await new Promise((r) => setTimeout(r, waitMs));
+      }
+    }
+    const { answer, reason } = judged;
     verdicts.push({ claim, kind, answer, pass: passes(kind, answer), reason });
   }
 
@@ -79,6 +121,17 @@ for (const p of PLANTED) {
 
 console.log("\n");
 
+if (ranOutOfQuotaAfter !== null) {
+  writeFileSync("judge_planted_results.json", JSON.stringify(outcomes, null, 2));
+  const msg =
+    `the daily token limit was reached after ${ranOutOfQuotaAfter} of ${PLANTED.length} ` +
+    `planted cases, so the judge was not checked. This is not a pass and not a failure.`;
+  console.log(msg);
+  // Rendered as a warning annotation when this runs in GitHub Actions.
+  console.log(`::warning title=Control did not run::${msg}`);
+  process.exitCode = 0;
+} else {
+
 for (const o of outcomes) {
   console.log(`${o.caught ? "caught" : "MISSED"}  ${o.id}`);
   if (!o.caught) {
@@ -91,4 +144,7 @@ for (const o of outcomes) {
 
 const caught = outcomes.filter((o) => o.caught).length;
 console.log(`\n${caught} of ${outcomes.length} caught`);
-if (caught < outcomes.length) process.exit(1);
+// exitCode rather than exit(), for the same libuv reason as above.
+if (caught < outcomes.length) process.exitCode = 1;
+
+}
