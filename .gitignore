@@ -23,6 +23,7 @@ VIDEO-SCRIPT.md
 /eval_results.json
 /judge_results.json
 /judge_planted_results.json
+/judge_results_batched.json
 
 # A separate project that was copied in here by accident, 1.1 GB of it.
 # Ignored so a stray `git add -A` cannot write it into history, where it would
