@@ -43,7 +43,14 @@ interface Verdict {
 }
 
 const results: EvalResult[] = JSON.parse(readFileSync("eval_results.json", "utf8"));
-const verdicts: Verdict[] = [];
+
+// Resume. Writing each verdict as it arrives keeps them, but without this a
+// retry starts over and pays for the lot again — which is the whole point of
+// the exercise. A DNS blip 417 judgements in is what prompted it.
+const OUT = "judge_results_batched.json";
+const verdicts: Verdict[] = existsSync(OUT) ? JSON.parse(readFileSync(OUT, "utf8")) : [];
+const already = new Set(verdicts.map((v) => `${v.id}\u0000${v.claim}`));
+if (verdicts.length) console.log(`resuming with ${verdicts.length} judgements already recorded`);
 let calls = 0;
 let refills = 0;
 
@@ -57,10 +64,17 @@ for (const result of results) {
   const input = describeInput(result.method, result.name);
   const claims = claimsFor(testCase.failureClass, testCase.must, testCase.mustNot);
 
-  const answered = await askAll(result.template, input, claims.map((c) => c.claim));
+  // Skip whole messages already done, so a resume does not re-batch them.
+  const outstanding = claims.filter((c) => !already.has(`${result.id}\u0000${c.claim}`));
+  if (!outstanding.length) {
+    process.stdout.write("-");
+    continue;
+  }
+
+  const answered = await askAll(result.template, input, outstanding.map((c) => c.claim));
   calls++;
 
-  for (const { claim, kind } of claims) {
+  for (const { claim, kind } of outstanding) {
     let judgement = answered.get(claim);
     let batched = true;
     if (!judgement) {
@@ -73,7 +87,7 @@ for (const result of results) {
     }
     const pass = passes(kind, judgement.answer);
     verdicts.push({ id: result.id, claim, kind, answer: judgement.answer, pass, reason: judgement.reason, batched });
-    writeFileSync("judge_results_batched.json", JSON.stringify(verdicts, null, 2));
+    writeFileSync(OUT, JSON.stringify(verdicts, null, 2));
     process.stdout.write(batched ? (pass ? "." : "F") : (pass ? "·" : "f"));
   }
 }
