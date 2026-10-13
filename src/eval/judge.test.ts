@@ -12,6 +12,7 @@ const RULES = [
   "The statement does not have to appear word for word.",
   "But the message has to say it.",
   "If your reason would use the words implying, suggesting, or hinting, the answer is no.",
+  "does not apply to a statement that asks about implication itself",
 ];
 
 test("both judge prompts carry every shared rule", () => {

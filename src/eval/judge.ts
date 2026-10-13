@@ -23,7 +23,9 @@ const RULES = `Do not judge whether the message is good. Do not consider any pro
 
 The statement does not have to appear word for word. A message that says the same thing in different words satisfies it.
 
-But the message has to say it. A statement is not true because the message implies it, is consistent with it, or would lead a reader to assume it. If your reason would use the words implying, suggesting, or hinting, the answer is no.`;
+But the message has to say it. A statement is not true because the message implies it, is consistent with it, or would lead a reader to assume it. If your reason would use the words implying, suggesting, or hinting, the answer is no.
+
+That last rule does not apply to a statement that asks about implication itself. When the statement is of the form "the message states or implies X", it is true if the message implies X, and you should answer yes.`;
 
 export const SYSTEM_PROMPT = `${HEADER}
 
