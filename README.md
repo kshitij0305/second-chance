@@ -883,8 +883,50 @@ where there is enough volume for it to be doing something.
 
 ## Layout
 
+A failed payment takes one path through the system. The middle four stages are
+driven by `recovery/engine.ts`, which is the only file that knows about all of
+them.
+
+```mermaid
+flowchart TD
+    W["Webhook arrives<br/>razorpay/webhook.ts · signature.ts"]
+    subgraph engine ["recovery/engine.ts orchestrates"]
+        direction TB
+        C["Diagnose why it failed<br/>classifier.ts · mapper.ts · types.ts"]
+        S["Pick a recovery plan<br/>strategy.ts · bandit.ts · variants.ts"]
+        M["Write the message<br/>composer.ts · templates.ts"]
+        D["Send it<br/>delivery/channel.ts · email.ts · links.ts"]
+        C --> S --> M --> D
+    end
+    W --> C
+```
+
+Four of those five stages are ordinary code, and the unit tests cover them. The
+exception is `composer.ts`, where the output is written by a model rather than
+decided by a branch. Everything below exists to measure that one file.
+
+```mermaid
+flowchart TD
+    G["The golden set<br/>eval/cases.ts — claims, not example outputs"]
+    E["Generate the messages<br/>scripts/eval.ts — 56 cases, exhaustive"]
+    J["Score every claim<br/>eval/judge.ts — 492 verdicts, polarity hidden"]
+    P["Check the judge<br/>eval/planted.ts — 11 planted failures"]
+    K["Measure agreement<br/>eval/kappa.ts — human labels, κ = 0.959"]
+    G --> E --> J
+    J --> P
+    J --> K
+```
+
+The two branches at the bottom are the part worth noticing. A green judge run on
+its own is indistinguishable from a judge that answers yes to everything, so
+`planted.ts` feeds it messages that are known to be wrong and `kappa.ts` scores
+it against a human. Neither measures the composer; both measure the measurement.
+
 | Path | What lives there |
 |---|---|
+| `src/index.ts` | Express entry point — webhook route, dashboard, lab checkout |
+| `src/config.ts` | every environment variable, read in one place |
+| `src/auth.ts` | password gate in front of the dashboard and API |
 | `src/razorpay/webhook.ts` | webhook route, signature check, event dispatch |
 | `src/razorpay/signature.ts` | HMAC verification over the raw request body |
 | `src/razorpay/types.ts` | hand-written webhook payload types |
@@ -899,8 +941,24 @@ where there is enough volume for it to be doing something.
 | `src/delivery/email.ts` | rendering the message for email rather than SMS |
 | `src/recovery/engine.ts` | scheduling, guarded dispatch, attribution |
 | `src/recovery/mapper.ts` | Razorpay vocabulary to ours |
+| `src/recovery/model-classifier.ts` | LLM fallback for codes the classifier cannot map |
+| `src/recovery/fixtures/` | real failure payloads captured from live checkouts |
+| `src/lab/checkout.ts` | a real checkout used to generate genuine failures |
 | `src/db.ts` | SQLite schema and migrations |
 | `public/index.html` | dashboard |
+| `src/eval/cases.ts` | the golden set — claims per failure class, and the grid |
+| `src/eval/judge.ts` | judge prompts, one-claim and batched, and `passes()` |
+| `src/eval/planted.ts` | eleven messages that each break exactly one claim |
+| `src/eval/kappa.ts` | Cohen's kappa, with standard error and prevalence index |
+| `src/eval/snapshots/` | frozen runs — the composer is non-deterministic, so anything hand-labelled must be pinned first |
+| `src/eval/notes.md` | the first, unusable attempt at hand-labelling, kept deliberately |
+| `scripts/eval.ts` | runs the composer over every case |
+| `scripts/judge.ts` | scores every claim, one call each |
+| `scripts/judge-batched.ts` | scores a whole message per call, and reports whether that changes the answers |
+| `scripts/judge-planted.ts` | the control; exits non-zero when the judge misses |
+| `scripts/label.ts` | blind human labelling — never opens the judge's output |
+| `scripts/label-model.ts` | a second model as an independent rater |
+| `scripts/kappa.ts` | agreement on both scales, plus the robustness check |
 
 ## Known gaps
 
