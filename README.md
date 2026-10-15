@@ -312,7 +312,7 @@ It is not a property of the class at all. It follows the flag.
 
 ### The judge, and how it is checked
 
-Each claim is one call. Fifty-six messages at roughly nine claims each is 516
+Each claim is one call. Fifty-six messages at roughly nine claims each is 492
 judgements per run, at temperature zero with the response format pinned to JSON,
 so the same input gives the same verdict and parsing cannot drift.
 
@@ -356,7 +356,7 @@ through. `npm run judge:planted` exits non-zero on any miss.
 
 Two workflows, split by whether a failure means anything.
 
-`ci.yml` gates every push and pull request: `npm run typecheck` and 98 unit
+`ci.yml` gates every push and pull request: `npm run typecheck` and 112 unit
 tests, on a pinned runner, installed with `npm ci` from the lockfile. No API key,
 no network, same answer every time. That is the entry fee for blocking a merge —
 a check that can fail on a coin flip teaches you to re-run it instead of reading
@@ -366,8 +366,8 @@ Wiring it up immediately found a bug it was built to find. The test script's glo
 was unquoted, so on Linux `sh` expanded `src/**/*.test.ts` itself, collapsed it to
 one directory level, and dropped `src/auth.test.ts` — the eight tests covering
 the gate in front of the dashboard, which serves customer addresses and every
-composed message. The suite would have reported 90 of 98 green and nobody would
-have looked. Quoting it hands the glob to node, which matches both depths on
+composed message. The suite would have reported 90 of the 98 tests that existed
+then as green, and nobody would have looked. Quoting it hands the glob to node, which matches both depths on
 every platform.
 
 `eval.yml` runs `judge:planted` daily at 02:00 UTC and on demand, and never
@@ -879,7 +879,7 @@ where there is enough volume for it to be doing something.
 | `npm run simulate -- <n>` | drives the bandit against invented ground truth so learning is observable |
 | `npm run demo` | scripted walkthrough at a fixed pace; `-- --reset` clears state between takes |
 | `npm run bench:composer` | model size and few-shot against validator rejection rate and cost |
-| `npm test` / `npm run typecheck` | 66 tests, strict TypeScript |
+| `npm test` / `npm run typecheck` | 112 tests, strict TypeScript |
 
 ## Layout
 
