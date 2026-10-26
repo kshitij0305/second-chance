@@ -620,7 +620,7 @@ the reason percent agreement is not worth quoting on its own.
 
 The raw answer avoids it for a reason that was not designed in. Because the judge
 is asked "is this property present" and never told the polarity, `mustNot` claims
-are correctly answered *no* — so the answers split 45/55 even though the outcomes
+are correctly answered *no* — so the human's answers split 45 yes to 55 no even though the outcomes
 split 98/2. Hiding polarity was meant to stop the model telling us what we wanted
 to hear. It also happens to be what makes this measurable.
 
@@ -640,7 +640,7 @@ on a sample where that person made two mistakes and it made none.
 The figure was taken on 3 October; on the 8th the judge was told to stop
 accepting implication, which moved three verdicts on a later run. Re-judging the
 same 100 labelled items under the new prompt changed **none of them** — same
-43/55 split, same two disagreements, κ = 0.959 to three places. The prompt fix
+43 agreed yes and 55 agreed no, same two disagreements, κ = 0.959 to three places. The prompt fix
 was surgical: it moved verdicts where implication was being counted as fact and
 nowhere else.
 
